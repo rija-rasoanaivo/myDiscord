@@ -10,5 +10,6 @@ socket_object = [server]
 
 print("Welcome to the J.M.R Server")
 
-while user_connected:
-    socket_list_read,socket_list_write,socket_list_error = select.select(socket_object, [], socket_object)
+class Server:
+    while user_connected:
+        socket_list_read,socket_list_write,socket_list_error = select.select(socket_object, [], socket_object)
