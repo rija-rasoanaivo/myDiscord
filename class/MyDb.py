@@ -34,10 +34,11 @@ class MyDb:
         return result 
     
 # test code
-db = MyDb("82.165.185.52", "manon", "Rijoma13!", "manon-rittling_mydiscord")
+db = MyDb("82.165.185.52", "marijo", "Rijoma13!", "manon-rittling_mydiscord")
 db.connexion()
 
-db.executeRequete("CREATE TABLE CLIENTS (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), email VARCHAR(255))")
+
+
 
 
 
