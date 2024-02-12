@@ -3,11 +3,13 @@ from Server import Server
 class ChatRoom:
     
     def create_chat_room(self):
-        table = input("Enter the table name: ")
-        fields = input("Enter the fields (comma-separated): ")
-        values = input("Enter the values (comma-separated): ")
+        
+        name = input("Enter the fields (comma-separated): ")
+        type_room = input("Enter the values (comma-separated): ")
 
-        values = "'" + values.replace(", ", "', '") + "'"
+        table = "chatRoom"
+        fields = "name, type_room"
+        values = f"'{name}', '{type_room}'"
 
         # Utilisation de l'attribut de classe db de Server
         Server.db.create(table, fields, values)
