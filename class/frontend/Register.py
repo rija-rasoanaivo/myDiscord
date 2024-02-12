@@ -1,11 +1,13 @@
 from tkinter import *
 import customtkinter as ctk
+from Login import Login
 
-class Login(Tk):
+
+class Register(Tk):
     def __init__(self):
         super().__init__()
         self.geometry("400x650")
-        self.title("Login Page") 
+        self.title("Register Page") 
         self.configure(bg = "#c3caf7")
         self.frame = ctk.CTkFrame(self,width= 150,height= 150)
         self.frame.place( x= 200, y=70, anchor = CENTER)
@@ -18,7 +20,7 @@ class Login(Tk):
         self.logo_label.pack(side=TOP)
 
         # titre de la page
-        self.label = ctk.CTkLabel(self, text= "LOGIN", width= 50, height=50,font=('Broadway', 25), text_color="white" )
+        self.label = ctk.CTkLabel(self, text= "REGISTER", width= 50, height=50,font=('Broadway', 25), text_color="white" )
         self.label.place(x= 200, y=160, anchor = CENTER)
 
         # creation champ pour le prenom
@@ -39,34 +41,21 @@ class Login(Tk):
         entry2 = ctk.CTkEntry(self, width=200, height=30, corner_radius= 8, fg_color= "white")
         entry2.place(x=200, y= 370, anchor = CENTER)
 
-    
         # creation champ mdp
         self.password = ctk.CTkLabel(self, text="Password", width=50, height=30, font=('Agency FB', 22, 'bold'), text_color= "white")
         self.password.place(x=200, y=400, anchor= CENTER)
         entry3 = ctk.CTkEntry(self, width= 150, height=30, corner_radius= 8, fg_color="white")
         entry3.place(x=200, y=430, anchor = CENTER )
 
-    
-    
-        #creation bouton connexion
-        self.buttonLogin = ctk.CTkButton(self, 
-                                         text="LOGIN", 
-                                         width=80, 
-                                         height=20,
-                                         corner_radius= 5,
-                                         font=("Agency FB", 21, "bold"),
-                                         border_width= 2,
-                                         border_color= "white",
-                                         fg_color="#e74353",
-                                         hover_color="#ef511c",
-                                         command= "welcome"
-                                         )
-        self.buttonLogin.place(x= 70, y= 500)
+        # creation champ confirmer mdp
+        self.password = ctk.CTkLabel(self, text="Confirm Password", width=50, height=30, font=('Agency FB', 22, 'bold'), text_color= "white")
+        self.password.place(x=200, y=460, anchor= CENTER)
+        entry4 = ctk.CTkEntry(self, width= 150, height=30, corner_radius= 8, fg_color="white")
+        entry4.place(x=200, y=490, anchor = CENTER )
 
-    
-        # creation bouton inscription
-        self.buttonRegister = ctk.CTkButton(self, 
-                                            text="REGISTER",
+        #creation bouton valider
+        self.buttonLogin = ctk.CTkButton(self, 
+                                            text="VALID",
                                             width=80, 
                                             height=20,
                                             corner_radius= 5,
@@ -75,14 +64,16 @@ class Login(Tk):
                                             border_color= "white",
                                             fg_color="#e74353",
                                             hover_color="#ef511c", 
-                                            command= "aller page inscription")
-        self.buttonRegister.place(x= 240, y= 500)
-        
+                                            command= self.retour_page_login)
+        self.buttonLogin.place(x=200, y=550, anchor = CENTER)
+
+    def retour_page_login(self):
+        # Fermer la fenêtre actuelle
+        self.destroy()
+        # Créer une nouvelle instance de la classe Login
+        login_page = Login()
+        login_page.mainloop()
 
 if __name__ == "__main__":
-    login = Login()
-    
-    login.mainloop()
-        
-
-
+    register = Register()
+    register.mainloop()
