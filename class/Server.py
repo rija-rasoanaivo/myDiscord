@@ -1,12 +1,19 @@
 import socket
 import select
-from MyDb import *
+from MyDb import MyDb
 
 class Server:
+    db = MyDb("82.165.185.52", "marijo", "Rijoma13!", "manon-rittling_mydiscord")
+    db.connexion()
 
     def __init__(self):
+        self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.socket_objects = [self.server_socket]
+        self.channels = {'A': [], 'B': []}
         self.host = '127.0.0.1'
         self.port = 9001
+    def __init__(self):
+        
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket_objects = [self.server_socket]
         self.channels = {'A': [], 'B': []}
@@ -82,4 +89,4 @@ class Server:
             print(f"Error disconnecting client: {e}")
 
 
-Server().start()
+server = Server()
