@@ -23,7 +23,7 @@ class User:
     def email_exists(self, email):
         # Exécution d'une requête pour chercher si l'email existe déjà.
         result = Server.db.fetch(
-            "SELECT * FROM user WHERE email = %s",
+            "SELECT * FROM user WHERE email = %s", 
             (email,)
         )
         return bool(result)  # Retourne True si l'email existe, False sinon.
