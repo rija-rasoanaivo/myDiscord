@@ -1,20 +1,21 @@
 from ChatRoom import ChatRoom
 
 class PrivateChatRoom:
-    def __init__(self):
-        self.chat_room = ChatRoom()
 
     def create_private_chat_room(self):
-        # Demander à l'utilisateur les informations nécessaires pour créer la salle de discussion
-        table = input("Enter the table name: ")
-        fields = input("Enter the fields (comma-separated): ")
-        values = input("Enter the values (comma-separated): ")
 
-        # Ajoutez des guillemets simples autour des valeurs pour les valeurs de type chaîne
-        values = "'" + values.replace(", ", "', '") + "'"
+        name = input("Enter the room name: ")
+        id_user = input("Enter the user id: ")
+        id_room = input("Enter the room id: ")
+        type_authorisation = input("Enter the type of authorisation: ")
+
+        table = "privateChatRoom"
+        fields = "name, id_user, id_room, type_authorisation"
+        values = f"'{name}', '{id_user}', '{id_room}', '{type_authorisation}'"
+
 
         # Appel de la méthode create_chat_room() de l'instance de ChatRoom
-        self.chat_room.create_chat_room(table, fields, values)
+        ChatRoom.db.create(table, fields, values)
 
 # Utilisation de la classe PrivateChatRoom
 private_chat_room_manager = PrivateChatRoom()
