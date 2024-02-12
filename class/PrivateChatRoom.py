@@ -2,7 +2,7 @@ from ChatRoom import ChatRoom
 
 class PrivateChatRoom:
 
-    def create_private_chat_room(self):
+    def private_chat_room(self):
 
         name = input("Enter the room name: ")
         id_user = input("Enter the user id: ")
@@ -17,9 +17,7 @@ class PrivateChatRoom:
         # Appel de la méthode create_chat_room() de l'instance de ChatRoom
         ChatRoom.db.create(table, fields, values)
 
-# Utilisation de la classe PrivateChatRoom
-private_chat_room_manager = PrivateChatRoom()
-private_chat_room_manager.create_private_chat_room()
+
 
 # table = "chatRoom"
 # fields = "name, type_room"
