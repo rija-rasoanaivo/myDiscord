@@ -3,8 +3,8 @@ from Server import Server
 class User:
     
     def register(self):
-        name = input("Enter the user's name: ")
-        firstname = input("Enter the user's first name: ")
+        name = input("Enter the user's name: ") 
+        firstname = input("Enter the user's first name: ")  
         email = input("Enter the user's email: ")
         password = input("Enter the user's password: ")
 
@@ -22,7 +22,7 @@ class User:
         email = input("Enter your email: ")
         password = input("Enter your password: ")
 
-        # Requête pour vérifier si un utilisateur correspondant existe dans la base de données
+    
         result = Server.db.fetch(
             "SELECT * FROM user WHERE firstName=%s AND name=%s AND email=%s AND password=%s",
             (firstname, name, email, password)
@@ -33,7 +33,7 @@ class User:
             return True
         else:
             print("Login failed. Please check your credentials.")
-            return False
+            return False 
 
 
 user_manager = User()
