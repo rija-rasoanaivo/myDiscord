@@ -47,6 +47,7 @@ class Loginpage(Tk):
         entry3.place(x=200, y=430, anchor = CENTER )
 
     
+    def buttonLogin(self):
         #creation bouton connexion
         self.buttonLogin = ctk.CTkButton(self, 
                                          text="LOGIN", 
@@ -56,12 +57,13 @@ class Loginpage(Tk):
                                          font=("Agency FB", 21, "bold"),
                                          border_width= 2,
                                          border_color= "white",
-                                         fg_color="#fe9601",
-                                         hover_color="#ef511c" ,
+                                         fg_color="#e74353",
+                                         hover_color="#ef511c",
                                          command= "welcome"
                                          )
         self.buttonLogin.place(x= 70, y= 500)
 
+    def buttonRegister(self):
         # creation bouton inscription
         self.buttonRegister = ctk.CTkButton(self, 
                                             text="REGISTER",
@@ -71,13 +73,15 @@ class Loginpage(Tk):
                                             font=("Agency FB", 21, "bold"),
                                             border_width= 2,
                                             border_color= "white",
-                                            fg_color="#fe9601",
+                                            fg_color="#e74353",
                                             hover_color="#ef511c", 
                                             command= "register")
         self.buttonRegister.place(x= 240, y= 500)
         
 
 test = Loginpage()
+test.buttonLogin()
+test.buttonRegister()
 test.mainloop()
         
 
