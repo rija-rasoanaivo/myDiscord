@@ -1,12 +1,33 @@
-from MyDb import MyDb
+from Server import Server
 
 class User:
-    def __init__(self, db_instance):
-        self.db = db_instance
+    
+    def register(self):
+        name = input("Enter the user's name: ")
+        firstname = input("Enter the user's first name: ")
+        email = input("Enter the user's email: ")
+        password = input("Enter the user's password: ")
 
-    def login(self, firstname, name, email, password):
-        result = self.db.fetch("SELECT * FROM User WHERE FirstName=%s AND Name=%s AND email=%s AND password=%s", 
-                            (firstname, name, email, password))
+        table = "user"  # Nom de la table où les utilisateurs sont stockés
+        fields = "name, firstName, email, password"  # Champs de la table
+        values = f"'{name}', '{firstname}', '{email}', '{password}'"  # Valeurs à insérer
+
+        # Utilisation de l'attribut de classe db de Server pour créer un utilisateur
+        Server.db.create(table, fields, values)
+        print(f"User {name} {firstname} registered successfully!")
+
+    def login(self):
+        firstname = input("Enter your first name: ")
+        name = input("Enter your name: ")
+        email = input("Enter your email: ")
+        password = input("Enter your password: ")
+
+        # Requête pour vérifier si un utilisateur correspondant existe dans la base de données
+        result = Server.db.fetch(
+            "SELECT * FROM user WHERE firstName=%s AND name=%s AND email=%s AND password=%s",
+            (firstname, name, email, password)
+        )
+        
         if result:
             print("Login successful!")
             return True
@@ -15,38 +36,5 @@ class User:
             return False
 
 
-
-    def register(self, name, firstname, email, password):
-        table = "user"
-        fields = "name, firstName, email, password"
-        
-        # S'assurer que la connexion est établie avant d'accéder au cursor
-        self.db.connexion()
-        
-        # Attention : Utiliser la fonction escape du convertisseur de mysql.connector peut ne pas être sûr.
-        # Cette ligne suivante est pour démonstration et n'est PAS recommandée.
-        values = f"'{self.db.cursor._connection.converter.escape(name)}', " \
-                f"'{self.db.cursor._connection.converter.escape(firstname)}', " \
-                f"'{self.db.cursor._connection.converter.escape(email)}', " \
-                f"'{self.db.cursor._connection.converter.escape(password)}'"
-        
-        self.db.create(table, fields, values)
-        
-        # N'oubliez pas de fermer la connexion une fois terminé
-        self.db.deconnexion()
-        
-        print(f"User {name} {firstname} registered successfully!")
-
-
-
-#create a new instance of the MyDb class
-db_instance = MyDb("82.165.185.52", "marijo", "Rijoma13!", "manon-rittling_mydiscord")
-
-# Create a new instance of the User class
-user_system = User(db_instance)
-
-# to register a new user
-user_system.register('Doe', 'John', 'john.doe@example.com', 'securepassword123')
-
-#to login a user
-user_system.login('Doe', 'John', 'john.doe@exemple.com','securepassword123')
+user_manager = User()
+user_manager.register()

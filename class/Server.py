@@ -88,7 +88,6 @@ class Server:
         except Exception as e:
             print(f"Error disconnecting client: {e}")
 
-    def get_db(self):
-        return self.db
+
 
 server = Server()
