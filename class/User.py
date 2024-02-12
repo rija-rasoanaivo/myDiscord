@@ -17,8 +17,8 @@ class User:
         print(f"User {name} {firstname} registered successfully!")
 
     def login(self):
-        firstname = input("Enter your first name: ")
         name = input("Enter your name: ")
+        firstname = input("Enter your first name: ")
         email = input("Enter your email: ")
         password = input("Enter your password: ")
 
