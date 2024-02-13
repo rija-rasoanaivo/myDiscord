@@ -62,6 +62,36 @@ class PrivateChatRoom:
         # Fermeture de la connexion à la base de données
         self.db.deconnexion()
 
+    def admin_remove_member_private_chat_room(self):
+        self.db.connexion()
+        admin_user_id = input("Enter the admin user id: ")
+        user_id_to_remove = input("Enter the user id to remove: ")
+        id_room = input("Enter the id_room: ")
+
+        # Vérification si l'utilisateur est bien admin de la chatRoom spécifiée
+        check_admin_query = f"""
+            SELECT COUNT(*)
+            FROM privateChatRoom
+            WHERE Id_user = '{admin_user_id}' AND Id_Room = '{id_room}' AND Type_Authorisation = 'admin';
+        """
+
+        # Exécution de la requête de vérification
+        self.db.cursor.execute(check_admin_query)
+        is_admin = self.db.cursor.fetchone()[0]  # Lire directement le résultat
+
+        if is_admin > 0:
+            delete_query = f"""
+                DELETE FROM privateChatRoom
+                WHERE Id_user = '{user_id_to_remove}' AND Id_Room = '{id_room}';
+            """
+            self.db.executeRequete(delete_query)  # Suppression du membre
+            print("Member removed successfully.")
+        else:
+            print("Operation not allowed. You must be an admin of the room to remove a member.")
+
+        self.db.deconnexion()
+
+
 if __name__ == "__main__":
     join_private_chat_room = PrivateChatRoom()
-    join_private_chat_room.admin_add_member_private_chat_room()
+    join_private_chat_room.admin_remove_member_private_chat_room()
