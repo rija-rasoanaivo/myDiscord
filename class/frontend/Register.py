@@ -1,6 +1,7 @@
 from tkinter import *
 import customtkinter as ctk
-from Login import Login
+
+
 
 
 class Register(Tk):
@@ -55,24 +56,24 @@ class Register(Tk):
 
         #creation bouton valider
         self.buttonLogin = ctk.CTkButton(self, 
-                                            text="VALID",
-                                            width=80, 
-                                            height=20,
-                                            corner_radius= 5,
-                                            font=("Agency FB", 21, "bold"),
-                                            border_width= 2,
-                                            border_color= "white",
-                                            fg_color="#e74353",
-                                            hover_color="#ef511c", 
-                                            command= self.retour_page_login)
+                                        text="VALID",
+                                        width=80, 
+                                        height=20,
+                                        corner_radius= 10,
+                                        font=("Agency FB", 21, "bold"),
+                                        border_width= 2,
+                                        border_color= "white",
+                                        fg_color="#e74353",
+                                        hover_color="#ef511c", 
+                                        command= "je dois retourner à la page login"
+                                        )
+        
         self.buttonLogin.place(x=200, y=550, anchor = CENTER)
 
-    def retour_page_login(self):
-        # Fermer la fenêtre actuelle
-        self.destroy()
-        # Créer une nouvelle instance de la classe Login
-        login_page = Login()
-        login_page.mainloop()
+    
+
+    # def return_page_login(self):
+       
 
 if __name__ == "__main__":
     register = Register()

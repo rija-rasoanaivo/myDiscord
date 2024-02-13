@@ -20,7 +20,7 @@ class MyDb:
     def deconnexion(self):
         self.db.close()
 
-    def executeRequete(self, requete, params=None):
+    def executeQuery(self, requete, params=None):
         self.connexion()
         self.cursor.execute(requete, params or ())
         self.db.commit()
