@@ -20,7 +20,7 @@ class MyDb:
     def deconnexion(self):
         self.db.close()
 
-    def executeQuery(self, requete, params=None):
+    def executeRequete(self, requete, params=None):
         self.connexion()
         self.cursor.execute(requete, params or ())
         self.db.commit()
@@ -53,6 +53,7 @@ class MyDb:
 # test code
 # db = MyDb("82.165.185.52", "marijo", "Rijoma13!", "manon-rittling_mydiscord")
 # db.connexion()
+# db.executeRequete("SELECT * FROM user")
 
 # table = "chatRoom"
 # fields = "name, type_room"
