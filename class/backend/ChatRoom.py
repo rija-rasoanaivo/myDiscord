@@ -16,13 +16,9 @@ class ChatRoom:
 
         return room_id
 
-create_chat_room = ChatRoom()
-create_chat_room.create_chat_room()
-
-
-# def create(self, table, fields, values):
-#         requete = "INSERT INTO " + table + " (" + fields + ") VALUES (" + values + ")"
-#         self.executeRequete(requete)
+if __name__ == "__main__":
+    create_chat_room = ChatRoom()
+    create_chat_room.create_chat_room()
 
 # table = "chatRoom"
 # fields = "name, type_room"
