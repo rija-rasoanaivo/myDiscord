@@ -10,7 +10,7 @@ class PrivateChatRoom:
         # Connexion à la base de données
         self.db.connexion()
 
-        # Saisie des valeurs de user.Name et chatRoom.name par l'utilisateur
+        # Saisie des valeurs de user.id et chatRoom.id_room par l'utilisateur
         user_id = input("Enter the user id: ")
         id_room = input("Enter the id_room: ")
 
@@ -38,7 +38,7 @@ class PrivateChatRoom:
         # Connexion à la base de données
         self.db.connexion()
 
-        # Saisie des valeurs de user.Name et chatRoom.name par l'utilisateur
+        # Saisie des valeurs de user.id et chatRoom.id_room par l'utilisateur administrateur de son salon privé
         user_id = input("Enter the user id: ")
         id_room = input("Enter the id_room: ")
 
