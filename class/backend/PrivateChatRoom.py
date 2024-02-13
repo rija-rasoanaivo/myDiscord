@@ -1,22 +1,22 @@
-from ChatRoom import ChatRoom
+from backend.ChatRoom import *
+
+chatRoom = ChatRoom()
+server = Server()
 
 class PrivateChatRoom:
+    
+    def create_private_chat_room(self, authorizing_user_id):
+        chat_room = ChatRoom()
+        room_id = chat_room.create_chat_room()
 
-    def private_chat_room(self):
+        if chat_room.type_room == "private":
+            self.set_admin_authorization(room_id, authorizing_user_id)
 
-        name = input("Enter the room name: ")
-        id_user = input("Enter the user id: ")
-        id_room = input("Enter the room id: ")
-        type_authorisation = input("Enter the type of authorisation: ")
-
-        table = "privateChatRoom"
-        fields = "name, id_user, id_room, type_authorisation"
-        values = f"'{name}', '{id_user}', '{id_room}', '{type_authorisation}'"
-
-
-        # Appel de la méthode create_chat_room() de l'instance de ChatRoom
-        ChatRoom.db.create(table, fields, values)
-
+    def set_admin_authorization(self, room_id, user_id):
+        table = "PrivateChatRoom"
+        fields = "Id_User, ID_Room, Type_Authorisation"
+        values = f"{user_id}, {room_id}, 'admin'"
+        Server.db.create(table, fields, values)
 
 
 # table = "chatRoom"
