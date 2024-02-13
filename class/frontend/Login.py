@@ -6,6 +6,8 @@ import customtkinter as ctk
 class Login(Tk):
     def __init__(self):
         super().__init__()
+
+        # creation de la fenetre
         self.geometry("400x650")
         self.title("Login Page") 
         self.configure(bg = "#c3caf7")
