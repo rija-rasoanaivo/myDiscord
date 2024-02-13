@@ -4,20 +4,20 @@ class ChatRoom:
     
     def create_chat_room(self):
         
-        name = input("Enter the fields (comma-separated): ")
-        type_room = input("Enter the values (comma-separated): ")
+        name = input("Enter the room name: ")
+        type_room = input("Enter the room type (public/private): ")
 
         table = "chatRoom"
         fields = "name, type_room"
         values = f"'{name}', '{type_room}'"
 
         # Utilisation de l'attribut de classe db de Server
-        Server.db.create(table, fields, values)
+        room_id = Server.db.create(table, fields, values)
 
-# Utilisation de la classe ChatRoom sans passer d'instance
-chat_room_manager = ChatRoom()
-chat_room_manager.create_chat_room()
-     
+        return room_id
+
+create_chat_room = ChatRoom()
+create_chat_room.create_chat_room()
 
 
 # def create(self, table, fields, values):
