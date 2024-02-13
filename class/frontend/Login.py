@@ -1,6 +1,6 @@
 from tkinter import *
 import customtkinter as ctk
-from Register import Register
+
 
 
 class Login(Tk):
