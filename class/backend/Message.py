@@ -1,43 +1,42 @@
-from PrivateChatRoom import *
-from Login import *
-from Register import *
-import socket
-import threading
+from Server import Server
+from datetime import datetime
+from Login import Login
 
 class Message:
 
-    def __init__(self):
-        self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket_objects = [self.client_socket]
-        self.chatroom = {'id_room_1': [], 'id_room_2': []}
-        self.host = '127.0.0.1'
-        self.port = 9901
-        self.client_socket.connect((self.host, self.port))
+    def __init__(self, user_id, id_room):
+        self.user_id = user_id
+        self.id_room = id_room
+        self.db = Server.db
 
-    def send_message(self):
-        while True:
-            message = input("> ")
-            self.client_socket.send(message.encode("utf-8"))
+    def send_message(self, message_content):
+        # Get the current timestamp
+        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        
+        # Construct the SQL query to insert the new message
+        query = """
+            INSERT INTO message (id_user, id_room, message_content, hour)
+            VALUES (%s, %s, %s, %s)
+        """
+        
+        # Execute the query
+        self.db.executeRequete(query, (self.user_id, self.id_room, message_content, timestamp))
+        
+        print(f"Message sent to room {self.id_room}: {message_content}")
 
-    def choose_channel(self):
-        channel = input("Please choose a channel: A, B\n")
-        self.client_socket.sendall(channel.encode('utf-8'))
-
-    def thread_send(self):
-        writing_thread = threading.Thread(target=self.send_message)
-        writing_thread.daemon = True
-        writing_thread.start()
-
-    def run():
-        message = Message()
-        message.choose_channel()
-        message.thread_send()
-        while True:
-            server_message = message.client_socket.recv(1024).decode('utf-8')
-            print(server_message)
-            print("> ", end='', flush=True)
-
+# This would be used after a successful login and joining a room
 if __name__ == "__main__":
-    Message.run()
-    
+    user_manager = Login()
+    login_success, user_id = user_manager.login()
 
+    if login_success:
+        print(f"User ID is: {user_id}")
+        
+        # Assume that the user has joined a room and you have the room's ID
+        id_room = input("Enter the id_room you have joined: ")
+        
+        message_client = Message(user_id, id_room)
+        
+        # Example of sending a message
+        message_content = input("Enter your message: ")
+        message_client.send_message(message_content)
