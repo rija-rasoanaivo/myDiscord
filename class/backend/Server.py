@@ -11,12 +11,7 @@ class Server:
         self.socket_objects = [self.server_socket]
         self.channels = {'A': [], 'B': []}
         self.host = '127.0.0.1'
-        self.port = 9001
-    def __init__(self):
-        
-        self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket_objects = [self.server_socket]
-        self.channels = {'A': [], 'B': []}
+        self.port = 3306
 
     def start(self):
         try:
@@ -91,3 +86,4 @@ class Server:
 
 
 server = Server()
+server.start()
