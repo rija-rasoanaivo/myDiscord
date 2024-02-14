@@ -1,5 +1,6 @@
 import socket
-from Message import Message
+from Message import *
+import threading
 
 class Chatting:
     def __init__(self):
@@ -15,24 +16,24 @@ class Chatting:
         except Exception as e:
             print(f"Error connecting to server: {e}")
 
-    def send_message(self, message_content):
-        try:
-            self.client_socket.sendall(message_content.encode('utf-8'))
-        except Exception as e:
-            print(f"Error sending message: {e}")
+    def send_message(self):
+        while True:
+            message_content = input("Enter message: ")
+            if message_content:
+                self.client_socket.sendall(message_content.encode("utf-8"))
+            else:
+                print("Message cannot be empty")
 
-    def receive_messages(self):
+    def run(self):
         try:
-            while True:
-                data = self.client_socket.recv(1024).decode('utf-8').strip()
-                if data:
-                    print(data)
-                else:
-                    print("Disconnected from server")
-                    break
+            room_choice = input("Choose a room by entering its number: ")
+            self.client_socket.sendall(room_choice.encode("utf-8"))
+            
+            # Vous pouvez continuer ici pour recevoir et afficher les messages dans la salle choisie
         except Exception as e:
-            print(f"Error receiving message: {e}")
+            print(f"Error: {e}")
 
 if __name__ == "__main__":
-    chatting = Chatting()
-    chatting.connect_to_server()
+    chat = Chatting()
+    chat.connect_to_server()
+    chat.run()

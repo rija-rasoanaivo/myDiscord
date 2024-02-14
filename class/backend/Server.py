@@ -99,7 +99,7 @@ class Server:
     def __init__(self):
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket_objects = [self.server_socket]
-        self.clients = {}  # Utiliser un dictionnaire pour stocker les informations sur les clients
+        self.clients = {}
         self.host = '127.0.0.1'
         self.port = 9901
 
@@ -128,40 +128,63 @@ class Server:
     def handle_new_connection(self, server_socket):
         user_socket, address = server_socket.accept()
         print(f"New connection from {address}")
-        user_socket.sendall(b"Welcome to the J.M.R Server\n")
-        
         self.socket_objects.append(user_socket)
         self.clients[user_socket] = address
+
+        # Récupérer les détails des salles de discussion depuis la base de données
+        rooms = self.db.executeRequete("SELECT id_room, type_room name FROM chatRoom")
+        room_list = "\n".join([f"{room[0]} - {room[1]}" for room in rooms])
+        user_socket.sendall(f"Welcome to the J.M.R Server\nPlease choose a room:\n{room_list}\n".encode('utf-8'))
+
+        # Assurez-vous de lire tous les résultats de la requête SQL
+        for room in rooms:
+            print(room)
+
 
     def handle_client_message(self, client_socket):
         try:
             data = client_socket.recv(1024).decode('utf-8').strip()
             if data:
-                self.send_to_all_clients(client_socket, data)
-            else:
-                self.disconnect_client(client_socket)
+                # Gérer la sélection de la salle de discussion par le client
+                room_id = int(data)
+                room_name = self.db.executeRequete("SELECT name FROM chatRoom WHERE id_room = ?", (room_id,))
+                if room_name:
+                    self.broadcast_message(client_socket, f"Joined room: {room_name[0][0]}")
+                else:
+                    client_socket.sendall(b"Invalid room selection\n")
         except Exception as e:
             print(f"Error handling message: {e}")
             self.disconnect_client(client_socket)
 
-    def send_to_all_clients(self, sender_socket, message):
-        for sock in self.clients:
-            if sock != sender_socket:
+    def broadcast_message(self, sender_socket, message):
+        sender_address = self.clients[sender_socket]
+        for client_socket, client_address in self.clients.items():
+            if client_socket != sender_socket:
                 try:
-                    sock.sendall(f"{self.clients[sender_socket]}: {message}\n".encode('utf-8'))
+                    client_socket.sendall(f"{sender_address}: {message}\n".encode('utf-8'))
                 except Exception as e:
                     print(f"Error sending message to client: {e}")
-                    self.disconnect_client(sock)
+                    self.disconnect_client(client_socket)
 
     def disconnect_client(self, client_socket):
         try:
             client_socket.close()
             self.socket_objects.remove(client_socket)
             del self.clients[client_socket]
-            print(f"Client disconnected: {client_socket}")
+            print(f"{client_socket.getpeername()} disconnected from the server.")
         except Exception as e:
             print(f"Error disconnecting client: {e}")
 
 if __name__ == "__main__":
+    import socket
+
+# Créez un objet de socket simulé
+    simulated_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    simulated_address = ('127.0.0.1', 12345)
+
+# Créez une instance du serveur
     server = Server()
-    server.start()
+
+# Appelez la méthode handle_new_connection avec l'objet de socket simulé
+    server.handle_new_connection(simulated_socket, simulated_address)
+
