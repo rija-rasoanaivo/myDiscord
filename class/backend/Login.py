@@ -21,6 +21,6 @@ class Login:
             print("Login failed. Please check your credentials.")
             return False 
 
-
-user_manager = Login()
-user_manager.login()
+if __name__ == "__main__":
+    user_manager = Login()
+    user_manager.login()

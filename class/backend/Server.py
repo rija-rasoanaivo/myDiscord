@@ -11,7 +11,7 @@ class Server:
         self.socket_objects = [self.server_socket]
         self.channels = {'A': [], 'B': []}
         self.host = '127.0.0.1'
-        self.port = 3306
+        self.port = 9901
 
     def start(self):
         try:

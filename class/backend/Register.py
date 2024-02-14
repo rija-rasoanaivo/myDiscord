@@ -27,6 +27,7 @@ class Register:
             (email,)
         )
         return bool(result)  # Retourne True si l'email existe, False sinon.
-    
-user_manager = Register()
-user_manager.register()
+
+if __name__ == "__main__":    
+    user_manager = Register()
+    user_manager.register()
