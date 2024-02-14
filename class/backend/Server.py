@@ -9,7 +9,7 @@ class Server:
     def __init__(self):
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket_objects = [self.server_socket]
-        self.chatroom = {'id_room_1': [], 'id_room_2': []}
+        self.chatroom = {'A': [], 'B': []}
         self.host = '127.0.0.1'
         self.port = 9901
 
@@ -38,17 +38,17 @@ class Server:
     def handle_new_connection(self, server_socket):
         user_socket, address = server_socket.accept()
         print(f"New connection from {address}")
-        user_socket.sendall(b"Welcome to the J.M.R Server\nPlease choose a channel: id_room_1, id_room_2\n")
+        user_socket.sendall(b"Welcome to the J.M.R Server\nPlease choose a channel: A, B\n")
         self.socket_objects.append(user_socket)
 
     def handle_client_message(self, client_socket):
         try:
             data = client_socket.recv(1024).decode('utf-8').strip()
             if data:
-                if client_socket in self.chatroom['id_room_1']:
-                    self.send_to_channel('id_room_1', data)
-                elif client_socket in self.chatroom['id_room_2']:
-                    self.send_to_channel('id_room_2', data)
+                if client_socket in self.chatroom['A']:
+                    self.send_to_channel('A', data)
+                elif client_socket in self.chatroom['B']:
+                    self.send_to_channel('B', data)
                 else:
                     self.join_channel(client_socket, data)
             else:
@@ -58,7 +58,7 @@ class Server:
             self.disconnect_client(client_socket)
 
     def join_channel(self, client_socket, channel):
-        if channel in ['id_room_1', 'id_room_2']:
+        if channel in ['A', 'B']:
             self.chatroom[channel].append(client_socket)
             client_socket.sendall(f"Welcome to channel {channel}\n".encode('utf-8'))
         else:
@@ -87,3 +87,4 @@ class Server:
 if __name__ == "__main__":
     server = Server()
     server.start()
+

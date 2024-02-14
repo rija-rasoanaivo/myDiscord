@@ -9,6 +9,7 @@ class Message:
     def __init__(self):
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket_objects = [self.client_socket]
+        self.chatroom = {'id_room_1': [], 'id_room_2': []}
         self.host = '127.0.0.1'
         self.port = 9901
         self.client_socket.connect((self.host, self.port))
@@ -39,3 +40,4 @@ class Message:
 if __name__ == "__main__":
     Message.run()
     
+
