@@ -9,7 +9,7 @@ class Server:
     def __init__(self):
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket_objects = [self.server_socket]
-        self.channels = {'A': [], 'B': []}
+        self.chatroom = {'A': [], 'B': []}
         self.host = '127.0.0.1'
         self.port = 9901
 
@@ -45,9 +45,9 @@ class Server:
         try:
             data = client_socket.recv(1024).decode('utf-8').strip()
             if data:
-                if client_socket in self.channels['A']:
+                if client_socket in self.chatroom['A']:
                     self.send_to_channel('A', data)
-                elif client_socket in self.channels['B']:
+                elif client_socket in self.chatroom['B']:
                     self.send_to_channel('B', data)
                 else:
                     self.join_channel(client_socket, data)
@@ -59,13 +59,13 @@ class Server:
 
     def join_channel(self, client_socket, channel):
         if channel in ['A', 'B']:
-            self.channels[channel].append(client_socket)
+            self.chatroom[channel].append(client_socket)
             client_socket.sendall(f"Welcome to channel {channel}\n".encode('utf-8'))
         else:
             client_socket.sendall(b"Invalid channel\n")
 
     def send_to_channel(self, channel, message):
-        for sock in self.channels[channel]:
+        for sock in self.chatroom[channel]:
             try:
                 sock.sendall(f"Channel {channel}: {message}\n".encode('utf-8'))
             except Exception as e:
@@ -76,7 +76,7 @@ class Server:
         try:
             client_socket.close()
             self.socket_objects.remove(client_socket)
-            for channel in self.channels.values():
+            for channel in self.chatroom.values():
                 if client_socket in channel:
                     channel.remove(client_socket)
             print(f"Client disconnected: {client_socket}")
@@ -84,6 +84,6 @@ class Server:
             print(f"Error disconnecting client: {e}")
 
 
-
-server = Server()
-server.start()
+if __name__ == "__main__":
+    server = Server()
+    server.start()
