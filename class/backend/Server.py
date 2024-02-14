@@ -84,6 +84,6 @@ class Server:
             print(f"Error disconnecting client: {e}")
 
 
-
-server = Server()
-server.start()
+if __name__ == "__main__":
+    server = Server()
+    server.start()
