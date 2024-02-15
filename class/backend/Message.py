@@ -22,7 +22,6 @@ class Message:
         # Execute the query
         self.db.executeRequete(query, (self.user_id, self.id_room, message_content, timestamp))
         
-        print(f"Message sent to room {self.id_room}: {message_content}")
 
 # This would be used after a successful login and joining a room
 if __name__ == "__main__":
@@ -40,3 +39,5 @@ if __name__ == "__main__":
         # Example of sending a message
         message_content = input("Enter your message: ")
         message_client.send_message(message_content)
+
+    
