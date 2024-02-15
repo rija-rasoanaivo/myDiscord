@@ -1,11 +1,13 @@
 from tkinter import *
 import customtkinter as ctk
+from Login import * 
+from MainPage_graph import *
 
 from ..backend.Login import Login
 
 
 
-class Login(Tk):
+class Login_graphic(Tk):
     def __init__(self):
         super().__init__()
 
@@ -31,20 +33,20 @@ class Login(Tk):
         # creation champ pour le prenom
         self.firstname = ctk.CTkLabel(self, text= "Firstname", width=50, height= 20, font=('Agency FB', 22, 'bold'), text_color="white")
         self.firstname.place(x=200, y=220, anchor= CENTER )
-        entry = ctk.CTkEntry(self, width=150, height=30, corner_radius= 8, fg_color= "white")
-        entry.place(x= 200, y =250, anchor = CENTER )
+        self.entry = ctk.CTkEntry(self, width=150, height=30, corner_radius= 8, fg_color= "white")
+        self.entry.place(x= 200, y =250, anchor = CENTER )
 
         # creation champ nom 
         self.surname = ctk.CTkLabel(self, text= "Surname", width=50, height=20, font=('Agency FB', 22, 'bold'), text_color= "white")
         self.surname.place(x= 200, y= 280, anchor = CENTER)
-        entry1 = ctk.CTkEntry(self, width=150, height=30, corner_radius= 8, fg_color= "white")
-        entry1.place(x=200, y= 310, anchor = CENTER)
+        self.entry1 = ctk.CTkEntry(self, width=150, height=30, corner_radius= 8, fg_color= "white")
+        self.entry1.place(x=200, y= 310, anchor = CENTER)
 
         # creation champ email
         self.email = ctk.CTkLabel(self,text= "Email", width=50, height=30,font=('Agency FB', 22, 'bold'), text_color= "white" )
         self.email.place(x=200, y=340, anchor= CENTER)
-        entry2 = ctk.CTkEntry(self, width=200, height=30, corner_radius= 8, fg_color= "white")
-        entry2.place(x=200, y= 370, anchor = CENTER)
+        self.entry2 = ctk.CTkEntry(self, width=200, height=30, corner_radius= 8, fg_color= "white")
+        self.entry2.place(x=200, y= 370, anchor = CENTER)
     
         # creation champ mdp
         self.password = ctk.CTkLabel(self, text="Password", width=50, height=30, font=('Agency FB', 22, 'bold'), text_color= "white")
@@ -70,7 +72,11 @@ class Login(Tk):
                                          border_color= "white",
                                          fg_color="#e74353",
                                          hover_color="#ef511c",
+<<<<<<< HEAD:class/frontend/Login.py
                                          command= self.verify_login
+=======
+                                         command= self.verify_login 
+>>>>>>> join:class/Login_graphic.py
                                          )
         self.buttonLogin.place(x= 70, y= 500)
 
@@ -96,7 +102,35 @@ class Login(Tk):
         else:
             self.entry3.configure(show="")
             self.password_visible = True
+
+    def verify_login(self):
+        # Créez une instance de la classe Login (backend)
+        login_backend = Login()
         
+        # Récupérez les valeurs des champs du formulaire
+        firstname = self.entry.get()
+        surname = self.entry1.get()
+        email = self.entry2.get()
+        password = self.entry3.get()
+
+        # Appelez la méthode login du backend pour vérifier les informations d'identification
+        success, user_id = login_backend.login(firstname, surname, email, password)
+
+        # Si la connexion est réussie (success est True), affichez la page principale
+        if success:
+            print("Welcome")
+            # Fermez la fenêtre de connexion
+            self.destroy()
+            # Affichez la page principale
+            app = MainPage_graph()
+            app.mainloop()
+        else:
+            print("Login failed. Please check your credentials.")
+
+
+
+        
+<<<<<<< HEAD:class/frontend/Login.py
     def verify_login(self):
         # Récupérer les valeurs des champs de saisie
         firstname = self.firstname_entry.get()
@@ -113,9 +147,11 @@ class Login(Tk):
             print("Login failed.")
             # Ajoutez ici le code pour afficher un message d'erreur à l'utilisateur ou effectuer d'autres actions en cas d'échec de la connexion    
             
+=======
+>>>>>>> join:class/Login_graphic.py
 
 if __name__ == "__main__":
-    login = Login()
+    login = Login_graphic()
     
     login.mainloop()
         
