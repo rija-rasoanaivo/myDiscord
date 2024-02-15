@@ -23,10 +23,8 @@ class Chatting:
         success, user_id = self.login_class.login()
         if success:
             self.user_id = user_id
-            print("Login successful!")
             return True
         else:
-            print("Login failed.")
             return False
 
     def select_chat_room(self):
