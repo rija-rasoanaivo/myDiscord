@@ -1,6 +1,6 @@
 import socket
 import select
-from MyDb import MyDb
+from MyDb import *
 
 class Server:
     db = MyDb("82.165.185.52", "marijo", "Rijoma13!", "manon-rittling_mydiscord")

@@ -1,4 +1,4 @@
-from Server import Server
+from Server import *
 from datetime import datetime
 
 class Message:

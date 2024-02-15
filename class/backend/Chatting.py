@@ -1,7 +1,6 @@
 from threading import Thread
 from Message import Message
-from Login import Login
-from MyDb import MyDb
+from Login import *
 import time
 # Assurez-vous d'importer vos classes ici. Exemple:
 # from MyDb import MyDb
