@@ -24,8 +24,10 @@ class Chatting:
         if self.can_join_room(room_id):
             self.current_room = room_id
             self.load_messages()
+            return True
         else:
             print("You do not have the permission to join this room.")
+            return False
 
     def can_join_room(self, room_id):
         # Vérifier si la salle de chat est publique ou privée
@@ -74,15 +76,17 @@ class Chatting:
 
     def refresh_messages(self):
         while True:
-            time.sleep(10)
+            time.sleep(3) # Attendre 3 secondes avant de rafraîchir les messages
             self.load_messages()
 
     def start_chat_session(self):
         if self.login():
-            self.select_chat_room()
-            Thread(target=self.refresh_messages, daemon=True).start()
-            while True:
-                self.send_message()
+            if self.select_chat_room():  # S'assurer que l'utilisateur a rejoint une salle
+                Thread(target=self.refresh_messages, daemon=True).start() # Démarrer un thread pour rafraîchir les messages toutes les 10 secondes, Le paramètre daemon spécifie si le thread est un "daemon". Un thread daemon en Python est un thread qui s'exécute en arrière-plan et qui ne bloque pas le programme pour attendre qu'il se termine.
+                while True:
+                    self.send_message()
+            else:
+                print("Unable to join any chat room. Session will not start.")
 
 if __name__ == "__main__":
     db = MyDb("82.165.185.52", "marijo", "Rijoma13!", "manon-rittling_mydiscord") 
