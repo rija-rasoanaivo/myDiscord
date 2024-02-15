@@ -1,5 +1,5 @@
 from threading import Thread
-from Message import Message
+from Message import *
 from Login import *
 import time
 
