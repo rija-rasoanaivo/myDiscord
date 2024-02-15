@@ -1,5 +1,4 @@
 import socket
-from Message import *
 import threading
 
 class Chatting:
@@ -12,9 +11,16 @@ class Chatting:
         try:
             self.client_socket.connect((self.host, self.port))
             print("Connected to server")
-            self.receive_messages()
+            self.get_room_list()
         except Exception as e:
             print(f"Error connecting to server: {e}")
+
+    def get_room_list(self):
+        try:
+            room_list = self.client_socket.recv(1024).decode('utf-8')
+            print(room_list)  # Afficher la liste des rooms proposées par le serveur
+        except Exception as e:
+            print(f"Error getting room list: {e}")
 
     def send_message(self):
         while True:
@@ -29,7 +35,11 @@ class Chatting:
             room_choice = input("Choose a room by entering its number: ")
             self.client_socket.sendall(room_choice.encode("utf-8"))
             
-            # Vous pouvez continuer ici pour recevoir et afficher les messages dans la salle choisie
+            while True:
+                # Recevoir et afficher les messages de la salle choisie
+                server_message = self.client_socket.recv(1024).decode('utf-8').strip()
+                if server_message:
+                    print(server_message)
         except Exception as e:
             print(f"Error: {e}")
 

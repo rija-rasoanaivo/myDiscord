@@ -1,93 +1,3 @@
-# import socket
-# import select
-# from MyDb import MyDb
-
-# class Server:
-#     db = MyDb("82.165.185.52", "marijo", "Rijoma13!", "manon-rittling_mydiscord")
-#     db.connexion()
-
-#     def __init__(self):
-#         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-#         self.socket_objects = [self.server_socket]
-#         self.chatroom = {'A': [], 'B': []}
-#         self.host = '127.0.0.1'
-#         self.port = 9901
-
-#     def start(self):
-#         try:
-#             self.server_socket.bind((self.host, self.port))
-#             self.server_socket.listen(10)
-#             print("Welcome to the J.M.R Server")
-#             self.run_server()
-#         except Exception as e:
-#             print(f"Error starting server: {e}")
-#             self.server_socket.close()
-
-#     def run_server(self):
-#         while True:
-#             try:
-#                 readable, _, _ = select.select(self.socket_objects, [], [])
-#                 for sock in readable:
-#                     if sock == self.server_socket:
-#                         self.handle_new_connection(sock)
-#                     else:
-#                         self.handle_client_message(sock)
-#             except Exception as e:
-#                 print(f"Error in server loop: {e}")
-
-#     def handle_new_connection(self, server_socket):
-#         user_socket, address = server_socket.accept()
-#         print(f"New connection from {address}")
-#         user_socket.sendall(b"Welcome to the J.M.R Server\nPlease choose a channel: A, B\n")
-#         self.socket_objects.append(user_socket)
-
-#     def handle_client_message(self, client_socket):
-#         try:
-#             data = client_socket.recv(1024).decode('utf-8').strip()
-#             if data:
-#                 if client_socket in self.chatroom['A']:
-#                     self.send_to_channel('A', data)
-#                 elif client_socket in self.chatroom['B']:
-#                     self.send_to_channel('B', data)
-#                 else:
-#                     self.join_channel(client_socket, data)
-#             else:
-#                 self.disconnect_client(client_socket)
-#         except Exception as e:
-#             print(f"Error handling message: {e}")
-#             self.disconnect_client(client_socket)
-
-#     def join_channel(self, client_socket, channel):
-#         if channel in ['A', 'B']:
-#             self.chatroom[channel].append(client_socket)
-#             client_socket.sendall(f"Welcome to channel {channel}\n".encode('utf-8'))
-#         else:
-#             client_socket.sendall(b"Invalid channel\n")
-
-#     def send_to_channel(self, channel, message):
-#         for sock in self.chatroom[channel]:
-#             try:
-#                 sock.sendall(f"Channel {channel}: {message}\n".encode('utf-8'))
-#             except Exception as e:
-#                 print(f"Error sending message to channel {channel}: {e}")
-#                 self.disconnect_client(sock)
-
-#     def disconnect_client(self, client_socket):
-#         try:
-#             client_socket.close()
-#             self.socket_objects.remove(client_socket)
-#             for channel in self.chatroom.values():
-#                 if client_socket in channel:
-#                     channel.remove(client_socket)
-#             print(f"Client disconnected: {client_socket}")
-#         except Exception as e:
-#             print(f"Error disconnecting client: {e}")
-
-
-# if __name__ == "__main__":
-#     server = Server()
-#     server.start()
-
 import socket
 import select
 from MyDb import MyDb
@@ -99,6 +9,7 @@ class Server:
     def __init__(self):
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket_objects = [self.server_socket]
+        self.room_sockets = {}  # Dictionnaire pour stocker les sockets des rooms
         self.clients = {}
         self.host = '127.0.0.1'
         self.port = 9901
@@ -132,14 +43,21 @@ class Server:
         self.clients[user_socket] = address
 
         # Récupérer les détails des salles de discussion depuis la base de données
-        rooms = self.db.executeRequete("SELECT id_room, type_room name FROM chatRoom")
+        rooms = self.db.executeRequete("SELECT id_room, name, type_room FROM chatRoom")
+
+        # Créer un socket pour chaque room et les ajouter au dictionnaire
+        for room in rooms:
+            room_id, room_name, room_type = room
+            room_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            room_port = 9000 + room_id  # Utilisez un port différent pour chaque room
+            room_socket.bind((self.host, room_port))
+            room_socket.listen(10)
+            self.socket_objects.append(room_socket)
+            self.room_sockets[room_id] = (room_socket, room_name)
+
+        # Envoyer la liste des salles disponibles à l'utilisateur
         room_list = "\n".join([f"{room[0]} - {room[1]}" for room in rooms])
         user_socket.sendall(f"Welcome to the J.M.R Server\nPlease choose a room:\n{room_list}\n".encode('utf-8'))
-
-        # Assurez-vous de lire tous les résultats de la requête SQL
-        for room in rooms:
-            print(room)
-
 
     def handle_client_message(self, client_socket):
         try:
@@ -147,24 +65,16 @@ class Server:
             if data:
                 # Gérer la sélection de la salle de discussion par le client
                 room_id = int(data)
-                room_name = self.db.executeRequete("SELECT name FROM chatRoom WHERE id_room = ?", (room_id,))
-                if room_name:
-                    self.broadcast_message(client_socket, f"Joined room: {room_name[0][0]}")
+                if room_id in self.room_sockets:
+                    room_socket, _ = self.room_sockets[room_id]
+                    # Connecter le client au socket de la room sélectionnée
+                    client_socket.sendall(f"Joined room: {room_id}\n".encode('utf-8'))
+                    room_socket.accept()
                 else:
                     client_socket.sendall(b"Invalid room selection\n")
         except Exception as e:
             print(f"Error handling message: {e}")
             self.disconnect_client(client_socket)
-
-    def broadcast_message(self, sender_socket, message):
-        sender_address = self.clients[sender_socket]
-        for client_socket, client_address in self.clients.items():
-            if client_socket != sender_socket:
-                try:
-                    client_socket.sendall(f"{sender_address}: {message}\n".encode('utf-8'))
-                except Exception as e:
-                    print(f"Error sending message to client: {e}")
-                    self.disconnect_client(client_socket)
 
     def disconnect_client(self, client_socket):
         try:
@@ -176,15 +86,5 @@ class Server:
             print(f"Error disconnecting client: {e}")
 
 if __name__ == "__main__":
-    import socket
-
-# Créez un objet de socket simulé
-    simulated_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    simulated_address = ('127.0.0.1', 12345)
-
-# Créez une instance du serveur
     server = Server()
-
-# Appelez la méthode handle_new_connection avec l'objet de socket simulé
-    server.handle_new_connection(simulated_socket, simulated_address)
-
+    server.start()
