@@ -2,6 +2,9 @@ from Server import Server
 
 class Login:
 
+    def __init__(self, db):
+        self.db = db
+
     def login(self):
         firstname = input("Enter your first name: ")
         name = input("Enter your name: ")
