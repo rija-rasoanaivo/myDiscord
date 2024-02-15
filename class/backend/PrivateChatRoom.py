@@ -94,4 +94,4 @@ class PrivateChatRoom:
 
 if __name__ == "__main__":
     join_private_chat_room = PrivateChatRoom()
-    join_private_chat_room.admin_remove_member_private_chat_room()
+    join_private_chat_room.admin_add_member_private_chat_room() 

@@ -20,9 +20,34 @@ class Chatting:
             return False
 
     def select_chat_room(self):
-        self.current_room = input("Enter the chatroom id you want to join: ")
-        self.load_messages()
+        room_id = input("Enter the chatroom id you want to join: ")
+        if self.can_join_room(room_id):
+            self.current_room = room_id
+            self.load_messages()
+        else:
+            print("You do not have the permission to join this room.")
 
+    def can_join_room(self, room_id):
+        # Vérifier si la salle de chat est publique ou privée
+        query = "SELECT type_room FROM chatRoom WHERE id_room = %s"
+        room_type = self.db.fetch(query, (room_id,))
+
+        if room_type:
+            if room_type[0][0] == 'public':
+                return True  # Tous les utilisateurs peuvent rejoindre une salle publique
+            else:
+                # Vérifier si l'utilisateur est admin ou membre de la salle privée
+                query = """
+                SELECT type_authorisation FROM privateChatRoom
+                WHERE id_user = %s AND id_room = %s
+                """
+                user_auth = self.db.fetch(query, (self.user_id, room_id))
+                # Si l'utilisateur a un enregistrement dans privateChatRoom, il peut rejoindre
+                return bool(user_auth)
+        else:
+            print("Chat room does not exist.")
+            return False
+        
     def load_messages(self):
         query = """
         SELECT id_user, message_content, hour
