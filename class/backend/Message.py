@@ -1,4 +1,4 @@
-from Server import *
+from PrivateChatRoom import *
 from datetime import datetime
 
 class Message:
