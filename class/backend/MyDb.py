@@ -52,6 +52,7 @@ class MyDb:
 # test code
 # db = MyDb("82.165.185.52", "marijo", "Rijoma13!", "manon-rittling_mydiscord")
 # db.connexion()
+# db.executeRequete("SELECT * FROM user")
 
 # table = "chatRoom"
 # fields = "name, type_room"
