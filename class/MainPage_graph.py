@@ -1,8 +1,8 @@
 from tkinter import *
 import customtkinter as ctk
-from class.frontend.Login_graphic import Login
 
-class MainPage(Tk):
+
+class MainPage_graph(Tk):
     def __init__(self):
         super().__init__()
 
@@ -29,7 +29,7 @@ class MainPage(Tk):
         # creation bouton deconnexion
         self.imageDeconnexion = PhotoImage(file="image/boutons/deconnexion1.png")
         # Création d'un Label avec l'image chargée comme image de fond
-        self.buttonDeconnexion = ctk.CTkButton(self, image=self.imageDeconnexion, text=None, width=10, height=10, fg_color="#c7c1f2", border_color="black",corner_radius= 20, border_width=1, hover_color="#a78ff7", command=self.returnLogin)
+        self.buttonDeconnexion = ctk.CTkButton(self, image=self.imageDeconnexion, text=None, width=10, height=10, fg_color="#c7c1f2", border_color="black",corner_radius= 20, border_width=1, hover_color="#a78ff7", command="retour page login")
         self.buttonDeconnexion.place(x=15, y=580)
 
         # creation de la frame a afficher sur la droite de mon bouton salon
@@ -136,12 +136,12 @@ class MainPage(Tk):
             self.text.place(x=50, y=50)
            
          
-    def returnLogin(self):
-        self.destroy()
-        app = Login()
-        app.mainloop()
+    # def returnLogin(self):
+    #     self.destroy()
+    #     app = Login_graphic()
+    #     app.mainloop()
             
                 
 if __name__ == "__main__":
-        app = MainPage()
+        app = MainPage_graph()
         app.mainloop()

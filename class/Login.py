@@ -5,6 +5,10 @@ class Login:
         self.server = Server()
 
     def login(self, firstname, name, email, password):
+        self.firstname = firstname
+        self.name = name
+        self.email = email
+        self.password = password
         result = self.server.db.fetch(
             "SELECT id FROM user WHERE firstName=%s AND name=%s AND email=%s AND password=%s",
             (firstname, name, email, password)
