@@ -1,6 +1,6 @@
 from tkinter import *
 import customtkinter as ctk
-from Login import Login
+from class.frontend.Login_graphic import Login
 
 class MainPage(Tk):
     def __init__(self):
@@ -124,7 +124,6 @@ class MainPage(Tk):
 
 
     def frame4_message(self):
-        
 
         if self.frame4.winfo_ismapped():
             self.frame4.place_forget()

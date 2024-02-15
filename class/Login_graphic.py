@@ -1,5 +1,6 @@
 from tkinter import *
 import customtkinter as ctk
+from backend.Login import Login 
 
 
 
@@ -93,6 +94,28 @@ class Login(Tk):
         else:
             self.entry3.configure(show="")
             self.password_visible = True
+
+    # Instanciez la classe Login
+login_instance = Login()
+
+# Fonction qui sera appelée lorsque le bouton de connexion est cliqué
+def on_login_button_clicked():
+    # Récupérez les informations du formulaire
+    firstname = get_firstname_from_form()
+    name = get_name_from_form()
+    email = get_email_from_form()
+    password = get_password_from_form()
+    
+    # Utilisez la méthode login pour vérifier les informations d'identification
+    success, user_id = login_instance.login(firstname, name, email, password)
+    
+    # Si la connexion est réussie, effectuez les actions appropriées
+    if success:
+        # Redirigez l'utilisateur vers une nouvelle page ou effectuez d'autres actions
+        redirect_to_dashboard(user_id)
+    else:
+        # Affichez un message d'erreur à l'utilisateur
+        show_error_message("Login failed. Please check your credentials.")
         
             
 
