@@ -9,7 +9,7 @@ import time
 # from Message import Message
 # from ChatRoom import ChatRoom # Si vous avez une classe pour gérer les chatrooms
 
-class ChatClient:
+class Chatting:
     def __init__(self, db):
         # Supposons que db est une instance de votre classe MyDb ou une classe similaire pour la gestion de la base de données
         self.db = db
@@ -73,5 +73,5 @@ class ChatClient:
 if __name__ == "__main__":
     # Assurez-vous de créer une instance de MyDb ou de votre classe de gestion de base de données ici
     db = MyDb("82.165.185.52", "marijo", "Rijoma13!", "manon-rittling_mydiscord")  # Exemple, remplacez par vos vraies informations de connexion
-    chat_client = ChatClient(db)
+    chat_client = Chatting(db)
     chat_client.start_chat_session()
