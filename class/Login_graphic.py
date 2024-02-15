@@ -3,7 +3,7 @@ import customtkinter as ctk
 from Login import * 
 from MainPage_graph import *
 
-from ..backend.Login import Login
+
 
 
 
@@ -72,11 +72,7 @@ class Login_graphic(Tk):
                                          border_color= "white",
                                          fg_color="#e74353",
                                          hover_color="#ef511c",
-<<<<<<< HEAD:class/frontend/Login.py
-                                         command= self.verify_login
-=======
                                          command= self.verify_login 
->>>>>>> join:class/Login_graphic.py
                                          )
         self.buttonLogin.place(x= 70, y= 500)
 
@@ -130,25 +126,6 @@ class Login_graphic(Tk):
 
 
         
-<<<<<<< HEAD:class/frontend/Login.py
-    def verify_login(self):
-        # Récupérer les valeurs des champs de saisie
-        firstname = self.firstname_entry.get()
-        name = self.name_entry.get()
-        email = self.email_entry.get()
-        password = self.password_entry.get()
-
-        # Appeler la méthode de vérification de connexion du backend
-        login_success, user_id = self.login_controller.login(firstname, name, email, password)
-        if login_success:
-            print(f"User ID is: {user_id}")
-            # Ajoutez ici le code pour rediriger l'utilisateur vers une autre page ou effectuer d'autres actions après la connexion réussie
-        else:
-            print("Login failed.")
-            # Ajoutez ici le code pour afficher un message d'erreur à l'utilisateur ou effectuer d'autres actions en cas d'échec de la connexion    
-            
-=======
->>>>>>> join:class/Login_graphic.py
 
 if __name__ == "__main__":
     login = Login_graphic()
