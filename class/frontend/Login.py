@@ -1,12 +1,15 @@
 from tkinter import *
 import customtkinter as ctk
 
+from ..backend.Login import Login
+
 
 
 class Login(Tk):
     def __init__(self):
         super().__init__()
 
+    
         # creation de la fenetre
         self.geometry("400x650")
         self.title("Login Page") 
@@ -67,7 +70,7 @@ class Login(Tk):
                                          border_color= "white",
                                          fg_color="#e74353",
                                          hover_color="#ef511c",
-                                         command= "welcome"
+                                         command= self.verify_login
                                          )
         self.buttonLogin.place(x= 70, y= 500)
 
@@ -94,6 +97,21 @@ class Login(Tk):
             self.entry3.configure(show="")
             self.password_visible = True
         
+    def verify_login(self):
+        # Récupérer les valeurs des champs de saisie
+        firstname = self.firstname_entry.get()
+        name = self.name_entry.get()
+        email = self.email_entry.get()
+        password = self.password_entry.get()
+
+        # Appeler la méthode de vérification de connexion du backend
+        login_success, user_id = self.login_controller.login(firstname, name, email, password)
+        if login_success:
+            print(f"User ID is: {user_id}")
+            # Ajoutez ici le code pour rediriger l'utilisateur vers une autre page ou effectuer d'autres actions après la connexion réussie
+        else:
+            print("Login failed.")
+            # Ajoutez ici le code pour afficher un message d'erreur à l'utilisateur ou effectuer d'autres actions en cas d'échec de la connexion    
             
 
 if __name__ == "__main__":
