@@ -5,7 +5,7 @@ from MainPage_graph import *
 
 
 
-class Login_graphic(Tk):
+class Login_graph(Tk):
     def __init__(self):
         super().__init__()
 
@@ -125,7 +125,7 @@ class Login_graphic(Tk):
         
 
 if __name__ == "__main__":
-    login = Login_graphic()
+    login = Login_graph()
     
     login.mainloop()
         
