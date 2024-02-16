@@ -1,7 +1,6 @@
 from threading import Thread
 import keyboard
 from Message import *
-from Login import *
 import time
 
 class Chatting:
