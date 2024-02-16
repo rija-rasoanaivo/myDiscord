@@ -1,5 +1,4 @@
 from threading import Thread
-import keyboard
 from Message import *
 import time
 
@@ -70,23 +69,53 @@ class Chatting:
             self.last_message_timestamp = timestamp  # Mise à jour de l'horodatage du dernier message affiché
 
     def send_message(self):
-        message_content = input("Enter your message: ")
-        message = Message(self.user_id, self.current_room)
-        message.send_message(message_content)
+        # Modification ici : pas de paramètre 'message_content' nécessaire
+        # car la saisie du message est gérée directement dans cette méthode.
+        message_content = input("Enter your message (or type 'CHANGE' to switch rooms): ")
+        if message_content == "CHANGE":
+            # L'utilisateur souhaite changer de chatroom.
+            if self.select_chat_room():
+                print("Switched to new chat room.")
+                # Optionnel : Rafraîchir immédiatement les messages après avoir changé de chatroom.
+                self.load_messages()
+        else:
+            # Traitement normal de l'envoi d'un message.
+            message = Message(self.user_id, self.current_room)
+            message.send_message(message_content)
 
     def refresh_messages(self):
         while True:
-            time.sleep(3) # Attendre 3 secondes avant de rafraîchir les messages
-            self.load_messages()
+            time.sleep(3)
+            # Créez une nouvelle connexion à chaque itération.
+            db = MyDb("82.165.185.52", "marijo", "Rijoma13!", "manon-rittling_mydiscord")
+            query = """
+            SELECT id_user, message_content, hour
+            FROM message
+            WHERE id_room = %s
+            """
+            params = (self.current_room,)
+            if self.last_message_timestamp:
+                query += " AND hour > %s"
+                params += (self.last_message_timestamp,)
+
+            query += " ORDER BY hour ASC"
+            messages = db.fetch(query, params)  # Utilisez la nouvelle connexion ici.
+
+            for id_user, content, timestamp in messages:
+                print(f"[{timestamp}] User {id_user}: {content}")
+                self.last_message_timestamp = timestamp
 
     def start_chat_session(self):
         if self.login():
             if self.select_chat_room():  # S'assurer que l'utilisateur a rejoint une salle
-                Thread(target=self.refresh_messages, daemon=True).start() # Démarrer un thread pour rafraîchir les messages toutes les 10 secondes, Le paramètre daemon spécifie si le thread est un "daemon". Un thread daemon en Python est un thread qui s'exécute en arrière-plan et qui ne bloque pas le programme pour attendre qu'il se termine.
+                print("You can type 'CHANGE' at any time to switch chat rooms.")
+                Thread(target=self.refresh_messages, daemon=True).start() # Démarrer un thread pour rafraîchir les messages
                 while True:
-                    self.send_message()
+                    self.send_message()  # L'utilisateur est invité à entrer un message ici, ou 'CHANGE' pour changer de salle
             else:
                 print("Unable to join any chat room. Session will not start.")
+        else:
+            print("Login failed. Unable to start the chat session.")
 
 if __name__ == "__main__":
     db = MyDb("82.165.185.52", "marijo", "Rijoma13!", "manon-rittling_mydiscord") 
