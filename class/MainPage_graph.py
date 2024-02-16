@@ -21,12 +21,12 @@ class MainPage_graph(Tk):
         # telecharger le logo placement du logo
         self.logo = PhotoImage(file="image/logo/logoJRM3.png")
         self.logo_label = Label(self, image=self.logo, bg='#c7c1f2')
-        self.logo_label.pack(side="top", anchor="nw", padx=15)
+        self.logo_label.pack(side="top", anchor="nw", padx=10)
 
         # creation bouton salon
         self.imageRoom  = PhotoImage(file="image/boutons/room.png")
             # Création d'un Label avec l'image chargée comme image de fond
-        self.buttonRoom = ctk.CTkButton(self, image=self.imageRoom,text= None, corner_radius=10, width=10, height=10,fg_color="#c7c1f2",border_color="black", border_width= 1 ,hover_color="#a78ff7", command = self.toggle_right_frame)
+        self.buttonRoom = ctk.CTkButton(self, image=self.imageRoom,text= None, width=10, height=10,fg_color="#c7c1f2",border_color="black", border_width= 1,  corner_radius=8 ,hover_color="#a78ff7", command = self.toggle_right_frame)
         self.buttonRoom.pack(side="top", anchor="nw", padx=15, pady=30)
 
         # creation bouton deconnexion
@@ -137,14 +137,47 @@ class MainPage_graph(Tk):
             self.frame4.destroy()
         else:
             self.frame4.place(x=300, y=0)
+
+            # creation de l'affichage pour afficher les messages user1
+            self.messageUser1 = ctk.CTkFrame(self.frame4, width=200, height=40, corner_radius=10, fg_color="white")
+            self.messageUser1.place(x=50, y=20)
+
+            # creation de l'affichage pour afficher les messages user2
+            self.messageUser2 = ctk.CTkFrame(self.frame4, width=200, height=40, corner_radius=10, fg_color="white")
+            self.messageUser2.place(x=260, y=100)
             
-            # creation boxtext message
-            self.text = ctk.CTkTextbox(self.frame4, width=250, height=50, corner_radius=5, fg_color="white", bg_color="#23272d", border_color="#38454c", border_width=1)
-            self.text.place(x=50, y=50)
+            
+            # creation saisi message par l'utilisateur
+            self.text = ctk.CTkTextbox(self.frame4, width=250, height=50, corner_radius=13, fg_color="white", bg_color="#23272d", border_color="#38454c", border_width=1)
+            self.text.place(x=200, y=600, anchor = CENTER)
+            # creation bouton envoyer message
+            self.imageSend = PhotoImage(file="image/boutons/envoyer1.png")
+            self.buttonSend = ctk.CTkButton(self.frame4, image=self.imageSend, text=None, width=10, height=10, fg_color="#23b0ed", border_color="black", border_width=1, hover_color="#a78ff7",corner_radius= 10)
+            self.buttonSend.place(x=400, y=600, anchor = CENTER)
+
+        
+            
+            # creation des emoticones
+            self.imageEmoticones1 = PhotoImage(file="image/emoji/heartred1.png")
+            self.buttonEmoticones1 = ctk.CTkButton(self.frame4, image=self.imageEmoticones1, text=None, width=5, height=5, fg_color="#23272d",hover_color="#23b0ed")
+            self.buttonEmoticones1.place(x=100, y=530)
+            self.imageEmoticones2 = PhotoImage(file="image/emoji/loveheart.png")
+            self.buttonEmoticones2 = ctk.CTkButton(self.frame4, image=self.imageEmoticones2, text=None, width=5, height=5, fg_color="#23272d", hover_color="#23b0ed")
+            self.buttonEmoticones2.place(x=130, y=530)
+            self.imageEmoticones3 = PhotoImage(file="image/emoji/mdr.png")
+            self.buttonEmoticones3 = ctk.CTkButton(self.frame4, image=self.imageEmoticones3, text=None, width=5, height=5, fg_color="#23272d", hover_color="#23b0ed")
+            self.buttonEmoticones3.place(x=160, y=530)
+            self.imageEmoticones4 = PhotoImage(file="image/emoji/pouce.png")
+            self.buttonEmoticones4 = ctk.CTkButton(self.frame4, image=self.imageEmoticones4, text=None, width=5, height=5, fg_color="#23272d", hover_color="#23b0ed")
+            self.buttonEmoticones4.place(x=190, y=530)
+            self.imageEmoticones5 = PhotoImage(file="image/emoji/eyesopen.png")
+            self.buttonEmoticones5 = ctk.CTkButton(self.frame4, image=self.imageEmoticones5, text=None, width=5, height=5, fg_color="#23272d", hover_color="#23b0ed")
+            self.buttonEmoticones5.place(x=220, y=530)
+
+            
            
     # methode pour retourner a la page de connexion
 
-    
     def returnPageLogin(self):  
         self.destroy()
         go_login = Login_graph()
