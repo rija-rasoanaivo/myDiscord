@@ -16,7 +16,7 @@ class Register:
             print("An account with this email already exists. Please use a different email.")
         else:
             table = "user"
-            fields = "name, firstName, email, password"
+            fields = " firstName, name, email, password"
             values = f" '{firstname}', '{name}', '{email}', '{password}'"
             # Utilisation de la méthode 'create' pour insérer le nouvel utilisateur dans la base de données.
             Server.db.create(table, fields, values)
@@ -29,6 +29,8 @@ class Register:
             (email,)
         )
         return bool(result)  # Retourne True si l'email existe, False sinon.
-    
-user_manager = Register()
-user_manager.register()
+
+
+if __name__ == "__main__":
+    user_manager = Register()
+    user_manager.register()

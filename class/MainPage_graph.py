@@ -1,5 +1,6 @@
 from tkinter import *
 import customtkinter as ctk
+from Register_graph import *
 
 
 class MainPage_graph(Tk):
