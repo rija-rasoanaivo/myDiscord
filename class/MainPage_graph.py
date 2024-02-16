@@ -1,6 +1,8 @@
 from tkinter import *
 import customtkinter as ctk
 from Register_graph import *
+from ChatRoom import *
+
 
 
 class MainPage_graph(Tk):
@@ -30,7 +32,7 @@ class MainPage_graph(Tk):
         # creation bouton deconnexion
         self.imageDeconnexion = PhotoImage(file="image/boutons/deconnexion1.png")
         # Création d'un Label avec l'image chargée comme image de fond
-        self.buttonDeconnexion = ctk.CTkButton(self, image=self.imageDeconnexion, text=None, width=10, height=10, fg_color="#c7c1f2", border_color="black",corner_radius= 20, border_width=1, hover_color="#a78ff7", command="retour page login")
+        self.buttonDeconnexion = ctk.CTkButton(self, image=self.imageDeconnexion, text=None, width=10, height=10, fg_color="#c7c1f2", border_color="black",corner_radius= 20, border_width=1, hover_color="#a78ff7", command= self.returnPageLogin)
         self.buttonDeconnexion.place(x=15, y=580)
 
         # creation de la frame a afficher sur la droite de mon bouton salon
@@ -41,6 +43,8 @@ class MainPage_graph(Tk):
 
         # creation frame4 pour afficher les messages
         self.frame4 = ctk.CTkFrame(self, width=500, height=800, corner_radius=2, fg_color="#23272d")
+
+        
         
     # gestion de la frame a afficher sur la droite de mon bouton salon en cliquant sur le bouton
     def toggle_right_frame(self):
@@ -49,7 +53,7 @@ class MainPage_graph(Tk):
         else:
             self.frame2.place(x=100, y=0)
             # Création et placement des libellés pour chaque nom de salon
-            salon_names = {"SALON 1", "SALON 2", "Salon 3"}
+            salon_names = ChatRoom().get_chat_room_names()
             for i, salon_name in enumerate(salon_names):
                 label = ctk.CTkButton(self.frame2, text=salon_name, width=70, height=20, corner_radius=10, font=("Agency FB", 18, 'bold'), fg_color="#aeb8f9",hover_color="#c7c1f2", border_color="white", border_width=1, command= self.frame4_message)
                 label.place(x=80, y=50 + i * 50)
@@ -67,8 +71,8 @@ class MainPage_graph(Tk):
         # Si la frame3 est déjà affichée, la faire disparaître et détruire ses éléments
         if self.frame3.winfo_ismapped():
             self.frame3.place_forget()
-            self.label.winfo_ismapped()
-            self.label.place_forget()
+            self.titre.winfo_ismapped()
+            self.titre.place_forget()
             self.roomName.winfo_ismapped()
             self.roomName.place_forget()
             self.entry_roomName.winfo_ismapped()
@@ -83,8 +87,10 @@ class MainPage_graph(Tk):
             self.members.place_forget()
             self.combo.winfo_ismapped()
             self.combo.place_forget()
-            self.buttonLogin.winfo_ismapped()
-            self.buttonLogin.place_forget()
+            self.buttonValid.winfo_ismapped()
+            self.buttonValid.place_forget()
+            self.label.winfo_ismapped()
+            self.label.place_forget()
     
 
         else: # Sinon, afficher la frame3 et ses éléments
@@ -92,8 +98,8 @@ class MainPage_graph(Tk):
             self.frame3.place(x=400, y=150)
 
             # Création du titre de la frame
-            self.label = ctk.CTkLabel(self, text="CREATE YOUR ROOM", width=20, height=20, font=('Broadway', 18), text_color="#c7c1f2", fg_color="#415059")
-            self.label.place(x=550, y=180, anchor=CENTER)
+            self.titre = ctk.CTkLabel(self, text="CREATE YOUR ROOM", width=20, height=20, font=('Broadway', 18), text_color="#c7c1f2", fg_color="#415059")
+            self.titre.place(x=550, y=180, anchor=CENTER)
 
             # Création du champ pour le nom du salon
             self.roomName = ctk.CTkLabel(self, text="Room Name", width=20, height=20, font=('Agency FB', 15, 'bold'), text_color="#c7c1f2", fg_color="#415059")
@@ -120,8 +126,8 @@ class MainPage_graph(Tk):
             self.combo.place(x=550, y=370, anchor=CENTER)
 
             # Création du bouton "valider"
-            self.buttonLogin = ctk.CTkButton(self, text="VALID", text_color="#38454c", width=80, height=20, corner_radius=10, font=("Agency FB", 21, "bold"), border_width=2, border_color="white", bg_color="#415059", fg_color="#c7c1f2", hover_color="#a78ff7", command="doit ajouter le salon dans la base de données")
-            self.buttonLogin.place(x=550, y=410, anchor=CENTER)
+            self.buttonValid = ctk.CTkButton(self, text="VALID", text_color="#38454c", width=80, height=20, corner_radius=10, font=("Agency FB", 21, "bold"), border_width=2, border_color="white", bg_color="#415059", fg_color="#c7c1f2", hover_color="#a78ff7", command=self.join_datacCreateroom)
+            self.buttonValid.place(x=550, y=410, anchor=CENTER)
 
 
     def frame4_message(self):
@@ -136,12 +142,35 @@ class MainPage_graph(Tk):
             self.text = ctk.CTkTextbox(self.frame4, width=250, height=50, corner_radius=5, fg_color="white", bg_color="#23272d", border_color="#38454c", border_width=1)
             self.text.place(x=50, y=50)
            
-         
-    # def returnLogin(self):
-    #     self.destroy()
-    #     app = Login_graphic()
-    #     app.mainloop()
-            
+    # methode pour retourner a la page de connexion
+
+    
+    def returnPageLogin(self):  
+        self.destroy()
+        go_login = Login_graph()
+        go_login.mainloop()
+        
+        
+    def join_datacCreateroom(self):
+        # recupere les valeurs saisies par l'utilisateur
+        roomName = self.entry_roomName.get()
+        typeRoom = self.checkPublic.get()
+        typeRoom = self.checkPrivate.get()
+
+        # insertion des valeurs dans la base de données par la classe ChatRoom
+        create_room = ChatRoom()
+        create_room.create_chat_room(roomName, typeRoom)
+
+        # affichage d'un message de confirmation
+        self.label = ctk.CTkLabel(self, text="Room created", width=20, height=20, font=('Agency FB', 30, 'bold'), text_color="white", fg_color="#415059")
+        self.label.place(x=550, y=300, anchor=CENTER)
+
+        
+        # Actualisation de la liste des salons
+        self.toggle_right_frame()
+        
+
+              
                 
 if __name__ == "__main__":
         app = MainPage_graph()

@@ -4,8 +4,6 @@ from Login import *
 from MainPage_graph import *
 
 
-
-
 class Login_graph(Tk):
     def __init__(self):
         super().__init__()
@@ -126,11 +124,6 @@ class Login_graph(Tk):
         register = Register_graph()
         register.mainloop()
 
-     
-
-
-
-        
 
 if __name__ == "__main__":
     login = Login_graph()
