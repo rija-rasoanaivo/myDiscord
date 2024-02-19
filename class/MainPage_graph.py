@@ -3,6 +3,7 @@ import customtkinter as ctk
 from Register_graph import *
 from ChatRoom import *
 from PrivateChatRoom import *
+from Chatting import *
 
 
 
@@ -116,10 +117,6 @@ class MainPage_graph(Tk):
             self.checkPrivate = ctk.CTkCheckBox(self, text="Private", text_color="white", width=40, height=20, bg_color="#415059", corner_radius=5, border_color="white", border_width=1)
             self.checkPrivate.place(x=630, y=340, anchor=CENTER)
 
-            
-
-            
-            
 
             # Création du bouton "valider"
             self.buttonValid = ctk.CTkButton(self, text="VALID", text_color="#38454c", width=80, height=20, corner_radius=10, font=("Agency FB", 21, "bold"), border_width=2, border_color="white", bg_color="#415059", fg_color="#c7c1f2", hover_color="#a78ff7", command=self.join_datacCreateroom)
@@ -134,13 +131,12 @@ class MainPage_graph(Tk):
         else:
             self.frame4.place(x=300, y=0)
 
-            # creation de l'affichage pour afficher les messages user1
-            self.messageUser1 = ctk.CTkFrame(self.frame4, width=200, height=40, corner_radius=10, fg_color="white")
-            self.messageUser1.place(x=50, y=20)
-
-            # creation de l'affichage pour afficher les messages user2
-            self.messageUser2 = ctk.CTkFrame(self.frame4, width=200, height=40, corner_radius=10, fg_color="white")
-            self.messageUser2.place(x=260, y=100)
+            # Création et placement des libellés pour chaque message
+            display = Chatting()
+            messages =display.load_messages()
+            for i, message in enumerate(messages):
+                messageDisplay = ctk.CTkLabel(self.frame4, text=message, width=70, height=20, corner_radius=10, font=("Agency FB", 18, 'bold'), fg_color="#aeb8f9",bg_color="#aeb8f9")
+                messageDisplay.place(x=80, y=50 + i * 50)
             
             
             # creation saisi message par l'utilisateur
@@ -151,7 +147,6 @@ class MainPage_graph(Tk):
             self.buttonSend = ctk.CTkButton(self.frame4, image=self.imageSend, text=None, width=10, height=10, fg_color="#23b0ed", border_color="black", border_width=1, hover_color="#a78ff7",corner_radius= 10)
             self.buttonSend.place(x=400, y=600, anchor = CENTER)
 
-        
             
             # creation des emoticones
             self.imageEmoticones1 = PhotoImage(file="image/emoji/heartred1.png")
@@ -173,13 +168,13 @@ class MainPage_graph(Tk):
             
            
     # methode pour retourner a la page de connexion
-
     def returnPageLogin(self):  
         self.destroy()
         go_login = Login_graph()
         go_login.mainloop()
         
         
+    
     def join_datacCreateroom(self):
         # recupere les valeurs saisies par l'utilisateur
         roomName = self.entry_roomName.get()
@@ -198,13 +193,13 @@ class MainPage_graph(Tk):
         admin_join = PrivateChatRoom()
         admin_join.admin_join_private_chat_room()
 
-        # ajoute les membres dans le salon privé
-        admin_add = PrivateChatRoom()
-        admin_add.admin_add_member_private_chat_room()
-
         
         # Actualisation de la liste des salons
         self.toggle_right_frame()
+
+    
+    
+            
         
 
               

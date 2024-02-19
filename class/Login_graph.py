@@ -26,17 +26,17 @@ class Login_graph(Tk):
         self.label = ctk.CTkLabel(self, text= "LOGIN", width= 50, height=50,font=('Broadway', 25), text_color="white" )
         self.label.place(x= 200, y=160, anchor = CENTER)
 
-        # creation champ pour le prenom
-        self.firstname = ctk.CTkLabel(self, text= "Firstname", width=50, height= 20, font=('Agency FB', 22, 'bold'), text_color="white")
-        self.firstname.place(x=200, y=220, anchor= CENTER )
-        self.entry = ctk.CTkEntry(self, width=150, height=30, corner_radius= 8, fg_color= "white")
-        self.entry.place(x= 200, y =250, anchor = CENTER )
+        # # creation champ pour le prenom
+        # self.firstname = ctk.CTkLabel(self, text= "Firstname", width=50, height= 20, font=('Agency FB', 22, 'bold'), text_color="white")
+        # self.firstname.place(x=200, y=220, anchor= CENTER )
+        # self.entry = ctk.CTkEntry(self, width=150, height=30, corner_radius= 8, fg_color= "white")
+        # self.entry.place(x= 200, y =250, anchor = CENTER )
 
-        # creation champ nom 
-        self.surname = ctk.CTkLabel(self, text= "Surname", width=50, height=20, font=('Agency FB', 22, 'bold'), text_color= "white")
-        self.surname.place(x= 200, y= 280, anchor = CENTER)
-        self.entry1 = ctk.CTkEntry(self, width=150, height=30, corner_radius= 8, fg_color= "white")
-        self.entry1.place(x=200, y= 310, anchor = CENTER)
+        # # creation champ nom 
+        # self.surname = ctk.CTkLabel(self, text= "Surname", width=50, height=20, font=('Agency FB', 22, 'bold'), text_color= "white")
+        # self.surname.place(x= 200, y= 280, anchor = CENTER)
+        # self.entry1 = ctk.CTkEntry(self, width=150, height=30, corner_radius= 8, fg_color= "white")
+        # self.entry1.place(x=200, y= 310, anchor = CENTER)
 
         # creation champ email
         self.email = ctk.CTkLabel(self,text= "Email", width=50, height=30,font=('Agency FB', 22, 'bold'), text_color= "white" )
@@ -100,13 +100,12 @@ class Login_graph(Tk):
         login_backend = Login()
         
         # Récupérez les valeurs des champs du formulaire
-        firstname = self.entry.get()
-        surname = self.entry1.get()
+        
         email = self.entry2.get()
         password = self.entry3.get()
 
         # Appelez la méthode login du backend pour vérifier les informations d'identification
-        success, user_id = login_backend.login(firstname, surname, email, password)
+        success, user_id = login_backend.login( email, password)
 
         # Si la connexion est réussie (success est True), affichez la page principale
         if success:
