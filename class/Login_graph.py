@@ -4,7 +4,6 @@ from Login import *
 from MainPage_graph import *
 
 
-
 class Login_graph(Tk):
     def __init__(self):
         super().__init__()
@@ -84,7 +83,7 @@ class Login_graph(Tk):
                                             border_color= "white",
                                             fg_color="#e74353",
                                             hover_color="#ef511c", 
-                                            command= "aller à la page register"
+                                            command= self.go_register
                                             )
         self.buttonRegister.place(x= 240, y= 500)
 
@@ -115,14 +114,16 @@ class Login_graph(Tk):
             # Fermez la fenêtre de connexion
             self.destroy()
             # Affichez la page principale
-            app = MainPage_graph()
-            app.mainloop()
+            goMainpage = MainPage_graph()
+            goMainpage.mainloop()
         else:
             print("Login failed. Please check your credentials.")
 
+    def go_register(self):
+        self.destroy()
+        register = Register_graph()
+        register.mainloop()
 
-
-        
 
 if __name__ == "__main__":
     login = Login_graph()
