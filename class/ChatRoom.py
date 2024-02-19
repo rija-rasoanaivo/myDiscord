@@ -1,4 +1,4 @@
-from Server import Server
+from Server import *
 
 class ChatRoom:
     def __init__(self):

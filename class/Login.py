@@ -21,3 +21,6 @@ class Login:
         else:
             print("Login failed. Please check your credentials.")
             return False, None  # Renvoie False et None
+        
+    def resultat(self):
+        return self.login(self.email, self.password)

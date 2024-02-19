@@ -127,16 +127,18 @@ class MainPage_graph(Tk):
 
         if self.frame4.winfo_ismapped():
             self.frame4.place_forget()
+            self.messageDisplay.winfo_ismapped()
+            
             
         else:
             self.frame4.place(x=300, y=0)
 
             # Création et placement des libellés pour chaque message
             display = Chatting()
-            messages =display.load_messages()
+            messages =display.load_messages(id_room=1, id_user=4)
             for i, message in enumerate(messages):
-                messageDisplay = ctk.CTkLabel(self.frame4, text=message, width=70, height=20, corner_radius=10, font=("Agency FB", 18, 'bold'), fg_color="#aeb8f9",bg_color="#aeb8f9")
-                messageDisplay.place(x=80, y=50 + i * 50)
+                self.messageDisplay = ctk.CTkLabel(self.frame4, text=message, width=70, height=20, corner_radius=10, font=("Agency FB", 18, 'bold'), fg_color="#aeb8f9",bg_color="#aeb8f9")
+                self.messageDisplay.place(x=80, y=50 + i * 50)
             
             
             # creation saisi message par l'utilisateur
@@ -165,6 +167,7 @@ class MainPage_graph(Tk):
             self.buttonEmoticones5 = ctk.CTkButton(self.frame4, image=self.imageEmoticones5, text=None, width=5, height=5, fg_color="#23272d", hover_color="#23b0ed")
             self.buttonEmoticones5.place(x=220, y=530)
 
+            
             
            
     # methode pour retourner a la page de connexion
