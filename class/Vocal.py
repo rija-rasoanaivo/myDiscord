@@ -18,32 +18,26 @@ class Vocal:
         write(filename, freq, recording)
 
     def convert_into_binary(self, filename):
-        pass
+        # Conversion de l'audio en données binaires
+        audio_array = np.array(read(filename)[1], dtype=float)
+        audio_bytes = audio_array.tobytes()
+        return base64.b64encode(audio_bytes).decode("utf-8")
     
-    def create_audio_from_blob(self, blob, filename="reconstructed.wav"):
-        # Décodage du blob en données audio
-        audio_bytes = base64.b64decode(blob)
-        audio_array = np.frombuffer(audio_bytes, dtype=np.int16)
-        # Écriture de l'audio dans un fichier WAV
-        write(filename, 44100, audio_array)
+    def decode_from_binary(self, binary_data):
+        # Décodage des données binaires en audio
+        audio_bytes = base64.b64decode(binary_data)
+        audio_array = np.frombuffer(audio_bytes, dtype=float)
+        return audio_array
 
     def play_audio(self, filename):
         # Lecture de l'audio
-        rate, data = read(filename)
-        sd.play(data, rate)
+        freq, audio_array = read(filename)
+        sd.play(audio_array, freq)
         sd.wait()
 
 if __name__ == "__main__":
     vocal = Vocal()
-    
-    # Enregistrement de l'audio
     vocal.record_audio()
-
-    # Création du blob à partir de l'audio enregistré
-    blob = vocal.create_blob_from_audio()
-
-    # Extraction et re-conversion du blob en audio
-    vocal.create_audio_from_blob(blob, "reconstructed_audio.wav")
-
-    # Lecture de l'audio reconstruit
-    vocal.play_audio("reconstructed_audio.wav")
+    binary_data = vocal.convert_into_binary("recording.wav")
+    audio_array = vocal.decode_from_binary(binary_data)
+    vocal.play_audio(audio_array)
