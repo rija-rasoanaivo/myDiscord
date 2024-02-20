@@ -11,6 +11,8 @@ class MainPage_graph(Tk):
     def __init__(self):
         super().__init__()
 
+        self.classLogin = Login()
+
         # Création de la fenêtre principale
         self.geometry("800x650")
         self.title("Main Page")
@@ -29,7 +31,7 @@ class MainPage_graph(Tk):
         self.imageRoom  = PhotoImage(file="image/boutons/room.png")
         # Création d'un Label avec l'image chargée comme image de fond
         self.buttonRoom = ctk.CTkButton(self, image=self.imageRoom,text= None, width=20, height=20, fg_color="#c7c1f2",border_color="black",bg_color="#c7c1f2",  corner_radius=10 ,hover_color="#a78ff7", command = self.toggle_right_frame)
-        self.buttonRoom.pack(side="top", anchor="nw", padx=15, pady=30)
+        self.buttonRoom.pack(side="top", anchor="nw", padx=12, pady=70)
 
         # creation bouton deconnexion
         self.imageDeconnexion = PhotoImage(file="image/boutons/deconnexion1.png")
@@ -46,6 +48,12 @@ class MainPage_graph(Tk):
         # creation frame4 pour afficher les messages
         self.frame4 = ctk.CTkFrame(self, width=500, height=800, corner_radius=2, fg_color="#23272d")
 
+        # creation du logo profil
+        self.imageProfil = PhotoImage(file="image/boutons/profil.png")
+        # Création d'un Label avec l'image chargée comme image de fond
+        self.buttonProfil = ctk.CTkButton(self, image=self.imageProfil, text=None, width=20, height=20, fg_color="#c7c1f2",bg_color= "#c7c1f2", corner_radius= 10, hover_color="#a78ff7", command=self.classLogin.get_user_info())
+        self.buttonProfil.place(x=10, y=100)
+
         
         
     # gestion de la frame a afficher sur la droite de mon bouton salon en cliquant sur le bouton
@@ -54,12 +62,10 @@ class MainPage_graph(Tk):
             self.frame2.place_forget()
         else:
             self.frame2.place(x=100, y=0)
-            # Création et placement des libellés pour chaque nom de salon
-            salon_names = ChatRoom().get_chat_room_names()
-            for i, salon_name in enumerate(salon_names):
-                label = ctk.CTkButton(self.frame2, text=salon_name, width=70, height=20, corner_radius=10, font=("Agency FB", 18, 'bold'), fg_color="#aeb8f9",bg_color="#aeb8f9", hover_color= "#a78ff7", command= self.frame4_message)
-                
-                label.place(x=80, y=50 + i * 50)
+            room_info = ChatRoom().get_chat_room_ids_and_names()
+            for i, (room_id, room_name) in enumerate(room_info):
+                button = ctk.CTkButton(self.frame2, text=room_name, width=70, height=20, corner_radius=10, font=("Agency FB", 18, 'bold'), fg_color="#aeb8f9",bg_color="#aeb8f9", hover_color= "#a78ff7", command=lambda id=room_id: self.frame4_message(id))
+                button.place(x=80, y=50 + i * 50)
 
                 # creation bouton ajouter salon
                 self.imageAdd = PhotoImage(file="image/boutons/ajout.png")
@@ -123,49 +129,60 @@ class MainPage_graph(Tk):
             self.buttonValid.place(x=550, y=410, anchor=CENTER)
 
 
-    def frame4_message(self):
+    def frame4_message(self, id_room):
+        # First, clear any previous messages displayed in frame4
+        for widget in self.frame4.winfo_children():
+            widget.destroy()
 
         if self.frame4.winfo_ismapped():
             self.frame4.place_forget()
             self.messageDisplay.winfo_ismapped()
-            
-            
+            self.messageDisplay.place_forget()
         else:
             self.frame4.place(x=300, y=0)
 
-            # Création et placement des libellés pour chaque message
+            # Fetch messages for the selected room
             display = Chatting()
-            messages =display.load_messages(id_room=1, id_user=4)
-            for i, message in enumerate(messages):
-                self.messageDisplay = ctk.CTkLabel(self.frame4, text=message, width=70, height=20, corner_radius=10, font=("Agency FB", 18, 'bold'), fg_color="#aeb8f9",bg_color="#aeb8f9")
-                self.messageDisplay.place(x=80, y=50 + i * 50)
-            
-            
-            # creation saisi message par l'utilisateur
-            self.text = ctk.CTkTextbox(self.frame4, width=250, height=50, corner_radius=13, fg_color="white", bg_color="#23272d", border_color="#38454c", border_width=1)
-            self.text.place(x=200, y=600, anchor = CENTER)
-            # creation bouton envoyer message
-            self.imageSend = PhotoImage(file="image/boutons/envoyer1.png")
-            self.buttonSend = ctk.CTkButton(self.frame4, image=self.imageSend, text=None, width=10, height=10, fg_color="#23b0ed", border_color="black", border_width=1, hover_color="#a78ff7",corner_radius= 10)
-            self.buttonSend.place(x=400, y=600, anchor = CENTER)
+            messages = display.load_messages(id_room, id_user=4)
 
-            
-            # creation des emoticones
-            self.imageEmoticones1 = PhotoImage(file="image/emoji/heartred1.png")
-            self.buttonEmoticones1 = ctk.CTkButton(self.frame4, image=self.imageEmoticones1, text=None, width=5, height=5, fg_color="#23272d",hover_color="#23b0ed")
-            self.buttonEmoticones1.place(x=100, y=530)
-            self.imageEmoticones2 = PhotoImage(file="image/emoji/loveheart.png")
-            self.buttonEmoticones2 = ctk.CTkButton(self.frame4, image=self.imageEmoticones2, text=None, width=5, height=5, fg_color="#23272d", hover_color="#23b0ed")
-            self.buttonEmoticones2.place(x=130, y=530)
-            self.imageEmoticones3 = PhotoImage(file="image/emoji/mdr.png")
-            self.buttonEmoticones3 = ctk.CTkButton(self.frame4, image=self.imageEmoticones3, text=None, width=5, height=5, fg_color="#23272d", hover_color="#23b0ed")
-            self.buttonEmoticones3.place(x=160, y=530)
-            self.imageEmoticones4 = PhotoImage(file="image/emoji/pouce.png")
-            self.buttonEmoticones4 = ctk.CTkButton(self.frame4, image=self.imageEmoticones4, text=None, width=5, height=5, fg_color="#23272d", hover_color="#23b0ed")
-            self.buttonEmoticones4.place(x=190, y=530)
-            self.imageEmoticones5 = PhotoImage(file="image/emoji/eyesopen.png")
-            self.buttonEmoticones5 = ctk.CTkButton(self.frame4 , image=self.imageEmoticones5, text=None, width=5, height=5, fg_color="#23272d", hover_color="#23b0ed")
-            self.buttonEmoticones5.place(x=220, y=530)
+            # Check if the messages list is empty
+            if not messages:
+                # No messages found, display a placeholder message or leave it empty
+                self.messageDisplay = ctk.CTkLabel(self.frame4, text="No messages in this room.", width=70, height=20, corner_radius=10, font=("Agency FB", 18, 'bold'), fg_color="#aeb8f9", bg_color="#aeb8f9")
+                self.messageDisplay.place(x=80, y=50)
+            else:
+                # If messages are found, display them
+                for i, message in enumerate(messages):
+                    message_text = f"{message[1]} (Sent at {message[2]})"
+                    self.messageDisplay = ctk.CTkLabel(self.frame4, text=message_text, width=70, height=20, corner_radius=10, font=("Agency FB", 18, 'bold'), fg_color="#aeb8f9", bg_color="#aeb8f9")
+                    self.messageDisplay.place(x=80, y=50 + i * 50)
+                
+                
+                # creation saisi message par l'utilisateur
+                self.text = ctk.CTkTextbox(self.frame4, width=250, height=50, corner_radius=13, fg_color="white", bg_color="#23272d", border_color="#38454c", border_width=1)
+                self.text.place(x=200, y=600, anchor = CENTER)
+                # creation bouton envoyer message
+                self.imageSend = PhotoImage(file="image/boutons/envoyer1.png")
+                self.buttonSend = ctk.CTkButton(self.frame4, image=self.imageSend, text=None, width=10, height=10, fg_color="#23b0ed", border_color="black", border_width=1, hover_color="#a78ff7",corner_radius= 10)
+                self.buttonSend.place(x=400, y=600, anchor = CENTER)
+
+                
+                # creation des emoticones
+                self.imageEmoticones1 = PhotoImage(file="image/emoji/heartred1.png")
+                self.buttonEmoticones1 = ctk.CTkButton(self.frame4, image=self.imageEmoticones1, text=None, width=5, height=5, fg_color="#23272d",hover_color="#23b0ed")
+                self.buttonEmoticones1.place(x=100, y=530)
+                self.imageEmoticones2 = PhotoImage(file="image/emoji/loveheart.png")
+                self.buttonEmoticones2 = ctk.CTkButton(self.frame4, image=self.imageEmoticones2, text=None, width=5, height=5, fg_color="#23272d", hover_color="#23b0ed")
+                self.buttonEmoticones2.place(x=130, y=530)
+                self.imageEmoticones3 = PhotoImage(file="image/emoji/mdr.png")
+                self.buttonEmoticones3 = ctk.CTkButton(self.frame4, image=self.imageEmoticones3, text=None, width=5, height=5, fg_color="#23272d", hover_color="#23b0ed")
+                self.buttonEmoticones3.place(x=160, y=530)
+                self.imageEmoticones4 = PhotoImage(file="image/emoji/pouce.png")
+                self.buttonEmoticones4 = ctk.CTkButton(self.frame4, image=self.imageEmoticones4, text=None, width=5, height=5, fg_color="#23272d", hover_color="#23b0ed")
+                self.buttonEmoticones4.place(x=190, y=530)
+                self.imageEmoticones5 = PhotoImage(file="image/emoji/eyesopen.png")
+                self.buttonEmoticones5 = ctk.CTkButton(self.frame4 , image=self.imageEmoticones5, text=None, width=5, height=5, fg_color="#23272d", hover_color="#23b0ed")
+                self.buttonEmoticones5.place(x=220, y=530)
 
             
             

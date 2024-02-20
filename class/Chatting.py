@@ -12,22 +12,22 @@ class Chatting:
     def load_messages(self, id_room, id_user):
         self.db = Server.db
 
-        while True:
-            query = """
-            SELECT id_user, message_content, hour
-            FROM message
-            WHERE id_room = %s
-            """
-            # Condition pour ne charger que les nouveaux messages
-            params = (id_room,)
-            if self.last_message_timestamp:
-                query += " AND hour > %s"
-                params += (self.last_message_timestamp,)
+        
+        query = """
+        SELECT id_user, message_content, hour
+        FROM message
+        WHERE id_room = %s
+        """
+        # Condition pour ne charger que les nouveaux messages
+        params = (id_room,)
+        if self.last_message_timestamp:
+            query += " AND hour > %s"
+            params += (self.last_message_timestamp,)
 
-            query += " ORDER BY hour ASC"
-            messages = self.db.fetch(query, params)
+        query += " ORDER BY hour ASC"
+        messages = self.db.fetch(query, params)
 
-            return messages
+        return messages
 
     def send_message(self):
         # Modification ici : pas de paramètre 'message_content' nécessaire
