@@ -11,6 +11,8 @@ class MainPage_graph(Tk):
     def __init__(self):
         super().__init__()
 
+        self.classLogin = Login()
+
         # Création de la fenêtre principale
         self.geometry("800x650")
         self.title("Main Page")
@@ -29,7 +31,7 @@ class MainPage_graph(Tk):
         self.imageRoom  = PhotoImage(file="image/boutons/room.png")
         # Création d'un Label avec l'image chargée comme image de fond
         self.buttonRoom = ctk.CTkButton(self, image=self.imageRoom,text= None, width=20, height=20, fg_color="#c7c1f2",border_color="black",bg_color="#c7c1f2",  corner_radius=10 ,hover_color="#a78ff7", command = self.toggle_right_frame)
-        self.buttonRoom.pack(side="top", anchor="nw", padx=15, pady=30)
+        self.buttonRoom.pack(side="top", anchor="nw", padx=12, pady=70)
 
         # creation bouton deconnexion
         self.imageDeconnexion = PhotoImage(file="image/boutons/deconnexion1.png")
@@ -120,6 +122,8 @@ class MainPage_graph(Tk):
 
             self.checkPrivate = ctk.CTkCheckBox(self, text="Private", text_color="white", width=40, height=20, bg_color="#415059", corner_radius=5, border_color="white", border_width=1)
             self.checkPrivate.place(x=630, y=340, anchor=CENTER)
+
+            
 
 
             # Création du bouton "valider"
