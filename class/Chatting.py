@@ -106,6 +106,7 @@ class Chatting:
                 self.last_message_timestamp = timestamp
 
     def start_chat_session(self):
+
         if self.login():
             if self.select_chat_room():  # S'assurer que l'utilisateur a rejoint une salle
                 print("You can type 'CHANGE' at any time to switch chat rooms.")
