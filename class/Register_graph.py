@@ -1,7 +1,7 @@
 from tkinter import *
 import customtkinter as ctk
 from Register import *
-from Login_graph import *
+from Login_graph import Login_graph
 
 
 
@@ -88,11 +88,16 @@ class Register_graph(Tk):
             # Affichez un message d'erreur à l'utilisateur ou prenez une autre action appropriée
         else:
             # Enregistrer l'utilisateur uniquement si les mots de passe correspondent
-            register_backend.register(self.firstname, self.surname, self.email, self.password)
+            register_backend.register(firstname, surname, email, password)
+            register_backend.email_exists(email)
+            # Rediriger l'utilisateur vers la page de connexion
             self.destroy()
             login = Login_graph()
             login.mainloop()
 
+
+            # mise a jour de la fenetre
+            self.update()
 
 if __name__ == "__main__":
     register = Register_graph()

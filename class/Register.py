@@ -1,21 +1,23 @@
 from Server import Server
 
 class Register:
+    def __init__(self):
+        self.server = Server()
+
     
-    def register(self):
-        # Demander à l'utilisateur de saisir ses informations personnelles pour l'inscription.
-        name = input("Enter the user's name: ")
-        firstname = input("Enter the user's first name: ")
-        email = input("Enter the user's email: ")
-        password = input("Enter the user's password: ")
+    def register(self, firstname, name, email, password):
+        self.firstname = firstname
+        self.name = name
+        self.email = email
+        self.password = password
 
         # Vérifier si l'email existe déjà dans la base de données.
         if self.email_exists(email):
             print("An account with this email already exists. Please use a different email.")
         else:
             table = "user"
-            fields = "name, firstName, email, password"
-            values = f"'{name}', '{firstname}', '{email}', '{password}'"
+            fields = " firstName, name, email, password"
+            values = f" '{firstname}', '{name}', '{email}', '{password}'"
             # Utilisation de la méthode 'create' pour insérer le nouvel utilisateur dans la base de données.
             Server.db.create(table, fields, values)
             print(f"User {name} {firstname} registered successfully!")
@@ -27,6 +29,8 @@ class Register:
             (email,)
         )
         return bool(result)  # Retourne True si l'email existe, False sinon.
-    
-user_manager = Register()
-user_manager.register()
+
+
+if __name__ == "__main__":
+    user_manager = Register()
+    user_manager.register()
