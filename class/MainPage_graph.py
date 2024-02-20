@@ -122,20 +122,26 @@ class MainPage_graph(Tk):
 
 
     def frame4_message(self, id_room):
+        # First, clear any previous messages displayed in frame4
+        for widget in self.frame4.winfo_children():
+            widget.destroy()
 
-        if self.frame4.winfo_ismapped():
-            self.frame4.place_forget()
-            self.messageDisplay.winfo_ismapped()
-            
-            
+        self.frame4.place(x=300, y=0)
+
+        # Fetch messages for the selected room
+        display = Chatting()
+        messages = display.load_messages(id_room, id_user=4)
+
+        # Check if the messages list is empty
+        if not messages:
+            # No messages found, display a placeholder message or leave it empty
+            self.messageDisplay = ctk.CTkLabel(self.frame4, text="No messages in this room.", width=70, height=20, corner_radius=10, font=("Agency FB", 18, 'bold'), fg_color="#aeb8f9", bg_color="#aeb8f9")
+            self.messageDisplay.place(x=80, y=50)
         else:
-            self.frame4.place(x=300, y=0)
-
-            # Création et placement des libellés pour chaque message
-            display = Chatting()
-            messages =display.load_messages(id_room, id_user=4)
+            # If messages are found, display them
             for i, message in enumerate(messages):
-                self.messageDisplay = ctk.CTkLabel(self.frame4, text=message, width=70, height=20, corner_radius=10, font=("Agency FB", 18, 'bold'), fg_color="#aeb8f9",bg_color="#aeb8f9")
+                message_text = f"{message[1]} (Sent at {message[2]})"
+                self.messageDisplay = ctk.CTkLabel(self.frame4, text=message_text, width=70, height=20, corner_radius=10, font=("Agency FB", 18, 'bold'), fg_color="#aeb8f9", bg_color="#aeb8f9")
                 self.messageDisplay.place(x=80, y=50 + i * 50)
             
             
