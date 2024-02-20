@@ -164,7 +164,7 @@ class MainPage_graph(Tk):
             self.buttonEmoticones4 = ctk.CTkButton(self.frame4, image=self.imageEmoticones4, text=None, width=5, height=5, fg_color="#23272d", hover_color="#23b0ed")
             self.buttonEmoticones4.place(x=190, y=530)
             self.imageEmoticones5 = PhotoImage(file="image/emoji/eyesopen.png")
-            self.buttonEmoticones5 = ctk.CTkButton(self.frame4, image=self.imageEmoticones5, text=None, width=5, height=5, fg_color="#23272d", hover_color="#23b0ed")
+            self.buttonEmoticones5 = ctk.CTkButton(self.frame4 , image=self.imageEmoticones5, text=None, width=5, height=5, fg_color="#23272d", hover_color="#23b0ed")
             self.buttonEmoticones5.place(x=220, y=530)
 
             
