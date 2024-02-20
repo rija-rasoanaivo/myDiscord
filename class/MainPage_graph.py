@@ -54,12 +54,10 @@ class MainPage_graph(Tk):
             self.frame2.place_forget()
         else:
             self.frame2.place(x=100, y=0)
-            # Création et placement des libellés pour chaque nom de salon
-            salon_names = ChatRoom().get_chat_room_names()
-            for i, salon_name in enumerate(salon_names):
-                label = ctk.CTkButton(self.frame2, text=salon_name, width=70, height=20, corner_radius=10, font=("Agency FB", 18, 'bold'), fg_color="#aeb8f9",bg_color="#aeb8f9", hover_color= "#a78ff7", command= self.frame4_message)
-                
-                label.place(x=80, y=50 + i * 50)
+            room_info = ChatRoom().get_chat_room_ids_and_names()
+            for i, (room_id, room_name) in enumerate(room_info):
+                button = ctk.CTkButton(self.frame2, text=room_name, width=70, height=20, corner_radius=10, font=("Agency FB", 18, 'bold'), fg_color="#aeb8f9",bg_color="#aeb8f9", hover_color= "#a78ff7", command=lambda id=room_id: self.frame4_message(id))
+                button.place(x=80, y=50 + i * 50)
 
                 # creation bouton ajouter salon
                 self.imageAdd = PhotoImage(file="image/boutons/ajout.png")
@@ -123,7 +121,7 @@ class MainPage_graph(Tk):
             self.buttonValid.place(x=550, y=410, anchor=CENTER)
 
 
-    def frame4_message(self):
+    def frame4_message(self, id_room):
 
         if self.frame4.winfo_ismapped():
             self.frame4.place_forget()
@@ -135,7 +133,7 @@ class MainPage_graph(Tk):
 
             # Création et placement des libellés pour chaque message
             display = Chatting()
-            messages =display.load_messages(id_room=1, id_user=4)
+            messages =display.load_messages(id_room, id_user=4)
             for i, message in enumerate(messages):
                 self.messageDisplay = ctk.CTkLabel(self.frame4, text=message, width=70, height=20, corner_radius=10, font=("Agency FB", 18, 'bold'), fg_color="#aeb8f9",bg_color="#aeb8f9")
                 self.messageDisplay.place(x=80, y=50 + i * 50)

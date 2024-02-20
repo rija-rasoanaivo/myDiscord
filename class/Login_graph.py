@@ -41,7 +41,7 @@ class Login_graph(Tk):
         # creation champ email
         self.email = ctk.CTkLabel(self,text= "Email", width=50, height=30,font=('Agency FB', 22, 'bold'), text_color= "white" )
         self.email.place(x=200, y=340, anchor= CENTER)
-        self.entry2 = ctk.CTkEntry(self, width=200, height=30, corner_radius= 8, fg_color= "white")
+        self.entry2 = ctk.CTkEntry(self, width=200, height=30, corner_radius= 8, fg_color= "white", text_color= "black")
         self.entry2.place(x=200, y= 370, anchor = CENTER)
     
         # creation champ mdp
