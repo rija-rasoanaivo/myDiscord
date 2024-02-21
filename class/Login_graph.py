@@ -1,12 +1,12 @@
 from tkinter import *
 import customtkinter as ctk
 from Login import * 
-from MainPage_graph import *
 
 
 class Login_graph(Tk):
-    def __init__(self):
+    def __init__(self, on_login_success=None):
         super().__init__()
+        self.on_login_success = on_login_success
 
         # creation de la fenetre
         self.geometry("400x650")
@@ -94,24 +94,16 @@ class Login_graph(Tk):
         # Utilisez la méthode login pour vérifier les informations de connexion
         success, user_id = login_backend.login(email, password)
         if success:
-            self.destroy()
-            main_page =MainPage_graph()
-            main_page.mainloop()
+            self.destroy()  # ou self.withdraw()
+            if self.on_login_success:
+                self.on_login_success(user_id)
         else:
             self.destroy() 
             # Gestion de l'échec de la connexion
             print("Login failed. Please check your credentials.")
-
-    def go_register(self):
-        self.destroy()
-        register = Register_graph()
-        register.mainloop()
 
 
 if __name__ == "__main__":
     login = Login_graph()
     
     login.mainloop()
-        
-
-
