@@ -85,9 +85,12 @@ class Login_graph(Tk):
             self.password_visible = True
 
     def verify_login(self):
+        # Créez une instance de la classe Login
         login_backend = Login()
+        #récupérez les valeurs des champs du formulaire
         email = self.entry2.get()
         password = self.entry3.get()
+        # Utilisez la méthode login pour vérifier les informations de connexion
         success, user_id = login_backend.login(email, password)
         if success:
             self.destroy()

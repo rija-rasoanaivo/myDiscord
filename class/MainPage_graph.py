@@ -146,7 +146,7 @@ class MainPage_graph(Tk):
 
             # Fetch messages for the selected room
             display = Chatting()
-            messages = display.load_messages(id_room, id_user=4)
+            messages = display.load_messages(id_room, id_user=self.user_id) 
 
             # Check if the messages list is empty
             if not messages:
