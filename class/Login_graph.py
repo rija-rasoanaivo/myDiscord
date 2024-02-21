@@ -1,7 +1,7 @@
 from tkinter import *
 import customtkinter as ctk
 from Login import * 
-from Register_graph import *
+from MainPage_graph import *
 
 
 
@@ -103,7 +103,7 @@ class Login_graph(Tk):
             # Gestion de l'échec de la connexion
             print("Login failed. Please check your credentials.")
 
-    def register(self):
+    def go_register(self):
         self.destroy()
         register = Register_graph()
         register.mainloop()
