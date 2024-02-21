@@ -1,6 +1,7 @@
 from tkinter import *
 import customtkinter as ctk
 from Register import *
+from MainPage_graph import *
 
 
 
@@ -93,7 +94,6 @@ class Register_graph(Tk):
             self.destroy()
             login = Login_graph()
             login.mainloop()
-
 
             # mise a jour de la fenetre
             self.update()

@@ -4,6 +4,7 @@ from Login import *
 from Register_graph import *
 
 
+
 class Login_graph(Tk):
     def __init__(self, on_login_success=None):
         super().__init__()
@@ -101,6 +102,11 @@ class Login_graph(Tk):
         else:
             # Gestion de l'échec de la connexion
             print("Login failed. Please check your credentials.")
+
+    def register(self):
+        self.destroy()
+        register = Register_graph()
+        register.mainloop()
 
 
 if __name__ == "__main__":
