@@ -87,6 +87,7 @@ class Login_graph(Tk):
     def verify_login(self):
         # Créez une instance de la classe Login
         login_backend = Login()
+    
         #récupérez les valeurs des champs du formulaire
         email = self.entry2.get()
         password = self.entry3.get()
@@ -94,7 +95,7 @@ class Login_graph(Tk):
         success, user_id = login_backend.login(email, password)
         if success:
             self.destroy()
-            main_page = MainPage_graph(user_id)
+            main_page = MainPage_graph()
             main_page.mainloop()
         else:
             # Gestion de l'échec de la connexion
