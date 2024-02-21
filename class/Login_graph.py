@@ -95,9 +95,10 @@ class Login_graph(Tk):
         success, user_id = login_backend.login(email, password)
         if success:
             self.destroy()
-            main_page = MainPage_graph()
+            main_page =MainPage_graph()
             main_page.mainloop()
         else:
+            self.destroy() 
             # Gestion de l'échec de la connexion
             print("Login failed. Please check your credentials.")
 

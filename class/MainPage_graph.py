@@ -4,6 +4,7 @@ from Register_graph import *
 from ChatRoom import *
 from PrivateChatRoom import *
 from Chatting import *
+from Login_graph import *
 
 
 
@@ -199,13 +200,11 @@ class MainPage_graph(Tk):
            
     # methode pour retourner a la page de connexion
     def returnPageLogin(self): 
-         
+        
         self.destroy()
-        go_login = Login_graph()
-        go_login.mainloop()
-
-
-    
+        app = Login_graph()
+        app.mainloop()
+        
         
     
     def join_datacCreateroom(self):
