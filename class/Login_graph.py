@@ -107,6 +107,3 @@ if __name__ == "__main__":
     login = Login_graph()
     
     login.mainloop()
-        
-
-
