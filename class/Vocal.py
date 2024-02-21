@@ -3,7 +3,7 @@ import socket
 import pyaudio
 
 class Vocal:
-    def __init__(self, host='127.0.0.1', port=9986):
+    def __init__(self, host='127.0.0.1', port=8000):
         self.host = host
         self.port = port
 

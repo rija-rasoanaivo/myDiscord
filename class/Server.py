@@ -4,7 +4,10 @@ import pyaudio
 import threading
 
 class Server:
-    def __init__(self, host='127.0.0.1', port=9986):
+    db = MyDb("82.165.185.52", "marijo", "Rijoma13!", "manon-rittling_mydiscord")
+    db.connexion()
+
+    def __init__(self, host='127.0.0.1', port=8000):
         self.host = host
         self.port = port
 
@@ -23,7 +26,7 @@ class Server:
         self.server_socket.listen(10)  # Attente de connexions
         print("Serveur en attente de connexions...")
 
-    # Fonction pour gérer les clients
+    # Fonction pour gérer les clients et leur audio
     def handle_client(self, client_socket):
         stream = self.audio.open(format=self.FORMAT, channels=self.CHANNELS, rate=self.RATE, output=True, frames_per_buffer=self.CHUNK)
         try:
