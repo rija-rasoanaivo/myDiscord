@@ -1,6 +1,7 @@
 from tkinter import *
 import customtkinter as ctk
 from Login import * 
+from Register_graph import *
 
 
 class Login_graph(Tk):
@@ -72,7 +73,7 @@ class Login_graph(Tk):
                                             border_color= "white",
                                             fg_color="#e74353",
                                             hover_color="#ef511c", 
-                                            command= self.go_register
+                                            command= self.register
                                             )
         self.buttonRegister.place(x= 240, y= 450)
 
