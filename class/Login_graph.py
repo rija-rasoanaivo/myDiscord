@@ -85,26 +85,20 @@ class Login_graph(Tk):
             self.password_visible = True
 
     def verify_login(self):
-        # Créez une instance de la classe Login (backend)
+        # Créez une instance de la classe Login
         login_backend = Login()
-        
-        # Récupérez les valeurs des champs du formulaire
-        
+    
+        #récupérez les valeurs des champs du formulaire
         email = self.entry2.get()
         password = self.entry3.get()
-
-        # Appelez la méthode login du backend pour vérifier les informations d'identification
-        success, user_id = login_backend.login( email, password)
-
-        # Si la connexion est réussie (success est True), affichez la page principale
+        # Utilisez la méthode login pour vérifier les informations de connexion
+        success, user_id = login_backend.login(email, password)
         if success:
-            print("Welcome")
-            # Fermez la fenêtre de connexion
             self.destroy()
-            # Affichez la page principale
-            goMainpage = MainPage_graph()
-            goMainpage.mainloop()
+            main_page = MainPage_graph()
+            main_page.mainloop()
         else:
+            # Gestion de l'échec de la connexion
             print("Login failed. Please check your credentials.")
 
     def go_register(self):

@@ -8,10 +8,11 @@ from Chatting import *
 
 
 class MainPage_graph(Tk):
-    def __init__(self):
+    def __init__(self, user_id=None):
         super().__init__()
 
         self.classLogin = Login()
+        self.user_id = user_id
 
         # Création de la fenêtre principale
         self.geometry("800x650")
@@ -51,7 +52,7 @@ class MainPage_graph(Tk):
         # creation du logo profil
         self.imageProfil = PhotoImage(file="image/boutons/profil.png")
         # Création d'un Label avec l'image chargée comme image de fond
-        self.buttonProfil = ctk.CTkButton(self, image=self.imageProfil, text=None, width=20, height=20, fg_color="#c7c1f2",bg_color= "#c7c1f2", corner_radius= 10, hover_color="#a78ff7", command=self.classLogin.get_user_info())
+        self.buttonProfil = ctk.CTkButton(self, image=self.imageProfil, text=None, width=20, height=20, fg_color="#c7c1f2", bg_color= "#c7c1f2", corner_radius= 10, hover_color="#a78ff7", command=lambda: print(self.user_id))
         self.buttonProfil.place(x=10, y=100)
 
         
@@ -143,7 +144,7 @@ class MainPage_graph(Tk):
 
             # Fetch messages for the selected room
             display = Chatting()
-            messages = display.load_messages(id_room, id_user=4)
+            messages = display.load_messages(id_room, id_user= self.user_id)
 
             # Check if the messages list is empty
             if not messages:
@@ -168,7 +169,7 @@ class MainPage_graph(Tk):
                 self.text.place(x=200, y=600, anchor = CENTER)
                 # creation bouton envoyer message
                 self.imageSend = PhotoImage(file="image/boutons/envoyer1.png")
-                self.buttonSend = ctk.CTkButton(self.frame4, image=self.imageSend, text=None, width=10, height=10, fg_color="#23b0ed", border_color="black", border_width=1, hover_color="#a78ff7",corner_radius= 10)
+                self.buttonSend = ctk.CTkButton(self.frame4, image=self.imageSend, text=None, width=10, height=10, fg_color="#23b0ed", border_color="black", border_width=1, hover_color="#a78ff7",corner_radius= 10, command=self.join_dataSendMessage)
                 self.buttonSend.place(x=370, y=600, anchor = CENTER)
 
                 # bouton vocal
@@ -204,7 +205,7 @@ class MainPage_graph(Tk):
         go_login.mainloop()
 
 
-        
+    
         
     
     def join_datacCreateroom(self):
