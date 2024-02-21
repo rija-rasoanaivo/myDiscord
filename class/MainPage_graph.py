@@ -8,10 +8,11 @@ from Chatting import *
 
 
 class MainPage_graph(Tk):
-    def __init__(self):
+    def __init__(self, user_id=None):
         super().__init__()
 
         self.classLogin = Login()
+        self.user_id = user_id
 
         # Création de la fenêtre principale
         self.geometry("800x650")
@@ -51,7 +52,7 @@ class MainPage_graph(Tk):
         # creation du logo profil
         self.imageProfil = PhotoImage(file="image/boutons/profil.png")
         # Création d'un Label avec l'image chargée comme image de fond
-        self.buttonProfil = ctk.CTkButton(self, image=self.imageProfil, text=None, width=20, height=20, fg_color="#c7c1f2",bg_color= "#c7c1f2", corner_radius= 10, hover_color="#a78ff7", command=self.classLogin.get_user_info())
+        self.buttonProfil = ctk.CTkButton(self, image=self.imageProfil, text=None, width=20, height=20, fg_color="#c7c1f2", bg_color= "#c7c1f2", corner_radius= 10, hover_color="#a78ff7", command=lambda: print(self.user_id))
         self.buttonProfil.place(x=10, y=100)
 
         
