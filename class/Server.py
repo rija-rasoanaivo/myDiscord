@@ -1,6 +1,8 @@
 import socket
 import select
 from MyDb import *
+import threading
+import pyaudio
 
 class Server:
     db = MyDb("82.165.185.52", "marijo", "Rijoma13!", "manon-rittling_mydiscord")
@@ -11,7 +13,15 @@ class Server:
         self.socket_objects = [self.server_socket]
         self.channels = {'A': [], 'B': []}
         self.host = '127.0.0.1'
-        self.port = 3306
+        self.port = 9986
+
+        self.format = pyaudio.paInt16
+        self.audio_channels = 1
+        self.rate = 44100
+        self.chunk = 1024
+
+        self.audio = pyaudio.PyAudio()
+
 
     def start(self):
         try:
@@ -34,6 +44,7 @@ class Server:
                         self.handle_client_message(sock)
             except Exception as e:
                 print(f"Error in server loop: {e}")
+
 
     def handle_new_connection(self, server_socket):
         user_socket, address = server_socket.accept()
