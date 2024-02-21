@@ -1,64 +1,46 @@
-import sounddevice as sd
-import numpy as np
-from scipy.io.wavfile import read, write
 from Chatting import *
-from MyDb import MyDb
+import socket
+import pyaudio
 
 class Vocal:
-    
-    def __init__(self):
-        self.db = MyDb("82.165.185.52", "marijo", "Rijoma13!", "manon-rittling_mydiscord")
+    def __init__(self, host='127.0.0.1', port=9986):
+        self.host = host
+        self.port = port
 
-    def record_audio(self, filename="recording.wav", duration=5):
-        # Enregistrement de l'audio
-        freq = 44100  # Fréquence d'échantillonnage
-        recording = sd.rec(int(duration * freq), samplerate=freq, channels=2)
-        sd.wait()
+        # Paramètres audio
+        self.FORMAT = pyaudio.paInt16
+        self.CHANNELS = 1
+        self.RATE = 44100
+        self.CHUNK = 1024
 
-        # Écriture de l'audio dans un fichier WAV
-        write(filename, freq, recording)
+        # Initialisation de PyAudio
+        self.audio = pyaudio.PyAudio()
 
-    def convert_into_binary(self, filename):
-        # Conversion de l'audio en données binaires
-        audio_array = np.array(read(filename)[1], dtype=float)
-        audio_array /= np.max(np.abs(audio_array))  # Normalisation entre -1 et 1
-        audio_bytes = audio_array.tobytes()
-        return audio_bytes
-    
-    def insert_audio_into_db(self, name, audio_binary, type_room):
-        # Insérer l'audio dans la base de données
-        sql = "INSERT INTO vocalChatRoom (name, vocal_message, type_room) VALUES (%s, %s, %s)"
-        values = (name, audio_binary, type_room)
-        self.db.executeRequete(sql, values)
+        # Création du socket TCP
+        self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.client_socket.connect((self.host, self.port))
 
-    def get_audio_from_db(self, name):
-        # Récupérer l'audio de la base de données par son nom
-        sql = "SELECT vocal_message FROM vocalChatRoom WHERE name = %s"
-        result = self.db.fetch(sql, (name,))
-        if result:
-            return result[0][0]
-        else:
-            print("Aucun enregistrement audio trouvé avec le nom spécifié.")
-            return None
+    # Fonction pour envoyer l'audio au serveur
+    def send_audio(self):
+        stream = self.audio.open(format=self.FORMAT, channels=self.CHANNELS, rate=self.RATE, input=True, frames_per_buffer=self.CHUNK)
+        try:
+            while True:
+                data = stream.read(self.CHUNK)
+                self.client_socket.sendall(data)
+        except Exception as e:
+            print(f"Erreur : {e}")
+        finally:
+            stream.stop_stream()
+            stream.close()
 
-    def play_audio(self, audio_array, freq=70000):
-        # Lecture de l'audio
-        sd.play(audio_array, freq)
-        sd.wait()
+    def start(self):
+        try:
+            self.send_audio()
+        finally:
+            self.client_socket.close()
 
 # Utilisation
 if __name__ == "__main__":
     vocal = Vocal()
-    
-    # Enregistrement de l'audio dans la base de données
-    vocal.record_audio()
-    binary_data = vocal.convert_into_binary("recording.wav")
-    vocal.insert_audio_into_db("Recording", binary_data, "room_type")
+    vocal.start()
 
-    # Récupération de l'audio depuis la base de données
-    audio_from_db = vocal.get_audio_from_db("Recording")
-
-    # Lecture de l'audio récupéré
-    if audio_from_db:
-        decoded_audio = np.frombuffer(audio_from_db, dtype=float)
-        vocal.play_audio(decoded_audio)
