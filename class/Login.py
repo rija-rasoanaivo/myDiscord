@@ -1,6 +1,9 @@
-from Server import Server
+from Server import *
 
 class Login:
+
+    def __init__(self, db):
+        self.db = db
 
     def login(self):
         firstname = input("Enter your first name: ")
