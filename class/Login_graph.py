@@ -1,12 +1,12 @@
 from tkinter import *
 import customtkinter as ctk
 from Login import * 
+from MainPage_graph import *
 
 
 class Login_graph(Tk):
-    def __init__(self, on_login_success=None):
+    def __init__(self):
         super().__init__()
-        self.on_login_success = on_login_success
 
         # creation de la fenetre
         self.geometry("400x650")
@@ -30,13 +30,13 @@ class Login_graph(Tk):
         # creation champ email
         self.email = ctk.CTkLabel(self,text= "Email", width=50, height=30,font=('Agency FB', 22, 'bold'), text_color= "white" )
         self.email.place(x=200, y=240, anchor= CENTER)
-        self.entry2 = ctk.CTkEntry(self, width=200, height=30, corner_radius= 8, fg_color= "white", text_color="black")
+        self.entry2 = ctk.CTkEntry(self, width=200, height=30, corner_radius= 8, fg_color= "white")
         self.entry2.place(x=200, y= 270, anchor = CENTER)
     
         # creation champ mdp
         self.password = ctk.CTkLabel(self, text="Password", width=50, height=30, font=('Agency FB', 22, 'bold'), text_color= "white")
         self.password.place(x=200, y=310, anchor= CENTER)
-        self.entry3 = ctk.CTkEntry(self,show = '*', width= 150, height=30, corner_radius= 8, fg_color="white", text_color="black")
+        self.entry3 = ctk.CTkEntry(self,show = '*', width= 150, height=30, corner_radius= 8, fg_color="white")
         self.entry3.place(x=200, y=340, anchor = CENTER )
 
         # Créez un bouton "Afficher"
@@ -85,25 +85,38 @@ class Login_graph(Tk):
             self.password_visible = True
 
     def verify_login(self):
-        # Créez une instance de la classe Login
+        # Créez une instance de la classe Login (backend)
         login_backend = Login()
-    
-        #récupérez les valeurs des champs du formulaire
+        
+        # Récupérez les valeurs des champs du formulaire
+        
         email = self.entry2.get()
         password = self.entry3.get()
-        # Utilisez la méthode login pour vérifier les informations de connexion
-        success, user_id = login_backend.login(email, password)
+
+        # Appelez la méthode login du backend pour vérifier les informations d'identification
+        success, user_id = login_backend.login( email, password)
+
+        # Si la connexion est réussie (success est True), affichez la page principale
         if success:
-            self.destroy()  # ou self.withdraw()
-            if self.on_login_success:
-                self.on_login_success(user_id)
+            print("Welcome")
+            # Fermez la fenêtre de connexion
+            self.destroy()
+            # Affichez la page principale
+            goMainpage = MainPage_graph(user_id)
+            goMainpage.mainloop()
         else:
-            self.destroy() 
-            # Gestion de l'échec de la connexion
             print("Login failed. Please check your credentials.")
+
+    def go_register(self):
+        self.destroy()
+        register = Register_graph()
+        register.mainloop()
 
 
 if __name__ == "__main__":
     login = Login_graph()
     
     login.mainloop()
+        
+
+

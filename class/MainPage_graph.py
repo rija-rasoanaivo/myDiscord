@@ -9,12 +9,11 @@ from Login_graph import *
 
 
 class MainPage_graph(Tk):
-    def __init__(self, user_id=None, on_logout=None):
+    def __init__(self, user_id=None):
         super().__init__()
 
         self.classLogin = Login()
         self.user_id = user_id
-        self.on_logout = on_logout
 
         # Création de la fenêtre principale
         self.geometry("800x650")
@@ -200,14 +199,12 @@ class MainPage_graph(Tk):
             
            
     # methode pour retourner a la page de connexion
-    def returnPageLogin(self):
-        self.destroy()  # ou self.withdraw()
-        if self.on_logout:
-            self.on_logout()
-
-
-
-    
+    def returnPageLogin(self): 
+        
+        self.destroy()
+        app = Login_graph()
+        app.mainloop()
+        
         
     
     def join_datacCreateroom(self):
@@ -235,6 +232,10 @@ class MainPage_graph(Tk):
     
     
             
+        
+
+              
+                
 if __name__ == "__main__":
         app = MainPage_graph()
         app.mainloop()
