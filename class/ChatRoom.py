@@ -1,4 +1,4 @@
-from Server import Server
+from Server import *
 
 class ChatRoom:
     def __init__(self):
@@ -18,18 +18,16 @@ class ChatRoom:
 
         return room_id
     
-    def get_chat_room_names(self):
+    def get_chat_room_ids_and_names(self):
         try:
             self.db = Server.db
-            # Écrire la requête SQL pour sélectionner les noms des salons
-            requete = "SELECT name FROM chatRoom"
-            # Exécuter la requête et récupérer les résultats
-            result = self.db.fetch(requete)
-            # Convertir les résultats en une liste de noms de salon
-            names = [row[0] for row in result]
-            return names
+            query = "SELECT id_room, name FROM chatRoom"
+            result = self.db.fetch(query)
+            # Convert the results into a list of tuples (id_room, name)
+            rooms = [(row[0], row[1]) for row in result]
+            return rooms
         except Exception as e:
-            print("Error fetching chat room names:", e)
+            print("Error fetching chat room IDs and names:", e)
             return []
 
 if __name__ == "__main__":

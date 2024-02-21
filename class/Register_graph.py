@@ -96,6 +96,9 @@ class Register_graph(Tk):
             login.mainloop()
 
 
+            # mise a jour de la fenetre
+            self.update()
+
 if __name__ == "__main__":
     register = Register_graph()
     register.mainloop()

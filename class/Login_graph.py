@@ -26,33 +26,22 @@ class Login_graph(Tk):
         self.label = ctk.CTkLabel(self, text= "LOGIN", width= 50, height=50,font=('Broadway', 25), text_color="white" )
         self.label.place(x= 200, y=160, anchor = CENTER)
 
-        # creation champ pour le prenom
-        self.firstname = ctk.CTkLabel(self, text= "Firstname", width=50, height= 20, font=('Agency FB', 22, 'bold'), text_color="white")
-        self.firstname.place(x=200, y=220, anchor= CENTER )
-        self.entry = ctk.CTkEntry(self, width=150, height=30, corner_radius= 8, fg_color= "white")
-        self.entry.place(x= 200, y =250, anchor = CENTER )
-
-        # creation champ nom 
-        self.surname = ctk.CTkLabel(self, text= "Surname", width=50, height=20, font=('Agency FB', 22, 'bold'), text_color= "white")
-        self.surname.place(x= 200, y= 280, anchor = CENTER)
-        self.entry1 = ctk.CTkEntry(self, width=150, height=30, corner_radius= 8, fg_color= "white")
-        self.entry1.place(x=200, y= 310, anchor = CENTER)
 
         # creation champ email
         self.email = ctk.CTkLabel(self,text= "Email", width=50, height=30,font=('Agency FB', 22, 'bold'), text_color= "white" )
-        self.email.place(x=200, y=340, anchor= CENTER)
+        self.email.place(x=200, y=240, anchor= CENTER)
         self.entry2 = ctk.CTkEntry(self, width=200, height=30, corner_radius= 8, fg_color= "white")
-        self.entry2.place(x=200, y= 370, anchor = CENTER)
+        self.entry2.place(x=200, y= 270, anchor = CENTER)
     
         # creation champ mdp
         self.password = ctk.CTkLabel(self, text="Password", width=50, height=30, font=('Agency FB', 22, 'bold'), text_color= "white")
-        self.password.place(x=200, y=400, anchor= CENTER)
+        self.password.place(x=200, y=310, anchor= CENTER)
         self.entry3 = ctk.CTkEntry(self,show = '*', width= 150, height=30, corner_radius= 8, fg_color="white")
-        self.entry3.place(x=200, y=430, anchor = CENTER )
+        self.entry3.place(x=200, y=340, anchor = CENTER )
 
         # Créez un bouton "Afficher"
         self.show_password_button = ctk.CTkButton(self, text="Afficher",width= 30, height=20,corner_radius= 8, command=self.toggle_password_visibility)
-        self.show_password_button.place(x=320, y=430, anchor=CENTER)
+        self.show_password_button.place(x=320, y=340, anchor=CENTER)
 
         # Gardez une variable pour suivre l'état actuel du mot de passe (masqué ou affiché)
         self.password_visible = False
@@ -70,7 +59,7 @@ class Login_graph(Tk):
                                          hover_color="#ef511c",
                                          command= self.verify_login 
                                          )
-        self.buttonLogin.place(x= 70, y= 500)
+        self.buttonLogin.place(x= 70, y= 450)
 
         # creation bouton inscription
         self.buttonRegister = ctk.CTkButton(self, 
@@ -85,7 +74,7 @@ class Login_graph(Tk):
                                             hover_color="#ef511c", 
                                             command= self.go_register
                                             )
-        self.buttonRegister.place(x= 240, y= 500)
+        self.buttonRegister.place(x= 240, y= 450)
 
     def toggle_password_visibility(self):
         if self.password_visible:
@@ -96,27 +85,20 @@ class Login_graph(Tk):
             self.password_visible = True
 
     def verify_login(self):
-        # Créez une instance de la classe Login (backend)
+        # Créez une instance de la classe Login
         login_backend = Login()
-        
-        # Récupérez les valeurs des champs du formulaire
-        firstname = self.entry.get()
-        surname = self.entry1.get()
+    
+        #récupérez les valeurs des champs du formulaire
         email = self.entry2.get()
         password = self.entry3.get()
-
-        # Appelez la méthode login du backend pour vérifier les informations d'identification
-        success, user_id = login_backend.login(firstname, surname, email, password)
-
-        # Si la connexion est réussie (success est True), affichez la page principale
+        # Utilisez la méthode login pour vérifier les informations de connexion
+        success, user_id = login_backend.login(email, password)
         if success:
-            print("Welcome")
-            # Fermez la fenêtre de connexion
             self.destroy()
-            # Affichez la page principale
-            goMainpage = MainPage_graph()
-            goMainpage.mainloop()
+            main_page = MainPage_graph()
+            main_page.mainloop()
         else:
+            # Gestion de l'échec de la connexion
             print("Login failed. Please check your credentials.")
 
     def go_register(self):
