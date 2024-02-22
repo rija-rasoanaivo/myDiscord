@@ -236,6 +236,7 @@ class MainPage_graph(Tk):
         # Actualisation de la liste des salons
         self.toggle_right_frame()
 
+
     def send_message(self):
         # Récupère le contenu du ctk.CTkTextbox
         message_content = self.text.get("1.0", "end-1c")
