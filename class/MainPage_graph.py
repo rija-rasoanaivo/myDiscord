@@ -66,7 +66,7 @@ class MainPage_graph(Tk):
             self.frame2.place(x=100, y=0)
             room_info = ChatRoom().get_chat_room_ids_and_names()
             for i, (room_id, room_name) in enumerate(room_info):
-                button = ctk.CTkButton(self.frame2, text=room_name, width=70, height=20, corner_radius=10, font=("Agency FB", 18, 'bold'), fg_color="#aeb8f9",bg_color="#aeb8f9", hover_color= "#a78ff7", command=lambda id=room_id: self.frame4_message(id))
+                button = ctk.CTkButton(self.frame2, text=room_name, width=70, height=20, corner_radius=10, font=("Agency FB", 18, 'bold'), fg_color="#aeb8f9",bg_color="#aeb8f9", hover_color= "#a78ff7", command=lambda id=room_id: self.select_room(id))
                 button.place(x=80, y=50 + i * 50)
 
                 # creation bouton ajouter salon
@@ -140,6 +140,7 @@ class MainPage_graph(Tk):
             self.frame4.place_forget()
             self.messageDisplay.winfo_ismapped()
             self.messageDisplay.place_forget()
+
             
         else:
             self.frame4.place(x=300, y=0)
@@ -237,18 +238,22 @@ class MainPage_graph(Tk):
         self.toggle_right_frame()
 
 
+    def select_room(self, id_room):
+        self.id_room = id_room  # Stockez l'ID du salon sélectionné
+        self.frame4_message(id_room)
+
     def send_message(self):
         # Récupère le contenu du ctk.CTkTextbox
-        message_content = self.text.get("1.0", "end-1c")
-        if message_content.strip():  # Vérifie si le message n'est pas vide
+        message_content = self.text.get("1.0", "end-1c").strip()
+        if message_content:
             # Utilise l'instance de Chatting pour envoyer le message
-            self.current_chat_instance.send_message(message_content.strip())
-            # Efface le contenu du ctk.CTkTextbox
+            self.current_chat_instance.send_message(message_content)
             self.text.delete("1.0", "end")
-            # Optionnellement, rafraîchir les messages ici pour afficher le nouveau message
-        
-        
+            # Rafraîchir les messages pour inclure le nouveau message
+            self.frame4_message(self.current_chat_instance.id_room)
+                        
                 
+                    
             
 
               
