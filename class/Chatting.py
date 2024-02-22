@@ -14,7 +14,7 @@ class Chatting:
         self.db = Server.db
 
         query = """
-        SELECT id_user, message_content, hour
+        SELECT  firstName, message_content, hour
         FROM message
         WHERE id_room = %s
         """
@@ -32,7 +32,7 @@ class Chatting:
 
         # Mise à jour de last_message_timestamp avec l'horodatage du dernier message chargé
         if messages:
-            self.last_message_timestamp = messages[-1][2]  # Supposant que le troisième élément est l'horodatage
+            self.last_message_timestamp = messages[::-1]  # Supposant que le troisième élément est l'horodatage
 
         return messages
 

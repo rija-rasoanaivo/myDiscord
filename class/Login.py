@@ -9,7 +9,7 @@ class Login:
         self.email = email
         self.password = password
         result = self.server.db.fetch(
-            "SELECT id FROM user WHERE email=%s AND password=%s",
+            "SELECT firstName FROM user WHERE email=%s AND password=%s",
             (email, password)
         )
         
@@ -25,6 +25,17 @@ class Login:
     def logout(self):
         self.user_id = None
         print("User logged out.")
+
+    # def get_userName(self):
+    #     if self.user_id:
+    #         user_info = self.server.db.fetch(
+    #             "SELECT firstName FROM user WHERE id=%s",
+    #             (self.user_id,)
+    #         )
+
+    #         print(user_info)
+    #         return user_info
+        
 
 
     # récupérer les informations de l'utilisateur à partir de son ID
