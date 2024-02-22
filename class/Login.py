@@ -9,13 +9,13 @@ class Login:
         self.email = email
         self.password = password
         result = self.server.db.fetch(
-            "SELECT id FROM user WHERE email=%s AND password=%s",
+            "SELECT firstName FROM user WHERE email=%s AND password=%s",
             (email, password)
         )
         
         if result:
             print("Login successful!")
-            self.user_id = result[0][0]  # Stockez l'ID de l'utilisateur dans user_id
+            self.user_id = result[0][0]  # Stockez l'ID de l'utilisateur dans user_id #[0][0
             return True, self.user_id  # Renvoie True et l'id_user
         else:
             print("Login failed. Please check your credentials.")

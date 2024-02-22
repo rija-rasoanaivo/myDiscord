@@ -4,9 +4,10 @@ from Message import *
 import time
 
 class Chatting:
-    def __init__(self, user_id, id_room):
+    def __init__(self, user_id, firstName, id_room):
         self.user_id = user_id
         self.id_room = id_room
+        self.firstName = firstName
         self.db = Server.db
         self.last_message_timestamp = None
     
@@ -14,7 +15,7 @@ class Chatting:
         self.db = Server.db
 
         query = """
-        SELECT id_user, message_content, hour
+        SELECT id_user, firstName, message_content, hour
         FROM message
         WHERE id_room = %s
         """
@@ -40,7 +41,7 @@ class Chatting:
 
     def send_message(self, message_content):
         # Création d'une instance de Message
-        message = Message(self.user_id, self.id_room)
+        message = Message(self.user_id, self.firstName, self.id_room)
         # Envoi du message
         message.send_message(message_content)
 
