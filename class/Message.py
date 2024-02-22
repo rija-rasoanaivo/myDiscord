@@ -7,11 +7,17 @@ class Message:
     def __init__(self, user_id, id_room):
         self.user_id = user_id
         self.id_room = id_room
+        
         self.db = Server.db
 
     def send_message(self, message_content):
         # Get the current timestamp
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        
+        query = """
+            SELECT id FROM user WHERE id=%s  INNER JOIN message ON user.id = message.id_user
+        """
         
         # Construct the SQL query to insert the new message
         query = """

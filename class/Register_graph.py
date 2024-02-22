@@ -2,6 +2,7 @@ from tkinter import *
 import customtkinter as ctk
 from Register import *
 from Login_graph import Login_graph
+from MainPage_graph import MainPage_graph
 
 
 

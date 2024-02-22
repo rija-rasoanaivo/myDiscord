@@ -7,8 +7,6 @@ from Chatting import *
 
 
 
-
-
 class MainPage_graph(Tk):
     def __init__(self, user_id=None):
         super().__init__()
@@ -132,50 +130,55 @@ class MainPage_graph(Tk):
 
 
     def frame4_message(self, id_room):
+        # Clear any previous messages displayed in frame4
         for widget in self.frame4.winfo_children():
             widget.destroy()
 
-    # Ensure frame4 is placed and visible
+        # Ensure frame4 is placed and visible
         self.frame4.place(x=300, y=0)
 
-     # Fetch messages for the selected room
+        # Fetch messages for the selected room
         self.current_chat_instance = Chatting(self.user_id, id_room)
         messages = self.current_chat_instance.load_messages(id_room, self.user_id)
 
-    # Display messages or a placeholder if none are found
+        # Display messages or a placeholder if none are found
         if messages:
             for i, message in enumerate(messages):
-                user_id = message[0]  # Get the user ID instead of the timestamp
-                message_content = message[1]
-                message_text = f"User {user_id}: {message_content}"  # Construct the message text with user ID
-                message_label = ctk.CTkLabel(self.frame4, text=message_text, width=170, height=30, corner_radius=10,font=("Agency FB", 18, 'bold'), fg_color="#aeb8f9", bg_color="#23272d", text_color="black")
+                message_text = f"{message[1]}"
+                message_label = ctk.CTkLabel(self.frame4, text=message_text, width=170, height=30, corner_radius=10,font=("Agency FB", 20, 'bold'), fg_color="#aeb8f9", bg_color="#23272d", text_color="black")
                 message_label.place(x=80, y=30 + i * 70)
+
+            for i, message in enumerate(messages):
+                message_text = f"{message[2]} {message[0]}" 
+                self.messageDisplay = ctk.CTkLabel(self.frame4, text=message_text, width=100, height=20, font=("Agency FB", 14, 'bold'),text_color="white", bg_color="#23272d" )
+                self.messageDisplay.place(x=80, y=60 + i * 70)
+
+            
         else:
             default_message = ctk.CTkLabel(self.frame4, text="No messages in this room.", width=200, height=20, corner_radius=10,
                                         font=("Agency FB", 18, 'bold'), fg_color="#aeb8f9", bg_color="#aeb8f9")
             default_message.place(x=80, y=50)
 
-            # Message entry textbox
-            self.text = ctk.CTkTextbox(self.frame4, width=250, height=50, corner_radius=13, fg_color="white",
-                                        bg_color="#23272d", border_color="#38454c", border_width=1)
-            self.text.place(x=200, y=600, anchor=CENTER)
+        # Message entry textbox
+        self.text = ctk.CTkTextbox(self.frame4, width=250, height=50, corner_radius=13, fg_color="white",bg_color="#23272d", border_color="#38454c", border_width=1, text_color= "black")
+        self.text.place(x=200, y=600, anchor=CENTER)
 
-            # Send message button
-            self.imageSend = PhotoImage(file="image/boutons/envoyer1.png")
-            self.buttonSend = ctk.CTkButton(self.frame4, image=self.imageSend, text=None, width=10, height=10, fg_color="#23b0ed",
-                                            border_color="black", border_width=1, hover_color="#a78ff7", corner_radius=10,
-                                            command=self.send_message)
-            self.buttonSend.place(x=370, y=600, anchor=CENTER)
+        # Send message button
+        self.imageSend = PhotoImage(file="image/boutons/envoyer1.png")
+        self.buttonSend = ctk.CTkButton(self.frame4, image=self.imageSend, text=None, width=10, height=10, fg_color="#23b0ed",
+                                        border_color="black", border_width=1, hover_color="#a78ff7", corner_radius=10,
+                                        command=self.send_message)
+        self.buttonSend.place(x=370, y=600, anchor=CENTER)
 
-            # Voice message button
-            self.imageVoice = PhotoImage(file="image/boutons/vocal.png")
-            self.buttonVoice = ctk.CTkButton(self.frame4, image=self.imageVoice, text=None, width=10, height=10, fg_color="#23b0ed",
-                                            border_color="black", border_width=1, hover_color="#a78ff7", corner_radius=10)
-            self.buttonVoice.place(x=430, y=600, anchor=CENTER)
+        # Voice message button
+        self.imageVoice = PhotoImage(file="image/boutons/vocal.png")
+        self.buttonVoice = ctk.CTkButton(self.frame4, image=self.imageVoice, text=None, width=10, height=10, fg_color="#23b0ed",
+                                        border_color="black", border_width=1, hover_color="#a78ff7", corner_radius=10)
+        self.buttonVoice.place(x=430, y=600, anchor=CENTER)
 
-            # Emoji buttons
-            self.create_emoji_buttons()
-            self.update
+        # Emoji buttons
+        self.create_emoji_buttons()
+        self.update
 
     def create_emoji_buttons(self):
         emoji_files = ["heartred1.png", "loveheart.png", "mdr.png", "pouce.png", "eyesopen.png"]
@@ -194,14 +197,14 @@ class MainPage_graph(Tk):
            
     # methode pour retourner a la page de connexion
     def returnPageLogin(self): 
-        
-        back = Login()
-        back.logout()
+         
         self.destroy()
-        graph =Login_graph()
-        graph.mainloop()
+        go_login = Login_graph()
+        go_login.mainloop()
+
+
+    
         
-            
     
     def join_datacCreateroom(self):
         # recupere les valeurs saisies par l'utilisateur

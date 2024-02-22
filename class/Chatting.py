@@ -14,7 +14,7 @@ class Chatting:
         self.db = Server.db
 
         query = """
-        SELECT id_user, message_content, hour
+        SELECT  firstName, message_content, hour
         FROM message
         WHERE id_room = %s
         """
@@ -32,7 +32,7 @@ class Chatting:
 
         # Mise à jour de last_message_timestamp avec l'horodatage du dernier message chargé
         if messages:
-            self.last_message_timestamp = messages[-1][2]  # Supposant que le troisième élément est l'horodatage
+            self.last_message_timestamp = messages[::-1]  # Supposant que le troisième élément est l'horodatage
 
         return messages
 
@@ -44,8 +44,30 @@ class Chatting:
         # Envoi du message
         message.send_message(message_content)
 
+    # def refresh_messages(self):
+    #     while True:
+    #         time.sleep(3)
+            
+    #         query = """
+    #         SELECT id_user, message_content, hour
+    #         FROM message
+    #         WHERE id_room = %s
+    #         """
+    #         params = (self.current_room,)
+    #         if self.last_message_timestamp:
+    #             query += " AND hour > %s"
+    #             params += (self.last_message_timestamp,)
+
+    #         query += " ORDER BY hour ASC"
+    #         messages = db.fetch(query, params)  # Utilisez la nouvelle connexion ici.
+
+    #         for id_user, content, timestamp in messages:
+    #             print(f"[{timestamp}] User {id_user}: {content}")
+    #             self.last_message_timestamp = timestamp
+
     
 
 if __name__ == "__main__":
     db = MyDb("82.165.185.52", "marijo", "Rijoma13!", "manon-rittling_mydiscord") 
     chat_client = Chatting(db)
+    
