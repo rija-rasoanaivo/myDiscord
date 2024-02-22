@@ -20,6 +20,12 @@ class Login:
         else:
             print("Login failed. Please check your credentials.")
             return False, None  # Renvoie False et None
+        
+    # méthode pour déconnecter l'utilisateur
+    def logout(self):
+        self.user_id = None
+        print("User logged out.")
+
 
     # récupérer les informations de l'utilisateur à partir de son ID
     def get_user_info(self):
