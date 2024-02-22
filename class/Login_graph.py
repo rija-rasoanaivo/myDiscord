@@ -7,7 +7,7 @@ from MainPage_graph import MainPage_graph
 
 
 class Login_graph(Tk):
-    def __init__(self, on_login_success=None):
+    def __init__(self):
         super().__init__()
 
         
@@ -29,17 +29,17 @@ class Login_graph(Tk):
         self.label = ctk.CTkLabel(self, text="LOGIN", width=50, height=50, font=('Broadway', 25), text_color="white")
         self.label.place(x=200, y=160, anchor=CENTER)
 
-        # Création champ email
-        self.email = ctk.CTkLabel(self, text="Email", width=50, height=30, font=('Agency FB', 22, 'bold'), text_color="white")
-        self.email.place(x=200, y=240, anchor=CENTER)
-        self.entry2 = ctk.CTkEntry(self, width=200, height=30, corner_radius=8, fg_color="white", text_color="black")
-        self.entry2.place(x=200, y=270, anchor=CENTER)
+        # creation champ email
+        self.email = ctk.CTkLabel(self,text= "Email", width=50, height=30,font=('Agency FB', 22, 'bold'), text_color= "white" )
+        self.email.place(x=200, y=240, anchor= CENTER)
+        self.entry2 = ctk.CTkEntry(self, width=200, height=30, corner_radius= 8, fg_color= "white", text_color= "black")
+        self.entry2.place(x=200, y= 270, anchor = CENTER)
     
-        # Création champ mdp
-        self.password = ctk.CTkLabel(self, text="Password", width=50, height=30, font=('Agency FB', 22, 'bold'), text_color="white")
-        self.password.place(x=200, y=310, anchor=CENTER)
-        self.entry3 = ctk.CTkEntry(self, show='*', width=150, height=30, corner_radius=8, fg_color="white", text_color="black")
-        self.entry3.place(x=200, y=340, anchor=CENTER)
+        # creation champ mdp
+        self.password = ctk.CTkLabel(self, text="Password", width=50, height=30, font=('Agency FB', 22, 'bold'), text_color= "white")
+        self.password.place(x=200, y=310, anchor= CENTER)
+        self.entry3 = ctk.CTkEntry(self,show = '*', width= 150, height=30, corner_radius= 8, fg_color="white", text_color= "black")
+        self.entry3.place(x=200, y=340, anchor = CENTER )
 
         # Créer un bouton "Afficher"
         self.show_password_button = ctk.CTkButton(self, text="Afficher", width=30, height=20, corner_radius=8, command=self.toggle_password_visibility)
