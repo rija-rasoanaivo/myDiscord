@@ -15,7 +15,7 @@ class Login:
         
         if result:
             print("Login successful!")
-            self.user_id = result[0][0]  # Stockez l'ID de l'utilisateur dans user_id #[0][0
+            self.user_id = result[0][0]  # Stockez l'ID de l'utilisateur dans user_id
             return True, self.user_id  # Renvoie True et l'id_user
         else:
             print("Login failed. Please check your credentials.")
