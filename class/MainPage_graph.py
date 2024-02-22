@@ -112,7 +112,7 @@ class MainPage_graph(Tk):
             self.roomName = ctk.CTkLabel(self, text="Room Name", width=20, height=20, font=('Agency FB', 18, 'bold'), text_color="#c7c1f2", fg_color="#415059")
             self.roomName.place(x=550, y=220, anchor=CENTER)
 
-            self.entry_roomName = ctk.CTkEntry(self, width=100, height=30, corner_radius=5, fg_color="white", bg_color="#415059", border_color="#38454c", border_width=1)
+            self.entry_roomName = ctk.CTkEntry(self, width=100, height=30, corner_radius=5, fg_color="white", bg_color="#415059", border_color="#38454c", border_width=1, text_color="black")
             self.entry_roomName.place(x=550, y=260, anchor=CENTER)
 
             # Création de la checkbox pour choisir salon privé ou public
@@ -147,8 +147,7 @@ class MainPage_graph(Tk):
         if messages:
             for i, message in enumerate(messages):
                 message_text = f"{message[1]}: {message[2]}"
-                message_label = ctk.CTkLabel(self.frame4, text=message_text, width=170, height=30, corner_radius=10,
-                                            font=("Agency FB", 18, 'bold'), fg_color="#aeb8f9", bg_color="#23272d")
+                message_label = ctk.CTkLabel(self.frame4, text=message_text, width=170, height=30, corner_radius=10,font=("Agency FB", 18, 'bold'), fg_color="#aeb8f9", bg_color="#23272d", text_color="black")
                 message_label.place(x=80, y=30 + i * 70)
         else:
             default_message = ctk.CTkLabel(self.frame4, text="No messages in this room.", width=200, height=20, corner_radius=10,
