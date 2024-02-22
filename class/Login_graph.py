@@ -4,8 +4,9 @@ from Login import *
 from MainPage_graph import *
 
 
+
 class Login_graph(Tk):
-    def __init__(self):
+    def __init__(self, on_login_success=None):
         super().__init__()
 
         # creation de la fenetre
@@ -96,21 +97,27 @@ class Login_graph(Tk):
         # Appelez la méthode login du backend pour vérifier les informations d'identification
         success, user_id = login_backend.login( email, password)
 
-        # Si la connexion est réussie (success est True), affichez la page principale
+        
+        # Si la connexion est réussie (success est True), affichez la page principale*
+       
         if success:
             print("Welcome")
-            # Fermez la fenêtre de connexion
+            # # Fermez la fenêtre de connexion
             self.destroy()
-            # Affichez la page principale
+            # # Affichez la page principale
             goMainpage = MainPage_graph(user_id)
             goMainpage.mainloop()
         else:
             print("Login failed. Please check your credentials.")
 
+        
+
     def go_register(self):
         self.destroy()
         register = Register_graph()
         register.mainloop()
+
+        self.update()
 
 
 if __name__ == "__main__":

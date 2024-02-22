@@ -4,7 +4,8 @@ from Register_graph import *
 from ChatRoom import *
 from PrivateChatRoom import *
 from Chatting import *
-from Login_graph import *
+
+
 
 
 
@@ -131,7 +132,7 @@ class MainPage_graph(Tk):
 
 
     def frame4_message(self, id_room):
-        # First, clear any previous messages displayed in frame4
+        # # First, clear any previous messages displayed in frame4
         for widget in self.frame4.winfo_children():
             widget.destroy()
 
@@ -139,6 +140,7 @@ class MainPage_graph(Tk):
             self.frame4.place_forget()
             self.messageDisplay.winfo_ismapped()
             self.messageDisplay.place_forget()
+            
         else:
             self.frame4.place(x=300, y=0)
 
@@ -152,25 +154,26 @@ class MainPage_graph(Tk):
                 # No messages found, display a placeholder message or leave it empty
                 self.messageDisplay = ctk.CTkLabel(self.frame4, text="No messages in this room.", width=200, height=20, corner_radius=10, font=("Agency FB", 18, 'bold'), fg_color="#aeb8f9", bg_color="#aeb8f9")
                 self.messageDisplay.place(x=80, y=50)
-            else:
-                # If messages are found, display them
-                for i, message in enumerate(messages):
-                    message_text = message[1]
-                    self.messageDisplay = ctk.CTkLabel(self.frame4, text=message_text, width=170, height=30, corner_radius=10, font=("Agency FB", 18, 'bold'), fg_color="#aeb8f9", bg_color="#23272d")
-                    self.messageDisplay.place(x=80, y=30 + i * 70)
+            
+            # If messages are found, display them
+            for i, message in enumerate(messages):
+                message_text = message[1]
+                self.messageDisplay = ctk.CTkLabel(self.frame4, text=message_text, width=170, height=30, corner_radius=10, font=("Agency FB", 18, 'bold'), fg_color="#aeb8f9", bg_color="#23272d")
+                self.messageDisplay.place(x=80, y=30 + i * 70)
 
-                for i, message in enumerate(messages):
-                    message_text = message[2]
-                    self.messageDisplay = ctk.CTkLabel(self.frame4, text=message_text, width=100, height=20, font=("Agency FB", 12, 'bold'),text_color="white", bg_color="#23272d" )
-                    self.messageDisplay.place(x=80, y=60 + i * 70)
+            for i, message in enumerate(messages):
+                message_text = message[2]
+                self.messageDisplay = ctk.CTkLabel(self.frame4, text=message_text, width=100, height=20, font=("Agency FB", 12, 'bold'),text_color="white", bg_color="#23272d" )
+                self.messageDisplay.place(x=80, y=60 + i * 70)
                 
                 
                 # creation saisi message par l'utilisateur
                 self.text = ctk.CTkTextbox(self.frame4, width=250, height=50, corner_radius=13, fg_color="white", bg_color="#23272d", border_color="#38454c", border_width=1)
                 self.text.place(x=200, y=600, anchor = CENTER)
+
                 # creation bouton envoyer message
                 self.imageSend = PhotoImage(file="image/boutons/envoyer1.png")
-                self.buttonSend = ctk.CTkButton(self.frame4, image=self.imageSend, text=None, width=10, height=10, fg_color="#23b0ed", border_color="black", border_width=1, hover_color="#a78ff7",corner_radius= 10, command=self.join_dataSendMessage)
+                self.buttonSend = ctk.CTkButton(self.frame4, image=self.imageSend, text=None, width=10, height=10, fg_color="#23b0ed", border_color="black", border_width=1, hover_color="#a78ff7",corner_radius= 10)
                 self.buttonSend.place(x=370, y=600, anchor = CENTER)
 
                 # bouton vocal
@@ -201,11 +204,13 @@ class MainPage_graph(Tk):
     # methode pour retourner a la page de connexion
     def returnPageLogin(self): 
         
+        back = Login()
+        back.logout()
         self.destroy()
-        app = Login_graph()
-        app.mainloop()
+        graph =Login_graph()
+        graph.mainloop()
         
-        
+            
     
     def join_datacCreateroom(self):
         # recupere les valeurs saisies par l'utilisateur
