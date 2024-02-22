@@ -4,9 +4,10 @@ from Message import *
 import time
 
 class Chatting:
-    def __init__(self):
+    def __init__(self, user_id, id_room):
+        self.user_id = user_id
+        self.id_room = id_room
         self.db = Server.db
-        self.login_class = Login()  # Initialisez Login avec une instance de la base de données
         self.last_message_timestamp = None
     
     def load_messages(self, id_room, id_user):
@@ -31,11 +32,11 @@ class Chatting:
         return messages
 
 
-    def send_message(self, user_id, id_room):
-        
-
-        message = Message(user_id, id_room)
-        message.send_message()
+    def send_message(self, message_content):
+        # Création d'une instance de Message
+        message = Message(self.user_id, self.id_room)
+        # Envoi du message
+        message.send_message(message_content)
 
     # def refresh_messages(self):
     #     while True:

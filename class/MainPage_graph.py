@@ -146,7 +146,7 @@ class MainPage_graph(Tk):
 
 
             # Fetch messages for the selected room
-            display = Chatting()
+            display = Chatting(self.user_id, id_room) 
             messages = display.load_messages(id_room, id_user= self.user_id)
 
             # Check if the messages list is empty
@@ -234,10 +234,16 @@ class MainPage_graph(Tk):
         # Actualisation de la liste des salons
         self.toggle_right_frame()
 
-    
-    
-            
+    def on_send_message_click(self):
+        message_content = self.text.get("1.0", "end-1c")  # Récupère le contenu du Textbox. "end-1c" évite d'inclure le dernier retour à la ligne automatiquement ajouté par Textbox.
+        if message_content.strip():  # Vérifie si le message n'est pas vide
+            self.chatting_instance.send_message(message_content.strip())  # Envoie le message
+            self.text.delete("1.0", END)
+
         
+        
+                
+            
 
               
                 
