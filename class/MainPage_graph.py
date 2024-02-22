@@ -8,7 +8,7 @@ from Chatting import *
 
 
 class MainPage_graph(Tk):
-    def __init__(self, user_id=None):
+    def __init__(self, user_id=None,):
         super().__init__()
 
         self.classLogin = Login()
