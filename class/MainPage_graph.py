@@ -149,14 +149,11 @@ class MainPage_graph(Tk):
                 message_label.place(x=80, y=30 + i * 70)
 
             for i, message in enumerate(messages):
-                message_text = f"{message[2]}, {message[0]}" 
+                message_text = f"{message[2]} {message[0]}" 
                 self.messageDisplay = ctk.CTkLabel(self.frame4, text=message_text, width=100, height=20, font=("Agency FB", 14, 'bold'),text_color="white", bg_color="#23272d" )
                 self.messageDisplay.place(x=80, y=60 + i * 70)
 
-            # for i, message in enumerate(messages):
-            #     message_text = f"{message[0]}"
-            #     self.messageDisplay = ctk.CTkLabel(self.frame4, text=message_text, width=100, height=20, font=("Agency FB", 12, 'bold'), text_color="white", bg_color="#23272d")
-            #     self.messageDisplay.place(x=140, y=60 + i * 70)
+            
         else:
             default_message = ctk.CTkLabel(self.frame4, text="No messages in this room.", width=200, height=20, corner_radius=10,
                                         font=("Agency FB", 18, 'bold'), fg_color="#aeb8f9", bg_color="#aeb8f9")
