@@ -4,6 +4,7 @@ from Register_graph import *
 from ChatRoom import *
 from PrivateChatRoom import *
 from Chatting import *
+from Vocal import *
 
 
 
@@ -174,7 +175,7 @@ class MainPage_graph(Tk):
 
                     # bouton vocal
                     self.imageVoice = PhotoImage(file="image/boutons/vocal.png")
-                    self.buttonVoice = ctk.CTkButton(self.frame4, image=self.imageVoice, text=None, width=10, height=10, fg_color="#23b0ed", border_color="black", border_width=1, hover_color="#a78ff7",corner_radius= 10)
+                    self.buttonVoice = ctk.CTkButton(self.frame4, image=self.imageVoice, text=None, width=10, height=10, fg_color="#23b0ed", border_color="black", border_width=1, hover_color="#a78ff7",corner_radius= 10, command= lambda: Vocal())
                     self.buttonVoice.place(x=430, y=600, anchor = CENTER)
                     
                     # creation des emoticones
