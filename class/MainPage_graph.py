@@ -146,6 +146,7 @@ class MainPage_graph(Tk):
 
 
             # Fetch messages for the selected room
+            self.current_chat_instance = Chatting(self.user_id, id_room)
             display = Chatting(self.user_id, id_room) 
             messages = display.load_messages(id_room, id_user= self.user_id)
 
@@ -173,8 +174,9 @@ class MainPage_graph(Tk):
 
                 # creation bouton envoyer message
                 self.imageSend = PhotoImage(file="image/boutons/envoyer1.png")
-                self.buttonSend = ctk.CTkButton(self.frame4, image=self.imageSend, text=None, width=10, height=10, fg_color="#23b0ed", border_color="black", border_width=1, hover_color="#a78ff7",corner_radius= 10)
-                self.buttonSend.place(x=370, y=600, anchor = CENTER)
+                self.buttonSend = ctk.CTkButton(self.frame4, image=self.imageSend, text=None, width=10, height=10, fg_color="#23b0ed", border_color="black", border_width=1, hover_color="#a78ff7", corner_radius=10, command=self.send_message)
+                self.buttonSend.place(x=370, y=600, anchor=CENTER)
+
 
                 # bouton vocal
                 self.imageVoice = PhotoImage(file="image/boutons/vocal.png")
@@ -234,12 +236,15 @@ class MainPage_graph(Tk):
         # Actualisation de la liste des salons
         self.toggle_right_frame()
 
-    def on_send_message_click(self):
-        message_content = self.text.get("1.0", "end-1c")  # Récupère le contenu du Textbox. "end-1c" évite d'inclure le dernier retour à la ligne automatiquement ajouté par Textbox.
+    def send_message(self):
+        # Récupère le contenu du ctk.CTkTextbox
+        message_content = self.text.get("1.0", "end-1c")
         if message_content.strip():  # Vérifie si le message n'est pas vide
-            self.chatting_instance.send_message(message_content.strip())  # Envoie le message
-            self.text.delete("1.0", END)
-
+            # Utilise l'instance de Chatting pour envoyer le message
+            self.current_chat_instance.send_message(message_content.strip())
+            # Efface le contenu du ctk.CTkTextbox
+            self.text.delete("1.0", "end")
+            # Optionnellement, rafraîchir les messages ici pour afficher le nouveau message
         
         
                 
