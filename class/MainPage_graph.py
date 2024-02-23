@@ -4,6 +4,8 @@ from Register_graph import *
 from ChatRoom import *
 from PrivateChatRoom import *
 from Chatting import *
+import emoji
+from tkinter.constants import CENTER
 
 
 
@@ -182,16 +184,17 @@ class MainPage_graph(Tk):
         self.update
 
     def create_emoji_buttons(self):
-        emoji_files = ["heartred1.png", "loveheart.png", "mdr.png", "pouce.png", "eyesopen.png"]
-        x_position = 100
-        for emoji_file in emoji_files:
-            emoji_image = PhotoImage(file=f"image/emoji/{emoji_file}")
-            buttonEmoticones = ctk.CTkButton(self.frame4, image=emoji_image, text=None, width=5, height=5,
-                                            fg_color="#23272d", hover_color="#23b0ed")
-            buttonEmoticones.place(x=x_position, y=530)
-            x_position += 30
-            # Save a reference to the image to prevent garbage collection
-            setattr(self, emoji_file.split('.')[0], emoji_image)
+        emojis = ["😃", "😁", "😂", "🤣", "😊", "😇", "😉", "😍", "😘", "😋", "😛", "🥺", "😭", "😤"]
+        x_position = 30
+        button_width = 10
+        button_height = 10
+        for emoji_code in emojis:
+            button = ctk.CTkButton(self.frame4, text=emoji_code, width=button_width, height=button_height, corner_radius=5, fg_color="#23272d", hover_color="#a78ff7", command=lambda e=emoji_code: self.text.insert("end", emoji_code))
+            button.place(x=x_position, y=550, anchor=CENTER)
+            x_position += 40  # Augmenter la position x pour le prochain bouton
+
+
+
 
             
             
