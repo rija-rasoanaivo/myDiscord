@@ -8,11 +8,12 @@ from Chatting import *
 
 
 class MainPage_graph(Tk):
-    def __init__(self, user_id=None,):
+    def __init__(self, user_id=None, first_name=None):
         super().__init__()
 
         self.classLogin = Login()
         self.user_id = user_id
+        self.first_name = first_name
 
         # Création de la fenêtre principale
         self.geometry("800x650")
@@ -238,10 +239,11 @@ class MainPage_graph(Tk):
         message_content = self.text.get("1.0", "end-1c").strip()
         if message_content:
             # Utilise l'instance de Chatting pour envoyer le message
-            self.current_chat_instance.send_message(message_content)
+            self.current_chat_instance.send_message(self.user_id, self.first_name, message_content)
             self.text.delete("1.0", "end")
             # Rafraîchir les messages pour inclure le nouveau message
             self.frame4_message(self.current_chat_instance.id_room)
+
                         
                 
                     

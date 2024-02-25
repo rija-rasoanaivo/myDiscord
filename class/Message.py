@@ -4,9 +4,10 @@ from datetime import datetime
 
 class Message:
 
-    def __init__(self, user_id, id_room):
+    def __init__(self, user_id, first_name, id_room):
         self.user_id = user_id
         self.id_room = id_room
+        self.first_name = first_name
         
         self.db = Server.db
 
@@ -14,16 +15,11 @@ class Message:
         # Get the current timestamp
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        
-        query = """
-            SELECT id FROM user WHERE id=%s  INNER JOIN message ON user.id = message.id_user
-        """
-        
         # Construct the SQL query to insert the new message
         query = """
-            INSERT INTO message (id_user, id_room, message_content, hour)
-            VALUES (%s, %s, %s, %s)
+            INSERT INTO message (id_user, firstName, id_room, message_content, hour)
+            VALUES (%s, %s, %s, %s, %s)
         """
         
         # Execute the query
-        self.db.executeRequete(query, (self.user_id, self.id_room, message_content, timestamp))  
+        self.db.executeRequete(query, (self.user_id, self.first_name, self.id_room, message_content, timestamp))

@@ -38,11 +38,12 @@ class Chatting:
 
 
 
-    def send_message(self, message_content):
-        # Création d'une instance de Message
-        message = Message(self.user_id, self.id_room)
+    def send_message(self, user_id, first_name, message_content):
+        # Création d'une instance de Message avec user_id et first_name
+        message = Message(user_id=user_id, first_name=first_name, id_room=self.id_room)
         # Envoi du message
         message.send_message(message_content)
+
 
     # def refresh_messages(self):
     #     while True:
