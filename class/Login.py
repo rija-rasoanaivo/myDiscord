@@ -43,7 +43,7 @@ class Login:
     def get_user_info(self):
         if self.user_id:
             user_info = self.server.db.fetch(
-                "SELECT first_name, last_name, email FROM user WHERE id=%s",
+                "SELECT firstName, lastName, email FROM user WHERE id=%s",
                 (self.user_id,)
             )
 
@@ -51,6 +51,6 @@ class Login:
             return user_info
         else:
             print("No user logged in.")
-            return None
+            
 
     

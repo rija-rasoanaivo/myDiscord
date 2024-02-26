@@ -4,7 +4,6 @@ from Register_graph import *
 from ChatRoom import *
 from PrivateChatRoom import *
 from Chatting import *
-import emoji
 from tkinter.constants import CENTER
 
 
@@ -37,10 +36,10 @@ class MainPage_graph(Tk):
         self.buttonRoom.pack(side="top", anchor="nw", padx=12, pady=70)
 
         # creation bouton deconnexion
-        self.imageDeconnexion = PhotoImage(file="image/boutons/deconnexion1.png")
+        self.imageDeconnexion = PhotoImage(file="image/boutons/deco.png")
         # Création d'un Label avec l'image chargée comme image de fond
         self.buttonDeconnexion = ctk.CTkButton(self, image=self.imageDeconnexion, text=None, width=20, height=20, fg_color="#c7c1f2",bg_color= "#c7c1f2", corner_radius= 10, hover_color="#a78ff7", command= self.returnPageLogin)
-        self.buttonDeconnexion.place(x=15, y=580)
+        self.buttonDeconnexion.place(x=15, y=570)
 
         # creation de la frame a afficher sur la droite de mon bouton salon
         self.frame2 = ctk.CTkFrame(self, width=200, height=800, corner_radius=2, fg_color="#aeb8f9")
@@ -79,6 +78,7 @@ class MainPage_graph(Tk):
                 self.labelAdd.place(x=100, y=560, anchor=CENTER)
 
     def toggle_createRoom(self):
+        
         # Si la frame3 est déjà affichée, la faire disparaître et détruire ses éléments
         if self.frame3.winfo_ismapped():
             self.frame3.place_forget()
@@ -96,6 +96,10 @@ class MainPage_graph(Tk):
             self.checkPrivate.place_forget()
             self.buttonValid.winfo_ismapped()
             self.buttonValid.place_forget()
+            self.members.winfo_ismapped()
+            self.members.place_forget()
+            self.combo.winfo_ismapped()
+            self.combo.place_forget()
             self.label.winfo_ismapped()
             self.label.place_forget()
     
@@ -110,38 +114,62 @@ class MainPage_graph(Tk):
 
             # Création du champ pour le nom du salon
             self.roomName = ctk.CTkLabel(self, text="Room Name", width=20, height=20, font=('Agency FB', 18, 'bold'), text_color="#c7c1f2", fg_color="#415059")
-            self.roomName.place(x=550, y=220, anchor=CENTER)
+            self.roomName.place(x=550, y=210, anchor=CENTER)
 
             self.entry_roomName = ctk.CTkEntry(self, width=100, height=30, corner_radius=5, fg_color="white", bg_color="#415059", border_color="#38454c", border_width=1, text_color="black")
-            self.entry_roomName.place(x=550, y=260, anchor=CENTER)
+            self.entry_roomName.place(x=550, y=250, anchor=CENTER)
 
             # Création de la checkbox pour choisir salon privé ou public
             self.type_room = ctk.CTkLabel(self, text="Type Room", width=20, height=20, font=('Agency FB', 18, 'bold'), text_color="#c7c1f2", fg_color="#415059")
-            self.type_room.place(x=550, y=300, anchor=CENTER)
+            self.type_room.place(x=550, y=280, anchor=CENTER)
 
             self.checkPublic = ctk.CTkCheckBox(self, text="Public", text_color="white", width=40, height=20, bg_color="#415059", corner_radius=5, border_color="white", border_width=1)
-            self.checkPublic.place(x=480, y=340, anchor=CENTER)
+            self.checkPublic.place(x=480, y=310, anchor=CENTER)
 
             self.checkPrivate = ctk.CTkCheckBox(self, text="Private", text_color="white", width=40, height=20, bg_color="#415059", corner_radius=5, border_color="white", border_width=1)
-            self.checkPrivate.place(x=630, y=340, anchor=CENTER)
-
+            self.checkPrivate.place(x=630, y=310, anchor=CENTER)
+            
+            # # creation combobox pour ajouter les membres dans le salon
+            # self.members = ctk.CTkLabel(self, text="Add Members", width=20, height=20, font=('Agency FB', 18, 'bold'), text_color="#c7c1f2", fg_color="#415059")
+            # self.members.place(x=550, y=340, anchor=CENTER)
+            # listmembers = PrivateChatRoom().get_userNames()
+            # comboText  = [f"{member[0]} {member[1]}" for member in listmembers]
+            # self.combo = ctk.CTkComboBox(self, width=150, height=25, corner_radius=5, fg_color="white", bg_color="#415059", border_color="#38454c", border_width=1, values=comboText)
+            # self.combo.place(x=550, y=370, anchor=CENTER)
 
             # Création du bouton "valider"
             self.buttonValid = ctk.CTkButton(self, text="VALID", text_color="#38454c", width=80, height=20, corner_radius=10, font=("Agency FB", 21, "bold"), border_width=2, border_color="white", bg_color="#415059", fg_color="#c7c1f2", hover_color="#a78ff7", command=self.join_datacCreateroom)
-            self.buttonValid.place(x=550, y=410, anchor=CENTER)
+            self.buttonValid.place(x=550, y=420, anchor=CENTER)
+    
+    # fermer la frame4
+    def outRoombutton(self):
+        if self.frame4.winfo_ismapped():
+            self.frame4.place_forget()
 
+        
+
+    def show_frame4(self):
+        # Afficher la frame4
+        self.frame4.place(x=300, y=0)
 
     def frame4_message(self, id_room):
         # Clear any previous messages displayed in frame4
         for widget in self.frame4.winfo_children():
             widget.destroy()
 
-        # Ensure frame4 is placed and visible
-        self.frame4.place(x=300, y=0)
+        
+        self.show_frame4()
 
         # Fetch messages for the selected room
         self.current_chat_instance = Chatting(self.user_id, id_room)
         messages = self.current_chat_instance.load_messages(id_room, self.user_id)
+
+        # bouton pour quitter le salon
+        self.ImageoutRoom = PhotoImage(file="image/boutons/outRoom1.png")
+        self.buttonOutRoom = ctk.CTkButton(self.frame4, image=self.ImageoutRoom, text=None, width=20, height=20, fg_color="#23272d", hover_color="#a78ff7", corner_radius=10, command=lambda: self.outRoombutton())
+        self.buttonOutRoom.place(x=450, y=10)
+        
+
 
         # Display messages or a placeholder if none are found
         if messages:
@@ -207,24 +235,21 @@ class MainPage_graph(Tk):
 
     # methode pour creer un salon
     def join_datacCreateroom(self):
-        # recupere les valeurs saisies par l'utilisateur
+        # récupérer les valeurs saisies par l'utilisateur
         roomName = self.entry_roomName.get()
-        typeRoom = self.checkPublic.get()
-        typeRoom = self.checkPrivate.get()
+        typeRoom = "Public" if self.checkPublic.get() else "Private"  # Déterminez le type de la chambre en fonction de la case cochée
 
         # insertion des valeurs dans la base de données par la classe ChatRoom
         create_room = ChatRoom()
         create_room.create_chat_room(roomName, typeRoom)
-
+        
         # affichage d'un message de confirmation
-        self.label = ctk.CTkLabel(self, text="Room created", width=20, height=20, font=('Agency FB', 30, 'bold'), text_color="white", fg_color="#415059")
+        self.label = ctk.CTkLabel(self.frame3, text="Room created", width=20, height=20, font=('Agency FB', 30, 'bold'), text_color="white", fg_color="#415059")
         self.label.place(x=550, y=300, anchor=CENTER)
 
-        # ajoute l'administrateur dans le salon privé
-        admin_join = PrivateChatRoom()
-        admin_join.admin_join_private_chat_room()
+        # Récupérer l'ID de l'utilisateur actuel (administrateur) depuis self.user_id
+        admin_user_id = self.user_id
 
-        
         # Actualisation de la liste des salons
         self.toggle_right_frame()
 
@@ -242,13 +267,9 @@ class MainPage_graph(Tk):
             self.text.delete("1.0", "end")
             # Rafraîchir les messages pour inclure le nouveau message
             self.frame4_message(self.current_chat_instance.id_room)
-                        
-                
-                    
-            
 
-              
-                
+    
+
 if __name__ == "__main__":
         app = MainPage_graph()
         app.mainloop()
