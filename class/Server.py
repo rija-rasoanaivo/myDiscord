@@ -8,9 +8,6 @@ class Server:
     db.connexion()
 
     def __init__(self):
-        self.host = '127.0.0.1'
-        self.port = 8000
-
         # Paramètres audio
         self.FORMAT = pyaudio.paInt16
         self.CHANNELS = 1
@@ -20,18 +17,20 @@ class Server:
         # Initialisation de PyAudio
         self.audio = pyaudio.PyAudio()
 
-        # Création du socket TCP
+        self.server_socket = None  # Initialisation du socket à None
+
+    def create_server_socket(self, host='127.0.0.1', port=8000):
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
-            self.server_socket.bind((self.host, self.port))
+            self.server_socket.bind((host, port))
             self.server_socket.listen(10)  # Attente de connexions
             print("Serveur en attente de connexions...")
         except Exception as e:
             print(f"Erreur lors de la liaison du socket : {e}")
-            self.server_socket.close()
-            return
+            if self.server_socket:
+                self.server_socket.close()
+            self.server_socket = None
 
-    # Fonction pour gérer les clients et leur audio
     def handle_client(self, client_socket):
         stream = self.audio.open(format=self.FORMAT, channels=self.CHANNELS, rate=self.RATE, output=True, frames_per_buffer=self.CHUNK)
         try:
@@ -45,7 +44,6 @@ class Server:
         finally:
             client_socket.close()
 
-    # Nouvelle fonction pour gérer les connexions entrantes
     def accept_clients(self):
         while True:
             try:
@@ -56,7 +54,11 @@ class Server:
             except Exception as e:
                 print(f"Erreur lors de l'acceptation des clients : {e}")
 
-    def start(self):
+    def start_server(self):
+        if not self.server_socket:
+            print("Le socket serveur n'a pas été créé. Veuillez appeler create_server_socket() d'abord.")
+            return
+
         try:
             accept_thread = threading.Thread(target=self.accept_clients)
             accept_thread.start()
@@ -68,4 +70,5 @@ class Server:
 # Utilisation
 if __name__ == "__main__":
     server = Server()
-    server.start()
+    server.create_server_socket()  # Créer le socket serveur
+    server.start_server()  # Démarrer le serveur

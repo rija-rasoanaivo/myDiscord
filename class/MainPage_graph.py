@@ -4,6 +4,8 @@ from Register_graph import *
 from ChatRoom import *
 from PrivateChatRoom import *
 from Chatting import *
+from Vocal import Vocal
+import threading
 
 
 
@@ -14,6 +16,9 @@ class MainPage_graph(Tk):
         self.classLogin = Login()
         self.user_id = user_id
         self.first_name = first_name
+
+        self.server = Server()
+
 
         # Création de la fenêtre principale
         self.geometry("800x650")
@@ -129,6 +134,13 @@ class MainPage_graph(Tk):
             self.buttonValid = ctk.CTkButton(self, text="VALID", text_color="#38454c", width=80, height=20, corner_radius=10, font=("Agency FB", 21, "bold"), border_width=2, border_color="white", bg_color="#415059", fg_color="#c7c1f2", hover_color="#a78ff7", command=self.join_datacCreateroom)
             self.buttonValid.place(x=550, y=410, anchor=CENTER)
 
+    def voice_message(self):
+        # Exécutez la fonction start dans un thread séparé
+        threading.Thread(target=self.start_voice_message_thread).start()
+
+    def start_voice_message_thread(self):
+        vocal = Vocal()
+        vocal.start()
 
     def frame4_message(self, id_room):
         # Clear any previous messages displayed in frame4
@@ -174,12 +186,13 @@ class MainPage_graph(Tk):
         # Voice message button
         self.imageVoice = PhotoImage(file="image/boutons/vocal.png")
         self.buttonVoice = ctk.CTkButton(self.frame4, image=self.imageVoice, text=None, width=10, height=10, fg_color="#23b0ed",
-                                        border_color="black", border_width=1, hover_color="#a78ff7", corner_radius=10)
+                                        border_color="black", border_width=1, hover_color="#a78ff7", corner_radius=10, command=self.voice_message)
         self.buttonVoice.place(x=430, y=600, anchor=CENTER)
 
         # Emoji buttons
         self.create_emoji_buttons()
         self.update
+
 
     def create_emoji_buttons(self):
         emoji_files = ["heartred1.png", "loveheart.png", "mdr.png", "pouce.png", "eyesopen.png"]
@@ -229,10 +242,16 @@ class MainPage_graph(Tk):
         # Actualisation de la liste des salons
         self.toggle_right_frame()
 
+    def start_server_when_room_selected(self, id_room):
+        # Création du serveur et activation du socket
+        self.server.create_server_socket()
 
     def select_room(self, id_room):
         self.id_room = id_room  # Stockez l'ID du salon sélectionné
         self.frame4_message(id_room)
+
+        # Appel de la méthode pour démarrer le serveur
+        self.start_server_when_room_selected(id_room)
 
     def send_message(self):
         # Récupère le contenu du ctk.CTkTextbox
