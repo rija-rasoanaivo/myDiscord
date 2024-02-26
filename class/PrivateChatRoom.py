@@ -10,9 +10,9 @@ class PrivateChatRoom:
         
         try:
             self.db = Server.db
-            query = "SELECT firstName FROM user"
+            query = "SELECT firstName, name FROM user"
             result = self.db.fetch(query)
-            listMembers = [f'{row[0]}' for row in result]
+            listMembers = [f'{row[0]} {row[1]}' for row in result]
             print(listMembers)
             return listMembers
         except Exception as e:
