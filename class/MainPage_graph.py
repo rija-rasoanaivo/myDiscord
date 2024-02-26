@@ -189,14 +189,12 @@ class MainPage_graph(Tk):
         button_width = 10
         button_height = 10
         for emoji_code in emojis:
-            button = ctk.CTkButton(self.frame4, text=emoji_code, width=button_width, height=button_height, corner_radius=5, fg_color="#23272d", hover_color="#a78ff7", command=lambda e=emoji_code: self.text.insert("end", emoji_code))
+            button = ctk.CTkButton(self.frame4, text=emoji_code, width=button_width, height=button_height, corner_radius=5, fg_color="#23272d", hover_color="#a78ff7", command=lambda e=emoji_code: self.text.insert("end", e))
             button.place(x=x_position, y=550, anchor=CENTER)
             x_position += 40  # Augmenter la position x pour le prochain bouton
 
 
-
-
-            
+       
             
            
     # methode pour retourner a la page de connexion
@@ -206,10 +204,7 @@ class MainPage_graph(Tk):
         go_login = Login_graph()
         go_login.mainloop()
 
-
-    
-        
-    
+    # methode pour creer un salon
     def join_datacCreateroom(self):
         # recupere les valeurs saisies par l'utilisateur
         roomName = self.entry_roomName.get()
