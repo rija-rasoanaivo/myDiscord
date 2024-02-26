@@ -48,12 +48,18 @@ class Register_graph(Tk):
         # creation champ mdp
         self.password = ctk.CTkLabel(self, text="Password", width=50, height=30, font=('Agency FB', 22, 'bold'), text_color= "white")
         self.password.place(x=200, y=400, anchor= CENTER)
-        self.entry3 = ctk.CTkEntry(self, width= 150, height=30, corner_radius= 8, fg_color="white", text_color= "black")
+        self.entry3 = ctk.CTkEntry(self,show = '*', width= 150, height=30, corner_radius= 8, fg_color="white", text_color= "black")
         self.entry3.place(x=200, y=430, anchor = CENTER )
 
+         # Créer un bouton "Afficher"
+        self.show_password_button = ctk.CTkButton(self, text="Afficher", width=30, height=20, corner_radius=8, command=self.toogle_password_visibility)
+        self.show_password_button.place(x=330, y=430, anchor=CENTER)
+
+        self.password_visible = False
+
         # creation champ confirmer mdp
-        self.password = ctk.CTkLabel(self, text="Confirm Password", width=50, height=30, font=('Agency FB', 22, 'bold'), text_color= "white")
-        self.password.place(x=200, y=460, anchor= CENTER)
+        self.confirmpassword = ctk.CTkLabel(self, text="Confirm Password", width=50, height=30, font=('Agency FB', 22, 'bold'), text_color= "white")
+        self.confirmpassword.place(x=200, y=460, anchor= CENTER)
         self.entry4 = ctk.CTkEntry(self, width= 150, height=30, corner_radius= 8, fg_color="white", text_color= "black")
         self.entry4.place(x=200, y=490, anchor = CENTER )
 
@@ -72,6 +78,15 @@ class Register_graph(Tk):
                                         )
         
         self.buttonLogin.place(x=200, y=550, anchor = CENTER)
+
+    def toogle_password_visibility(self):
+        if self.password_visible:
+            self.entry3.configure(show="*")  # Masquer le mot de passe
+            self.password_visible = False
+        else:
+            self.entry3.configure(show="")  # Afficher le mot de passe
+            self.password_visible = True
+
 
     
 
@@ -98,7 +113,7 @@ class Register_graph(Tk):
 
 
             # mise a jour de la fenetre
-            self.update()
+            Login_graph().update()
 
 if __name__ == "__main__":
     register = Register_graph()

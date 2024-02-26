@@ -54,8 +54,11 @@ class MainPage_graph(Tk):
         # creation du logo profil
         self.imageProfil = PhotoImage(file="image/boutons/profil.png")
         # Création d'un Label avec l'image chargée comme image de fond
-        self.buttonProfil = ctk.CTkButton(self, image=self.imageProfil, text=None, width=20, height=20, fg_color="#c7c1f2", bg_color= "#c7c1f2", corner_radius= 10, hover_color="#a78ff7", command=lambda: print(self.user_id))
+        self.buttonProfil = ctk.CTkButton(self, image=self.imageProfil, text=None, width=20, height=20, fg_color="#c7c1f2", bg_color= "#c7c1f2", corner_radius= 10, hover_color="#a78ff7", command= self.ProfilLog)
         self.buttonProfil.place(x=10, y=100)
+
+    
+
 
         
     # gestion de la frame a afficher sur la droite de mon bouton salon en cliquant sur le bouton
@@ -234,6 +237,7 @@ class MainPage_graph(Tk):
         self.destroy()
         go_login = Login_graph()
         go_login.mainloop()
+        go_login.update()
 
     # methode pour creer un salon
     def join_datacCreateroom(self):

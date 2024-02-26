@@ -122,9 +122,7 @@ class Login_graph(Tk):
         self.update()
 
 
-# mise a jour de la fenetre
-    def update(self):
-        self.update()
+
 
 if __name__ == "__main__":
     login = Login_graph()
