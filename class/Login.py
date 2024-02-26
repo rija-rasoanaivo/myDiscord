@@ -26,6 +26,7 @@ class Login:
         self.user_id = None
         print("User logged out.")
 
+    # méthode pour récupérer le nom de l'utilisateur
     # def get_userName(self):
     #     if self.user_id:
     #         user_info = self.server.db.fetch(

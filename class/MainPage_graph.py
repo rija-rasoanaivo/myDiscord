@@ -183,14 +183,16 @@ class MainPage_graph(Tk):
         self.create_emoji_buttons()
         self.update
 
+    
     def create_emoji_buttons(self):
-        emojis = ["😃", "😁", "😂", "🤣", "😊", "😇", "😉", "😍", "😘", "💖", "😛", "🥺", "😭", "😤"]
+        emojis = ["😃", "😁", "😂", "🤣", "😊", "😇", "😉", "😍", "😘", "💖", "🙀", "🥺", "😭", "😤"]
         x_position = 30
         buttonwidth = 10
         buttonheight = 10
+        coloremoji = "#ffba49"
         
         for emoji_code in emojis:
-            button = ctk.CTkButton(self.frame4, text=emoji_code, font=("Segoe UI Emoji", 12),width= buttonwidth, height=buttonheight, corner_radius=5, fg_color="#23272d", hover_color="#a78ff7", command=lambda e=emoji_code: self.text.insert("end", e))
+            button = ctk.CTkButton(self.frame4, text=emoji_code,text_color=coloremoji, font=("Segoe UI Emoji", 15),width= buttonwidth, height=buttonheight, corner_radius=5, fg_color="#23272d", hover_color="#a78ff7", command=lambda e=emoji_code: self.text.insert("end", e))
             button.place(x=x_position, y=550, anchor=CENTER)
             x_position += 30  
 
