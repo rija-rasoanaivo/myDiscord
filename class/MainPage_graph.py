@@ -5,6 +5,7 @@ from ChatRoom import *
 from PrivateChatRoom import *
 from Chatting import *
 from tkinter.constants import CENTER
+from AddMember import *
 
 
 
@@ -129,13 +130,14 @@ class MainPage_graph(Tk):
             self.checkPrivate = ctk.CTkCheckBox(self, text="Private", text_color="white", width=40, height=20, bg_color="#415059", corner_radius=5, border_color="white", border_width=1)
             self.checkPrivate.place(x=630, y=310, anchor=CENTER)
             
-            # # creation combobox pour ajouter les membres dans le salon
-            # self.members = ctk.CTkLabel(self, text="Add Members", width=20, height=20, font=('Agency FB', 18, 'bold'), text_color="#c7c1f2", fg_color="#415059")
-            # self.members.place(x=550, y=340, anchor=CENTER)
-            # listmembers = PrivateChatRoom().get_userNames()
-            # comboText  = [f"{member[0]} {member[1]}" for member in listmembers]
-            # self.combo = ctk.CTkComboBox(self, width=150, height=25, corner_radius=5, fg_color="white", bg_color="#415059", border_color="#38454c", border_width=1, values=comboText)
-            # self.combo.place(x=550, y=370, anchor=CENTER)
+            # creation combobox pour ajouter les membres dans le salon
+            self.members = ctk.CTkLabel(self, text="Add Members", width=20, height=20, font=('Agency FB', 18, 'bold'), text_color="#c7c1f2", fg_color="#415059")
+            self.members.place(x=550, y=340, anchor=CENTER)
+            listmember = PrivateChatRoom()
+            listmembers = listmember.get_userNames()
+            
+            self.combo = ctk.CTkComboBox(self, width=150, height=25, corner_radius=5, fg_color="white", bg_color="#415059", border_color="#38454c", border_width=1, values=listmembers)
+            self.combo.place(x=550, y=370, anchor=CENTER)
 
             # Création du bouton "valider"
             self.buttonValid = ctk.CTkButton(self, text="VALID", text_color="#38454c", width=80, height=20, corner_radius=10, font=("Agency FB", 21, "bold"), border_width=2, border_color="white", bg_color="#415059", fg_color="#c7c1f2", hover_color="#a78ff7", command=self.join_datacCreateroom)
@@ -166,7 +168,7 @@ class MainPage_graph(Tk):
 
         # bouton pour quitter le salon
         self.ImageoutRoom = PhotoImage(file="image/boutons/outRoom1.png")
-        self.buttonOutRoom = ctk.CTkButton(self.frame4, image=self.ImageoutRoom, text=None, width=20, height=20, fg_color="#23272d", hover_color="#a78ff7", corner_radius=10, command=lambda: self.outRoombutton())
+        self.buttonOutRoom = ctk.CTkButton(self.frame4, image=self.ImageoutRoom, text=None, width=20, height=20, fg_color="#23272d", hover_color="#23b0ed", corner_radius=10, command=lambda: self.outRoombutton())
         self.buttonOutRoom.place(x=450, y=10)
         
 

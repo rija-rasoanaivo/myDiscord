@@ -7,30 +7,18 @@ class PrivateChatRoom:
         self.db = Server.db
 
     def get_userNames(self):
+        
         try:
-            # Connexion à la base de données
-            self.db.connexion()
-
-            # Requête SQL pour récupérer le prénom et le nom de tous les utilisateurs
-            query = """
-                SELECT firstname, name
-                FROM user;
-            """
-
-            # Exécution de la requête SQL
-            self.db.executeRequete(query)
-
-            # Récupération des résultats de la requête
-            results = self.db.cursor.fetchall()
-
-            # Fermeture de la connexion à la base de données
-            self.db.deconnexion()
-
-            # Retourner les résultats sous forme de liste de tuples (prénom, nom)
-            return results
+            self.db = Server.db
+            query = "SELECT firstName FROM user"
+            result = self.db.fetch(query)
+            listMembers = [f'{row[0]}' for row in result]
+            print(listMembers)
+            return listMembers
         except Exception as e:
-            print("An error occurred while fetching user names:", str(e))
-            return None
+            print("Error fetching user names:", e)
+            return []
+
 
 
     def admin_join_private_chat_room(self, user_id, id_room):
@@ -123,4 +111,4 @@ class PrivateChatRoom:
 
 if __name__ == "__main__":
     join_private_chat_room = PrivateChatRoom()
-    join_private_chat_room.admin_add_member_private_chat_room()
+    join_private_chat_room.get_userNames()
