@@ -16,8 +16,7 @@ class MainPage_graph(Tk):
         self.classLogin = Login()
         self.user_id = user_id
         self.first_name = first_name
-        self.current_room_id = None
-        self.start_automatic_refresh()
+
         self.server = Server()
 
 
@@ -191,6 +190,9 @@ class MainPage_graph(Tk):
         self.buttonVoice.place(x=430, y=600, anchor=CENTER)
 
         # Emoji buttons
+        if not hasattr(self, 'refresh_initialized'):
+            self.after(10000, self.refresh_messages)
+            self.refresh_initialized = True
         self.create_emoji_buttons()
         self.update
 
@@ -248,7 +250,7 @@ class MainPage_graph(Tk):
         self.server.create_server_socket()
 
     def select_room(self, id_room):
-        self.current_room_id = id_room  # Mettez à jour l'attribut ici
+        self.id_room = id_room  # Stockez l'ID du salon sélectionné
         self.frame4_message(id_room)
 
         # Appel de la méthode pour démarrer le serveur
@@ -262,26 +264,11 @@ class MainPage_graph(Tk):
             self.current_chat_instance.send_message(self.user_id, self.first_name, message_content)
             self.text.delete("1.0", "end")
             # Rafraîchir les messages pour inclure le nouveau message
-            self.frame4_message(self.current_chat_instance.id_room)
-
-    def start_automatic_refresh(self):
-        threading.Thread(target=self.automatic_refresh, daemon=True).start()
 
     def refresh_messages(self):
-        if self.current_room_id is not None:
-            self.frame4_message(self.current_room_id)
-        else:
-            print("Aucun salon sélectionné pour le rafraîchissement.")
-
-    def automatic_refresh(self):
-        while True:
-            time.sleep(10)  # Pause de 10 secondes entre chaque rafraîchissement
-            # Appel sécurisé de la méthode de rafraîchissement dans le thread principal
-            self.after(0, self.refresh_messages)
-
-
-
-
+        if hasattr(self, 'current_chat_instance') and self.current_chat_instance.id_room:
+            self.frame4_message(self.current_chat_instance.id_room)
+            self.after(10000, self.refresh_messages)
 
                         
                 
