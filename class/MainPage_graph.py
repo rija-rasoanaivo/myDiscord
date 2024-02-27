@@ -301,6 +301,8 @@ class MainPage_graph(Tk):
 
     def returnPageLogin(self):
         try:
+            from Login_graph import Login_graph  # Import tardif
+            
             # Libérer les ressources si nécessaire
             self.voice_thread = None
             
@@ -310,12 +312,7 @@ class MainPage_graph(Tk):
             # Créer une nouvelle instance de la page de connexion
             go_login = Login_graph()
             go_login.mainloop()
-            
-            # Mettre à jour l'interface si nécessaire
-            go_login.update()
 
-            self.update()
-            
         except Exception as e:
             print("Une erreur s'est produite lors du retour à la page de connexion:", e)
         
