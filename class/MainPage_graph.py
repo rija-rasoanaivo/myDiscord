@@ -7,6 +7,7 @@ from Chatting import *
 from tkinter.constants import CENTER
 from Vocal import *
 import threading
+from plyer import notification
 
 
 
@@ -68,7 +69,7 @@ class MainPage_graph(Tk):
 
         self.initialize_message_input_area()
         self.should_refresh_messages = True
-
+        self.notification_displayed = False
         
     # gestion de la frame a afficher sur la droite de mon bouton salon en cliquant sur le bouton
     def toggle_right_frame(self):
@@ -191,6 +192,8 @@ class MainPage_graph(Tk):
                 message_text = f"{message[1]}"
                 message_label = ctk.CTkLabel(self.frame4, text=message_text, width=170, height=30, corner_radius=10,font=("Agency FB", 20, 'bold'), fg_color="#aeb8f9", bg_color="#23272d", text_color="black")
                 message_label.place(x=80, y=30 + i * 70)
+                
+                
 
             for i, message in enumerate(messages):
                 message_text = f"{message[2]} {message[0]}" 
@@ -199,14 +202,13 @@ class MainPage_graph(Tk):
 
             
         else:
-            default_message = ctk.CTkLabel(self.frame4, text="No messages in this room.", width=200, height=20, corner_radius=10,
-                                        font=("Agency FB", 18, 'bold'), fg_color="#aeb8f9", bg_color="#aeb8f9")
+            default_message = ctk.CTkLabel(self.frame4, text="No messages in this room.", width=200, height=20, corner_radius=10,font=("Agency FB", 18, 'bold'), fg_color="#aeb8f9", bg_color="#aeb8f9")
             default_message.place(x=80, y=50)
 
     def initialize_message_input_area(self):
 
         # Message entry textbox
-        self.text = ctk.CTkTextbox(self.frame4, width=250, height=50, corner_radius=13, fg_color="white", bg_color="#23272d", border_color="#38454c", border_width=1)
+        self.text = ctk.CTkTextbox(self.frame4, width=250, height=50, corner_radius=13, fg_color="white", bg_color="#23272d", border_color="#38454c", border_width=1, text_color="black")
         self.text.place(x=200, y=600, anchor=CENTER)
 
         # Send message button
@@ -332,7 +334,6 @@ class MainPage_graph(Tk):
         self.label = ctk.CTkLabel(self.frame3, text="Room created", width=20, height=20, font=('Agency FB', 30, 'bold'), text_color="white", fg_color="#415059")
         self.label.place(x=550, y=300, anchor=CENTER)
 
-        
 
         # Actualisation de la liste des salons
         self.toggle_right_frame()
@@ -354,13 +355,16 @@ class MainPage_graph(Tk):
             self.current_chat_instance.send_message( self.user_id, self.first_name, message_content)
             self.text.delete("1.0", "end")
             
-            
+                  
             
     def refresh_messages(self):
         # Ajoutez une vérification pour voir si le rafraîchissement doit continuer
         if self.should_refresh_messages and hasattr(self, 'current_chat_instance') and self.current_chat_instance.id_room:
             self.frame4_message(self.current_chat_instance.id_room)  # Mise à jour des messages
             self.after(500, self.refresh_messages)  # Planifiez le prochain rafraîchissement
+            self.receive_message(self.user_id, self.first_name)
+            
+            
     
     def stop_refreshing_messages(self):
         # Appelez cette méthode pour arrêter le rafraîchissement
@@ -371,7 +375,27 @@ class MainPage_graph(Tk):
         self.should_refresh_messages = True
         self.refresh_messages()
 
+    def receive_message(self, sender, message):
+        # Traitez le message reçu ici...
+        if not self.notification_displayed:
+            # Afficher une notification pour informer l'utilisateur du nouveau message
+            self.displayNotify("Nouveau message", f"De {sender}: {message}")
+            self.notification_displayed = True  # Mettez à jour le drapeau pour indiquer qu'une notification a été affichée
 
+        # Assurez-vous également de rafraîchir l'affichage des messages dans la fenêtre appropriée
+        self.frame4_message(self.current_chat_instance.id_room)
+
+    def displayNotify(self, title, message):
+        notification.notify(
+            title=title,
+            message=message,
+            app_icon=None,
+            timeout=10, 
+        )
+        
+    
+
+    
     
 
 if __name__ == "__main__":
