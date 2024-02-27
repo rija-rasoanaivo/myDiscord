@@ -60,10 +60,10 @@ class MainPage_graph(Tk):
         # creation du logo profil
         self.imageProfil = PhotoImage(file="image/boutons/profil.png")
         # Création d'un Label avec l'image chargée comme image de fond
-        self.buttonProfil = ctk.CTkButton(self, image=self.imageProfil, text=None, width=20, height=20, fg_color="#c7c1f2", bg_color= "#c7c1f2", corner_radius= 10, hover_color="#a78ff7", command= self.start_server)
+        self.buttonProfil = ctk.CTkButton(self, image=self.imageProfil, text=None, width=20, height=20, fg_color="#c7c1f2", bg_color= "#c7c1f2", corner_radius= 10, hover_color="#a78ff7", command= "")
         self.buttonProfil.place(x=10, y=100)
 
-        
+        self.initialize_message_input_area()
 
         
     # gestion de la frame a afficher sur la droite de mon bouton salon en cliquant sur le bouton
@@ -164,7 +164,8 @@ class MainPage_graph(Tk):
     def frame4_message(self, id_room):
         # Clear any previous messages displayed in frame4
         for widget in self.frame4.winfo_children():
-            widget.destroy()
+            if not isinstance(widget, ctk.CTkTextbox) and not isinstance(widget, ctk.CTkButton):
+                widget.destroy()
 
         
         self.show_frame4()
@@ -173,13 +174,9 @@ class MainPage_graph(Tk):
         self.current_chat_instance = Chatting(self.user_id, id_room)
         messages = self.current_chat_instance.load_messages(id_room, self.user_id)
 
-        # bouton pour quitter le salon
-        self.ImageoutRoom = PhotoImage(file="image/boutons/outRoom1.png")
-        self.buttonOutRoom = ctk.CTkButton(self.frame4, image=self.ImageoutRoom, text=None, width=20, height=20, fg_color="#23272d", hover_color="#23b0ed", corner_radius=10, command=lambda: self.outRoombutton())
-        self.buttonOutRoom.place(x=450, y=10)
         
-
-
+        
+    
         # Display messages or a placeholder if none are found
         if messages:
             for i, message in enumerate(messages):
@@ -198,16 +195,17 @@ class MainPage_graph(Tk):
                                         font=("Agency FB", 18, 'bold'), fg_color="#aeb8f9", bg_color="#aeb8f9")
             default_message.place(x=80, y=50)
 
+    def initialize_message_input_area(self):
+
+        
+
         # Message entry textbox
-        self.text = ctk.CTkTextbox(self.frame4, width=250, height=50, corner_radius=13, fg_color="white",
-                                    bg_color="#23272d", border_color="#38454c", border_width=1)
+        self.text = ctk.CTkTextbox(self.frame4, width=250, height=50, corner_radius=13, fg_color="white", bg_color="#23272d", border_color="#38454c", border_width=1)
         self.text.place(x=200, y=600, anchor=CENTER)
 
         # Send message button
         self.imageSend = PhotoImage(file="image/boutons/envoyer1.png")
-        self.buttonSend = ctk.CTkButton(self.frame4, image=self.imageSend, text=None, width=10, height=10, fg_color="#23b0ed",
-                                        border_color="black", border_width=1, hover_color="#a78ff7", corner_radius=10,
-                                        command=self.send_message)
+        self.buttonSend = ctk.CTkButton(self.frame4, image=self.imageSend, text=None, width=10, height=10, fg_color="#23b0ed", border_color="black", border_width=1, hover_color="#a78ff7", corner_radius=10, command=self.send_message)
         self.buttonSend.place(x=370, y=600, anchor=CENTER)
 
         # Voice message button
@@ -218,6 +216,7 @@ class MainPage_graph(Tk):
         # Emoji buttons
         self.create_emoji_buttons()
         self.update
+        self.frame4_message(self.current_chat_instance.id_room)  # Mise à jour des messages
 
     
     def create_emoji_buttons(self):
@@ -309,6 +308,9 @@ class MainPage_graph(Tk):
     def select_room(self, id_room):
         self.id_room = id_room  # Stockez l'ID du salon sélectionné
         self.frame4_message(id_room)
+        if not hasattr(self, 'refresh_initialized') or not self.refresh_initialized:
+            self.refresh_messages()
+            self.refresh_initialized = True
 
     def send_message(self):
         # Récupère le contenu du ctk.CTkTextbox
@@ -317,8 +319,13 @@ class MainPage_graph(Tk):
             # Utilise l'instance de Chatting pour envoyer le message
             self.current_chat_instance.send_message( self.user_id, self.first_name, message_content)
             self.text.delete("1.0", "end")
-            # Rafraîchir les messages pour inclure le nouveau message
-            self.frame4_message(self.current_chat_instance.id_room)
+            
+            
+            
+    def refresh_messages(self):
+        if hasattr(self, 'current_chat_instance') and self.current_chat_instance.id_room:
+            self.frame4_message(self.current_chat_instance.id_room)  # Mise à jour des messages
+            self.after(1000, self.refresh_messages)
 
     
 
