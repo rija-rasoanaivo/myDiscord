@@ -142,37 +142,31 @@ class MainPage_graph(Tk):
         vocal.start()
 
     def frame4_message(self, id_room):
-        # Nettoyez uniquement les widgets de message dans self.frame4
-        # Ceci est fait pour éviter de toucher à la zone de texte et aux boutons
         for widget in self.frame4.winfo_children():
             if not isinstance(widget, ctk.CTkTextbox) and not isinstance(widget, ctk.CTkButton):
                 widget.destroy()
 
-        # Assurez-vous que frame4 est placé et visible
         self.frame4.place(x=300, y=0)
 
         # Récupération des messages pour la salle sélectionnée
         self.current_chat_instance = Chatting(self.user_id, id_room)
         messages = self.current_chat_instance.load_messages(id_room, self.user_id)
 
-        # Affichage des messages ou d'un message par défaut si aucun n'est trouvé
         if messages:
             for i, message in enumerate(messages):
-                message_text = f"{message[1]}"  # Supposons que message[1] contient le texte du message
+                message_text = f"{message[1]}"  
                 # Création et placement des labels pour chaque message
                 message_label = ctk.CTkLabel(self.frame4, text=message_text, width=170, height=30, corner_radius=10, font=("Agency FB", 20, 'bold'), fg_color="#aeb8f9", bg_color="#23272d", text_color="black")
                 message_label.place(x=80, y=30 + i * 70)
 
-                # Supposons que message[2] contient l'heure du message et message[0] l'auteur
                 message_details = f"{message[2]} {message[0]}"
                 details_label = ctk.CTkLabel(self.frame4, text=message_details, width=100, height=20, font=("Agency FB", 14, 'bold'), text_color="white", bg_color="#23272d")
                 details_label.place(x=80, y=60 + i * 70)
         else:
             # Affichage d'un message par défaut si aucun message n'est trouvé dans la salle
             default_message = ctk.CTkLabel(self.frame4, text="No messages in this room yet.", width=200, height=20, corner_radius=10, font=("Agency FB", 18, 'bold'), fg_color="#aeb8f9", bg_color="#23272d", text_color="white")
-            default_message.place(x=150, y=50)  # Ajustez les coordonnées selon votre layout
+            default_message.place(x=150, y=50) 
 
-        # Pas besoin de recréer la zone de texte et les boutons ici car ils sont déjà initialisés dans initialize_message_input_area
 
     def initialize_message_input_area(self):
         # Zone de texte pour les messages
@@ -200,7 +194,6 @@ class MainPage_graph(Tk):
             buttonEmoticones = ctk.CTkButton(self.frame4, image=emoji_image, text=None, width=5, height=5, fg_color="#23272d", hover_color="#23b0ed")
             buttonEmoticones.place(x=x_position, y=530)
             x_position += 30
-            # Sauvegardez une référence à l'image pour éviter le ramassage des ordures
             setattr(self, emoji_file.split('.')[0], emoji_image)
 
               
@@ -241,7 +234,6 @@ class MainPage_graph(Tk):
     def select_room(self, id_room):
         self.id_room = id_room  # Stockez l'ID du salon sélectionné
         self.frame4_message(id_room)
-        # Assurez-vous de ne démarrer le rafraîchissement que si ce n'est pas déjà en cours
         if not hasattr(self, 'refresh_initialized') or not self.refresh_initialized:
             self.refresh_messages()
             self.refresh_initialized = True
