@@ -16,7 +16,6 @@ class MainPage_graph(Tk):
         self.classLogin = Login()
         self.user_id = user_id
         self.first_name = first_name
-        self.server = Server()
 
 
         # Création de la fenêtre principale
@@ -142,7 +141,7 @@ class MainPage_graph(Tk):
         vocal.start()
 
     def frame4_message(self, id_room):
-        for widget in self.frame4.winfo_children():
+        for widget in self.frame4.winfo_children(): 
             if not isinstance(widget, ctk.CTkTextbox) and not isinstance(widget, ctk.CTkButton):
                 widget.destroy()
 
@@ -174,12 +173,12 @@ class MainPage_graph(Tk):
         self.text.place(x=200, y=600, anchor=CENTER)
 
         # Bouton d'envoi
-        self.imageSend = PhotoImage(file="image/boutons/envoyer1.png")  # Assurez-vous que le chemin d'accès est correct
+        self.imageSend = PhotoImage(file="image/boutons/envoyer1.png")  
         self.buttonSend = ctk.CTkButton(self.frame4, image=self.imageSend, text=None, width=10, height=10, fg_color="#23b0ed", border_color="black", border_width=1, hover_color="#a78ff7", corner_radius=10, command=self.send_message)
         self.buttonSend.place(x=370, y=600, anchor=CENTER)
 
         # Bouton de message vocal
-        self.imageVoice = PhotoImage(file="image/boutons/vocal.png")  # Assurez-vous que le chemin d'accès est correct
+        self.imageVoice = PhotoImage(file="image/boutons/vocal.png")  
         self.buttonVoice = ctk.CTkButton(self.frame4, image=self.imageVoice, text=None, width=10, height=10, fg_color="#23b0ed", border_color="black", border_width=1, hover_color="#a78ff7", corner_radius=10, command=self.voice_message)
         self.buttonVoice.place(x=430, y=600, anchor=CENTER)
 
@@ -245,13 +244,11 @@ class MainPage_graph(Tk):
             # Utilise l'instance de Chatting pour envoyer le message
             self.current_chat_instance.send_message(self.user_id, self.first_name, message_content)
             self.text.delete("1.0", "end")
-            # Rafraîchir les messages pour inclure le nouveau message
 
     def refresh_messages(self):
         if hasattr(self, 'current_chat_instance') and self.current_chat_instance.id_room:
             self.frame4_message(self.current_chat_instance.id_room)  # Mise à jour des messages
             self.after(10000, self.refresh_messages)
-
                         
                 
                     
