@@ -4,8 +4,8 @@ from Register_graph import *
 from ChatRoom import *
 from PrivateChatRoom import *
 from Chatting import *
-from Vocal import Vocal
-import threading
+from Vocal import *
+import threading 
 
 
 
@@ -17,7 +17,11 @@ class MainPage_graph(Tk):
         self.user_id = user_id
         self.first_name = first_name
 
-        self.server = Server()
+        # Initialisation de l'attribut recording
+        self.recording = False
+        self.voice_thread = None
+
+        self.voice=None
 
 
         # Création de la fenêtre principale
@@ -58,17 +62,24 @@ class MainPage_graph(Tk):
         # creation du logo profil
         self.imageProfil = PhotoImage(file="image/boutons/profil.png")
         # Création d'un Label avec l'image chargée comme image de fond
-        self.buttonProfil = ctk.CTkButton(self, image=self.imageProfil, text=None, width=20, height=20, fg_color="#c7c1f2", bg_color= "#c7c1f2", corner_radius= 10, hover_color="#a78ff7", command=lambda: print(self.user_id))
+        self.buttonProfil = ctk.CTkButton(self, image=self.imageProfil, text=None, width=20, height=20, fg_color="#c7c1f2", bg_color= "#c7c1f2", corner_radius= 10, hover_color="#a78ff7", command = self.start_server)
         self.buttonProfil.place(x=10, y=100)
 
+    def start_server(self):
+        self.server = Server()
+        self.server_thread = threading.Thread(target=self.server.start_server)
+        self.server_thread.daemon = True  # Définir le thread comme un démon pour qu'il se termine lorsque le programme principal se termine
+        self.server_thread.start()
         
     # gestion de la frame a afficher sur la droite de mon bouton salon en cliquant sur le bouton
     def toggle_right_frame(self):
         if self.frame2.winfo_ismapped():
             self.frame2.place_forget()
+            
         else:
             self.frame2.place(x=100, y=0)
             room_info = ChatRoom().get_chat_room_ids_and_names()
+            
             for i, (room_id, room_name) in enumerate(room_info):
                 button = ctk.CTkButton(self.frame2, text=room_name, width=70, height=20, corner_radius=10, font=("Agency FB", 18, 'bold'), fg_color="#aeb8f9",bg_color="#aeb8f9", hover_color= "#a78ff7", command=lambda id=room_id: self.select_room(id))
                 button.place(x=80, y=50 + i * 50)
@@ -134,14 +145,40 @@ class MainPage_graph(Tk):
             self.buttonValid = ctk.CTkButton(self, text="VALID", text_color="#38454c", width=80, height=20, corner_radius=10, font=("Agency FB", 21, "bold"), border_width=2, border_color="white", bg_color="#415059", fg_color="#c7c1f2", hover_color="#a78ff7", command=self.join_datacCreateroom)
             self.buttonValid.place(x=550, y=410, anchor=CENTER)
 
-    def voice_message(self):
-        # Exécutez la fonction start dans un thread séparé
-        threading.Thread(target=self.start_voice_message_thread).start()
+    def toggle_voice_message(self):
+        print("Toggle voice message method called")
+        if not self.recording:  # Si l'enregistrement n'est pas en cours, démarrer l'enregistrement
+            print("Starting voice message recording")
+            self.start_voice_message()
+        else:  # Si l'enregistrement est en cours, arrêter l'enregistrement
+            print("Stopping voice message recording")
+            self.stop_voice_message()
+
+    def start_voice_message(self):
+        print("Starting voice message thread")
+        self.recording = True
+        # Créer une instance de Vocal
+        self.voice = Vocal()
+        # Démarrer le thread d'enregistrement vocal
+        self.voice_thread = threading.Thread(target=self.start_voice_message_thread)
+        self.voice_thread.start()
+
+    def stop_voice_message(self):
+        print("Stopping voice message recording")
+        self.recording = False  # Mettre à jour l'état de l'enregistrement
+        # Appeler la méthode stop de l'instance de Vocal pour arrêter l'enregistrement
+        if self.voice:
+            self.voice.stop()
+        # Si le thread d'enregistrement vocal est en cours, attendre qu'il se termine
+        if self.voice_thread is not None:
+            self.voice_thread.join()
 
     def start_voice_message_thread(self):
-        vocal = Vocal()
-        vocal.start()
+        if self.recording:  # Vérifier que l'enregistrement est toujours actif
+            self.voice.start()
+            self.recording = False  # Mettre à jour l'état de l'enregistrement lorsque celui-ci est terminé
 
+    
     def frame4_message(self, id_room):
         # Clear any previous messages displayed in frame4
         for widget in self.frame4.winfo_children():
@@ -186,7 +223,7 @@ class MainPage_graph(Tk):
         # Voice message button
         self.imageVoice = PhotoImage(file="image/boutons/vocal.png")
         self.buttonVoice = ctk.CTkButton(self.frame4, image=self.imageVoice, text=None, width=10, height=10, fg_color="#23b0ed",
-                                        border_color="black", border_width=1, hover_color="#a78ff7", corner_radius=10, command=self.voice_message)
+                                        border_color="black", border_width=1, hover_color="#a78ff7", corner_radius=10, command=self.toggle_voice_message)
         self.buttonVoice.place(x=430, y=600, anchor=CENTER)
 
         # Emoji buttons
@@ -242,16 +279,16 @@ class MainPage_graph(Tk):
         # Actualisation de la liste des salons
         self.toggle_right_frame()
 
-    def start_server_when_room_selected(self, id_room):
-        # Création du serveur et activation du socket
-        self.server.create_server_socket()
+    # def start_server_when_room_selected(self, id_room):
+    #     # Création du serveur et activation du socket
+    #     self.server.create_server_socket()
 
     def select_room(self, id_room):
         self.id_room = id_room  # Stockez l'ID du salon sélectionné
         self.frame4_message(id_room)
 
-        # Appel de la méthode pour démarrer le serveur
-        self.start_server_when_room_selected(id_room)
+        # # Appel de la méthode pour démarrer le serveur
+        # self.start_server_when_room_selected(id_room)
 
     def send_message(self):
         # Récupère le contenu du ctk.CTkTextbox

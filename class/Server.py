@@ -56,8 +56,9 @@ class Server:
 
     def start_server(self):
         if not self.server_socket:
-            print("Le socket serveur n'a pas été créé. Veuillez appeler create_server_socket() d'abord.")
-            return
+            self.create_server_socket()  # Créer le socket serveur si nécessaire
+        else:
+            print("Le socket serveur existe déjà.")
 
         try:
             accept_thread = threading.Thread(target=self.accept_clients)
@@ -66,6 +67,7 @@ class Server:
         finally:
             self.server_socket.close()
             self.audio.terminate()
+
 
 # Utilisation
 if __name__ == "__main__":

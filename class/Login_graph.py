@@ -92,6 +92,8 @@ class Login_graph(Tk):
         self.entry3.delete(0, END)
         # Setup other widgets and configurations as needed
 
+    
+
     def verify_login(self):
         # Récupérer les valeurs des champs du formulaire
         email = self.entry2.get()
@@ -100,6 +102,7 @@ class Login_graph(Tk):
         # Créer une instance de la classe Login (backend)
         login_backend = Login()
 
+
         # Appeler la méthode login du backend pour vérifier les informations d'identification
         success, user_id, first_name = login_backend.login(email, password)
         
@@ -107,7 +110,8 @@ class Login_graph(Tk):
             # Rediriger l'utilisateur vers la page principale
             self.destroy()
             mainpage = MainPage_graph(user_id, first_name)
-            mainpage.mainloop()
+            mainpage.mainloop() 
+            
         else:
             # Afficher un message d'erreur à l'utilisateur
             print("Email ou mot de passe incorrect")
@@ -127,5 +131,8 @@ class Login_graph(Tk):
         self.update()
 
 if __name__ == "__main__":
+    # server = Server()
+    # server.create_server_socket()
     login = Login_graph()
     login.mainloop()
+    # server.start_server()
