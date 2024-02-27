@@ -21,6 +21,9 @@ class MainPage_graph(Tk):
         # Initialisation de l'attribut recording
         self.recording = False
         self.voice_thread = None
+        self.voice=None
+        self.server=Server()
+        self.server_started = False
 
         # Création de la fenêtre principale
         self.geometry("800x650")
@@ -60,10 +63,11 @@ class MainPage_graph(Tk):
         # creation du logo profil
         self.imageProfil = PhotoImage(file="image/boutons/profil.png")
         # Création d'un Label avec l'image chargée comme image de fond
-        self.buttonProfil = ctk.CTkButton(self, image=self.imageProfil, text=None, width=20, height=20, fg_color="#c7c1f2", bg_color= "#c7c1f2", corner_radius= 10, hover_color="#a78ff7", command= "")
+        self.buttonProfil = ctk.CTkButton(self, image=self.imageProfil, text=None, width=20, height=20, fg_color="#c7c1f2", bg_color= "#c7c1f2", corner_radius= 10, hover_color="#a78ff7", command= self.start_server)
         self.buttonProfil.place(x=10, y=100)
 
         self.initialize_message_input_area()
+        self.should_refresh_messages = True
 
         
     # gestion de la frame a afficher sur la droite de mon bouton salon en cliquant sur le bouton
@@ -155,6 +159,7 @@ class MainPage_graph(Tk):
     def outRoombutton(self):
         if self.frame4.winfo_ismapped():
             self.frame4.place_forget()
+            self.stop_refreshing_messages()
 
 
     def show_frame4(self):
@@ -217,8 +222,7 @@ class MainPage_graph(Tk):
         # Emoji buttons
         self.create_emoji_buttons()
         self.update
-        self.frame4_message(self.current_chat_instance.id_room)  # Mise à jour des messages
-
+    
     
     def create_emoji_buttons(self):
         emojis = ["😃", "😁", "😂", "🤣", "😊", "😇", "😉", "😍", "😘", "💖", "🙀", "🥺", "😭", "😤"]
@@ -244,26 +248,55 @@ class MainPage_graph(Tk):
 
         self.update()
 
-
+    # parti vocal 
     def start_voice_message(self):
         print("Starting voice message thread")
         self.recording = True
-        # Lancez le thread d'enregistrement vocal et stockez une référence à ce thread
+        # Créer une instance de Vocal
+        self.voice = Vocal()
+        # Démarrer le thread d'enregistrement vocal
         self.voice_thread = threading.Thread(target=self.start_voice_message_thread)
         self.voice_thread.start()
 
+
     def stop_voice_message(self):
-        print("Stopping voice message thread")
-        self.recording = False
-        # Attendez que le thread d'enregistrement vocal se termine
+        print("Stopping voice message recording")
+        self.recording = False  # Mettre à jour l'état de l'enregistrement
+        # Appeler la méthode stop de l'instance de Vocal pour arrêter l'enregistrement
+        if self.voice:
+            self.voice.stop()
+        # Si le thread d'enregistrement vocal est en cours, attendre qu'il se termine
         if self.voice_thread is not None:
             self.voice_thread.join()
-    
+
     def start_voice_message_thread(self):
-        vocal = Vocal()
-        vocal.start()
-        self.recording = False  # Met à jour l'état de l'enregistrement vocal lorsque celui-ci est terminé
-           
+        if self.recording:  # Vérifier que l'enregistrement est toujours actif
+            self.voice.start()
+            self.recording = False  # Mettre à jour l'état de l'enregistrement lorsque celui-ci est terminé
+    def start_server(self):
+        if not self.server_started:  # Vérifiez si le serveur n'est pas déjà démarré
+            print("Starting server thread")
+            self.server_thread = threading.Thread(target=self.server.start_server)
+            self.server_thread.daemon = True
+            self.server_thread.start()
+            self.server_started = True  # Mettez à jour l'état du serveur
+        else:
+            print("Stopping server thread")
+            self.server.stop_server()  # Arrêtez le serveur si c'est déjà démarré
+            self.server_started = False  # Mettez à jour l'état du serveur
+
+    def start_server(self):
+        if not self.server_started:  # Vérifiez si le serveur n'est pas déjà démarré
+            print("Starting server thread")
+            self.server_thread = threading.Thread(target=self.server.start_server)
+            self.server_thread.daemon = True
+            self.server_thread.start()
+            self.server_started = True  # Mettez à jour l'état du serveur
+        else:
+            print("Stopping server thread")
+            self.server.stop_server()  # Arrêtez le serveur si c'est déjà démarré
+            self.server_started = False  # Mettez à jour l'état du serveur
+
     def returnPageLogin(self):
         try:
             # Libérer les ressources si nécessaire
@@ -299,8 +332,7 @@ class MainPage_graph(Tk):
         self.label = ctk.CTkLabel(self.frame3, text="Room created", width=20, height=20, font=('Agency FB', 30, 'bold'), text_color="white", fg_color="#415059")
         self.label.place(x=550, y=300, anchor=CENTER)
 
-        # Récupérer l'ID de l'utilisateur actuel (administrateur) depuis self.user_id
-        admin_user_id = self.user_id
+        
 
         # Actualisation de la liste des salons
         self.toggle_right_frame()
@@ -309,8 +341,9 @@ class MainPage_graph(Tk):
     def select_room(self, id_room):
         self.id_room = id_room  # Stockez l'ID du salon sélectionné
         self.frame4_message(id_room)
+        self.start_refreshing_messages()  # Démarrer le rafraîchissement des messages
+        # Si refresh_initialized n'est pas nécessaire, vous pouvez l'omettre ou le gérer différemment
         if not hasattr(self, 'refresh_initialized') or not self.refresh_initialized:
-            self.refresh_messages()
             self.refresh_initialized = True
 
     def send_message(self):
@@ -324,12 +357,23 @@ class MainPage_graph(Tk):
             
             
     def refresh_messages(self):
-        if hasattr(self, 'current_chat_instance') and self.current_chat_instance.id_room:
+        # Ajoutez une vérification pour voir si le rafraîchissement doit continuer
+        if self.should_refresh_messages and hasattr(self, 'current_chat_instance') and self.current_chat_instance.id_room:
             self.frame4_message(self.current_chat_instance.id_room)  # Mise à jour des messages
-            self.after(1000, self.refresh_messages)
+            self.after(500, self.refresh_messages)  # Planifiez le prochain rafraîchissement
+    
+    def stop_refreshing_messages(self):
+        # Appelez cette méthode pour arrêter le rafraîchissement
+        self.should_refresh_messages = False
+
+    def start_refreshing_messages(self):
+        # Appelez cette méthode pour démarrer ou redémarrer le rafraîchissement
+        self.should_refresh_messages = True
+        self.refresh_messages()
+
 
     
 
-# if __name__ == "__main__":
-#         app = MainPage_graph()
-#         app.mainloop()
+if __name__ == "__main__":
+        app = MainPage_graph()
+        app.mainloop()
