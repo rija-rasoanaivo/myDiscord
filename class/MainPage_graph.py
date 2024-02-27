@@ -174,7 +174,10 @@ class MainPage_graph(Tk):
         self.current_chat_instance = Chatting(self.user_id, id_room)
         messages = self.current_chat_instance.load_messages(id_room, self.user_id)
 
-        
+        # bouton pour quitter le salon
+        self.ImageoutRoom = PhotoImage(file="image/boutons/outRoom1.png")
+        self.buttonOutRoom = ctk.CTkButton(self.frame4, image=self.ImageoutRoom, text=None, width=20, height=20, fg_color="#23272d", hover_color="#23b0ed", corner_radius=10, command=lambda: self.outRoombutton())
+        self.buttonOutRoom.place(x=450, y=10)
         
     
         # Display messages or a placeholder if none are found
@@ -196,8 +199,6 @@ class MainPage_graph(Tk):
             default_message.place(x=80, y=50)
 
     def initialize_message_input_area(self):
-
-        
 
         # Message entry textbox
         self.text = ctk.CTkTextbox(self.frame4, width=250, height=50, corner_radius=13, fg_color="white", bg_color="#23272d", border_color="#38454c", border_width=1)
