@@ -7,26 +7,18 @@ class PrivateChatRoom:
         self.db = Server.db
 
     def get_userNames(self):
-        # Connexion à la base de données
-        self.db.connexion()
+        
+        try:
+            self.db = Server.db
+            query = "SELECT firstName, name FROM user"
+            result = self.db.fetch(query)
+            listMembers = [f'{row[0]} {row[1]}' for row in result]
+            print(listMembers)
+            return listMembers
+        except Exception as e:
+            print("Error fetching user names:", e)
+            return []
 
-        # Requête SQL pour récupérer le prénom et le nom de tous les utilisateurs
-        query = """
-            SELECT firstname, name
-            FROM user;
-        """
-
-        # Exécution de la requête SQL
-        self.db.executeRequete(query)
-
-        # Récupération des résultats de la requête
-        results = self.db.cursor.fetchall()
-
-        # Fermeture de la connexion à la base de données
-        self.db.deconnexion()
-
-        # Retourner les résultats sous forme de liste de tuples (prénom, nom)
-        return results
 
 
     def admin_join_private_chat_room(self, user_id, id_room):
@@ -57,15 +49,15 @@ class PrivateChatRoom:
         # Fermeture de la connexion à la base de données
         self.db.deconnexion()
 
+    
+
     def admin_add_member_private_chat_room(self, user_id, id_room):
         # Connexion à la base de données
         self.db.connexion()
         self.user_id = user_id
         self.id_room = id_room
 
-        # # Saisie des valeurs de user.id et chatRoom.id_room par l'utilisateur administrateur de son salon privé
-        # user_id = input("Enter the user id: ")
-        # id_room = input("Enter the id_room: ")
+
 
         # Exemple de requête SQL avec INNER JOIN et les valeurs saisies par l'utilisateur
         query = f"""
@@ -119,4 +111,4 @@ class PrivateChatRoom:
 
 if __name__ == "__main__":
     join_private_chat_room = PrivateChatRoom()
-    join_private_chat_room.admin_add_member_private_chat_room()
+    join_private_chat_room.get_userNames()
