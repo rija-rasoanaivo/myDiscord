@@ -5,21 +5,27 @@ from ChatRoom import *
 from PrivateChatRoom import *
 from Chatting import *
 from tkinter.constants import CENTER
-from AddMember import *
+from Vocal import *
+import threading
 
 
 
 class MainPage_graph(Tk):
-    def __init__(self, user_id=None):
+    def __init__(self, user_id=None, first_name=None):
         super().__init__()
 
         self.classLogin = Login()
         self.user_id = user_id
+        self.first_name = first_name
+
+        # Initialisation de l'attribut recording
+        self.recording = False
+        self.voice_thread = None
 
         # Création de la fenêtre principale
         self.geometry("800x650")
         self.title("Main Page")
-        self.configure(bg="black")  # Définition de la couleur de fond de la fenêtre principale
+        self.configure(bg="black")  
 
         # Création du cadre avec la couleur de fond spécifiée
         self.frame1 = ctk.CTkFrame(self, width=100, height=800, corner_radius=0, fg_color="#c7c1f2")  # Définition de la couleur de fond du cadre
@@ -54,11 +60,10 @@ class MainPage_graph(Tk):
         # creation du logo profil
         self.imageProfil = PhotoImage(file="image/boutons/profil.png")
         # Création d'un Label avec l'image chargée comme image de fond
-        self.buttonProfil = ctk.CTkButton(self, image=self.imageProfil, text=None, width=20, height=20, fg_color="#c7c1f2", bg_color= "#c7c1f2", corner_radius= 10, hover_color="#a78ff7", command= self.ProfilLog)
+        self.buttonProfil = ctk.CTkButton(self, image=self.imageProfil, text=None, width=20, height=20, fg_color="#c7c1f2", bg_color= "#c7c1f2", corner_radius= 10, hover_color="#a78ff7", command= self.start_server)
         self.buttonProfil.place(x=10, y=100)
 
-    
-
+        
 
         
     # gestion de la frame a afficher sur la droite de mon bouton salon en cliquant sur le bouton
@@ -151,7 +156,6 @@ class MainPage_graph(Tk):
         if self.frame4.winfo_ismapped():
             self.frame4.place_forget()
 
-        
 
     def show_frame4(self):
         # Afficher la frame4
@@ -208,8 +212,7 @@ class MainPage_graph(Tk):
 
         # Voice message button
         self.imageVoice = PhotoImage(file="image/boutons/vocal.png")
-        self.buttonVoice = ctk.CTkButton(self.frame4, image=self.imageVoice, text=None, width=10, height=10, fg_color="#23b0ed",
-                                        border_color="black", border_width=1, hover_color="#a78ff7", corner_radius=10)
+        self.buttonVoice = ctk.CTkButton(self.frame4, image=self.imageVoice, text=None, width=10, height=10, fg_color="#23b0ed", border_color="black", border_width=1, hover_color="#a78ff7", corner_radius=10, command=self.toggle_voice_message)
         self.buttonVoice.place(x=430, y=600, anchor=CENTER)
 
         # Emoji buttons
@@ -229,15 +232,58 @@ class MainPage_graph(Tk):
             button.place(x=x_position, y=550, anchor=CENTER)
             x_position += 30  
 
+    def toggle_voice_message(self):
 
+        print("Toggle voice message method called")
+        if not self.recording:  # Si l'enregistrement n'est pas en cours, démarrez-le
+            print("Starting voice message recording")
+            self.start_voice_message()
+        else:  # Sinon, arrêtez l'enregistrement
+            print("Stopping voice message recording")
+            self.stop_voice_message()
+
+        self.update()
+
+
+    def start_voice_message(self):
+        print("Starting voice message thread")
+        self.recording = True
+        # Lancez le thread d'enregistrement vocal et stockez une référence à ce thread
+        self.voice_thread = threading.Thread(target=self.start_voice_message_thread)
+        self.voice_thread.start()
+
+    def stop_voice_message(self):
+        print("Stopping voice message thread")
+        self.recording = False
+        # Attendez que le thread d'enregistrement vocal se termine
+        if self.voice_thread is not None:
+            self.voice_thread.join()
+    
+    def start_voice_message_thread(self):
+        vocal = Vocal()
+        vocal.start()
+        self.recording = False  # Met à jour l'état de l'enregistrement vocal lorsque celui-ci est terminé
            
-    # methode pour retourner a la page de connexion
-    def returnPageLogin(self): 
-         
-        self.destroy()
-        go_login = Login_graph()
-        go_login.mainloop()
-        go_login.update()
+    def returnPageLogin(self):
+        try:
+            # Libérer les ressources si nécessaire
+            self.voice_thread = None
+            
+            # Détruire la fenêtre actuelle
+            self.destroy()
+            
+            # Créer une nouvelle instance de la page de connexion
+            go_login = Login_graph()
+            go_login.mainloop()
+            
+            # Mettre à jour l'interface si nécessaire
+            go_login.update()
+
+            self.update()
+            
+        except Exception as e:
+            print("Une erreur s'est produite lors du retour à la page de connexion:", e)
+        
 
     # methode pour creer un salon
     def join_datacCreateroom(self):
@@ -269,13 +315,13 @@ class MainPage_graph(Tk):
         message_content = self.text.get("1.0", "end-1c").strip()
         if message_content:
             # Utilise l'instance de Chatting pour envoyer le message
-            self.current_chat_instance.send_message(message_content)
+            self.current_chat_instance.send_message( self.user_id, self.first_name, message_content)
             self.text.delete("1.0", "end")
             # Rafraîchir les messages pour inclure le nouveau message
             self.frame4_message(self.current_chat_instance.id_room)
 
     
 
-if __name__ == "__main__":
-        app = MainPage_graph()
-        app.mainloop()
+# if __name__ == "__main__":
+#         app = MainPage_graph()
+#         app.mainloop()

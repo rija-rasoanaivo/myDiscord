@@ -1,89 +1,74 @@
-import socket
-import select
 from MyDb import *
+import socket
+import pyaudio
+import threading
 
 class Server:
     db = MyDb("82.165.185.52", "marijo", "Rijoma13!", "manon-rittling_mydiscord")
     db.connexion()
 
     def __init__(self):
+        # Paramètres audio
+        self.FORMAT = pyaudio.paInt16
+        self.CHANNELS = 1
+        self.RATE = 44100
+        self.CHUNK = 1024
+
+        # Initialisation de PyAudio
+        self.audio = pyaudio.PyAudio()
+
+        self.server_socket = None  # Initialisation du socket à None
+
+    def create_server_socket(self, host='127.0.0.1', port=8000):
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket_objects = [self.server_socket]
-        self.channels = {'A': [], 'B': []}
-        self.host = '127.0.0.1'
-        self.port = 3306
-
-    def start(self):
         try:
-            self.server_socket.bind((self.host, self.port))
-            self.server_socket.listen(10)
-            print("Welcome to the J.M.R Server")
-            self.run_server()
+            self.server_socket.bind((host, port))
+            self.server_socket.listen(10)  # Attente de connexions
+            print("Serveur en attente de connexions...")
         except Exception as e:
-            print(f"Error starting server: {e}")
-            self.server_socket.close()
+            print(f"Erreur lors de la liaison du socket : {e}")
+            if self.server_socket:
+                self.server_socket.close()
+            self.server_socket = None
 
-    def run_server(self):
+    def handle_client(self, client_socket):
+        stream = self.audio.open(format=self.FORMAT, channels=self.CHANNELS, rate=self.RATE, output=True, frames_per_buffer=self.CHUNK)
+        try:
+            while True:
+                data = client_socket.recv(1024)
+                if not data:
+                    break
+                stream.write(data)
+        except Exception as e:
+            print(f"Erreur lors de la gestion du client : {e}")
+        finally:
+            client_socket.close()
+
+    def accept_clients(self):
         while True:
             try:
-                readable, _, _ = select.select(self.socket_objects, [], [])
-                for sock in readable:
-                    if sock == self.server_socket:
-                        self.handle_new_connection(sock)
-                    else:
-                        self.handle_client_message(sock)
+                client_socket, addr = self.server_socket.accept()
+                print(f"Connexion établie avec {addr}")
+                client_thread = threading.Thread(target=self.handle_client, args=(client_socket,))
+                client_thread.start()
             except Exception as e:
-                print(f"Error in server loop: {e}")
+                print(f"Erreur lors de l'acceptation des clients : {e}")
 
-    def handle_new_connection(self, server_socket):
-        user_socket, address = server_socket.accept()
-        print(f"New connection from {address}")
-        user_socket.sendall(b"Welcome to the J.M.R Server\nPlease choose a channel: A, B\n")
-        self.socket_objects.append(user_socket)
+    def start_server(self):
+        if not self.server_socket:
+            print("Le socket serveur n'a pas été créé. Veuillez appeler create_server_socket() d'abord.")
+            return
 
-    def handle_client_message(self, client_socket):
         try:
-            data = client_socket.recv(1024).decode('utf-8').strip()
-            if data:
-                if client_socket in self.channels['A']:
-                    self.send_to_channel('A', data)
-                elif client_socket in self.channels['B']:
-                    self.send_to_channel('B', data)
-                else:
-                    self.join_channel(client_socket, data)
-            else:
-                self.disconnect_client(client_socket)
-        except Exception as e:
-            print(f"Error handling message: {e}")
-            self.disconnect_client(client_socket)
+            accept_thread = threading.Thread(target=self.accept_clients)
+            accept_thread.start()
+            accept_thread.join()  # Attente indéfinie pour que le thread d'acceptation ne se termine pas
+        finally:
+            self.server_socket.close()
+            self.audio.terminate()
 
-    def join_channel(self, client_socket, channel):
-        if channel in ['A', 'B']:
-            self.channels[channel].append(client_socket)
-            client_socket.sendall(f"Welcome to channel {channel}\n".encode('utf-8'))
-        else:
-            client_socket.sendall(b"Invalid channel\n")
-
-    def send_to_channel(self, channel, message):
-        for sock in self.channels[channel]:
-            try:
-                sock.sendall(f"Channel {channel}: {message}\n".encode('utf-8'))
-            except Exception as e:
-                print(f"Error sending message to channel {channel}: {e}")
-                self.disconnect_client(sock)
-
-    def disconnect_client(self, client_socket):
-        try:
-            client_socket.close()
-            self.socket_objects.remove(client_socket)
-            for channel in self.channels.values():
-                if client_socket in channel:
-                    channel.remove(client_socket)
-            print(f"Client disconnected: {client_socket}")
-        except Exception as e:
-            print(f"Error disconnecting client: {e}")
-
-
-if __name__ == "__main__":
-    server = Server()
-    server.start()
+# # Utilisation
+# if __name__ == "__main__":
+#     server = Server()
+#     server.create_server_socket()  # Créer le socket serveur
+#     server.start_server()  # Démarrer le serveur

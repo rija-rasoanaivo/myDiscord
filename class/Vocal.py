@@ -1,43 +1,50 @@
-import sounddevice as sd
-import base64
-import numpy as np
-from scipy.io.wavfile import read, write
+from Chatting import *
+import socket
+import pyaudio
 
 class Vocal:
-    
-    def __init__(self):
-        pass
+    def __init__(self, host='127.0.0.1', port=8000):
+        self.host = host
+        self.port = port
 
-    def record_audio(self, filename="recording.wav", duration=5):
-        # Enregistrement de l'audio
-        freq = 44100  # Fréquence d'échantillonnage
-        recording = sd.rec(int(duration * freq), samplerate=freq, channels=2)
-        sd.wait()
+        # Paramètres audio
+        self.FORMAT = pyaudio.paInt16
+        self.CHANNELS = 1
+        self.RATE = 44100
+        self.CHUNK = 1024
 
-        # Écriture de l'audio dans un fichier WAV
-        write(filename, freq, recording)
+        # Initialisation de PyAudio
+        self.audio = pyaudio.PyAudio()
 
-    def convert_into_binary(self, filename):
-        # Conversion de l'audio en données binaires
-        audio_array = np.array(read(filename)[1], dtype=float)
-        audio_bytes = audio_array.tobytes()
-        return base64.b64encode(audio_bytes).decode("utf-8")
-    
-    def decode_from_binary(self, binary_data):
-        # Décodage des données binaires en audio
-        audio_bytes = base64.b64decode(binary_data)
-        audio_array = np.frombuffer(audio_bytes, dtype=float)
-        return audio_array
+        # Création du socket TCP
+        print("Connecting to server...")
+        self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.client_socket.connect((self.host, self.port))
+        print("Connected to server.")
 
-    def play_audio(self, filename):
-        # Lecture de l'audio
-        freq, audio_array = read(filename)
-        sd.play(audio_array, freq)
-        sd.wait()
+    # Fonction pour envoyer l'audio au serveur
+    def send_audio(self):
+        print("Recording and sending audio...")
+        stream = self.audio.open(format=self.FORMAT, channels=self.CHANNELS, rate=self.RATE, input=True, frames_per_buffer=self.CHUNK)
+        try:
+            while True:
+                data = stream.read(self.CHUNK)
+                self.client_socket.sendall(data)
+        except Exception as e:
+            print(f"Erreur : {e}")
+        finally:
+            stream.stop_stream()
+            stream.close()
+            print("Audio stream stopped and closed.")
 
+    def start(self):
+        try:
+            self.send_audio()
+        finally:
+            self.client_socket.close()
+            print("Connection closed.")
+
+# Utilisation
 if __name__ == "__main__":
     vocal = Vocal()
-    vocal.record_audio()
-    binary_data = vocal.convert_into_binary("recording.wav")
-    audio_array = vocal.decode_from_binary(binary_data)
-    vocal.play_audio(audio_array)
+    vocal.start()

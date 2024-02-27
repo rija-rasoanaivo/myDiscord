@@ -101,18 +101,19 @@ class Login_graph(Tk):
         login_backend = Login()
 
         # Appeler la méthode login du backend pour vérifier les informations d'identification
-        success, user_id = login_backend.login(email, password)
+        success, user_id,first_name = login_backend.login(email, password)
         
         if success:
             # Rediriger l'utilisateur vers la page principale
             self.destroy()
-            mainpage = MainPage_graph(user_id)
+            mainpage = MainPage_graph(user_id, first_name)
             mainpage.mainloop()
         else:
             # Afficher un message d'erreur à l'utilisateur
             print("Email ou mot de passe incorrect")
             # Réinitialiser la page de connexion
             self.setup_login_page()
+
 
 
     def go_register(self):
@@ -125,5 +126,6 @@ class Login_graph(Tk):
 
 
 if __name__ == "__main__":
+    
     login = Login_graph()
     login.mainloop()
