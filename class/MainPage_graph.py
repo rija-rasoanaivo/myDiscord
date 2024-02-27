@@ -23,6 +23,8 @@ class MainPage_graph(Tk):
 
         self.voice=None
 
+        self.server = Server()  # Créez une instance de la classe Server
+        self.server_started = False  # Variable pour suivre l'état du serveur
 
         # Création de la fenêtre principale
         self.geometry("800x650")
@@ -64,12 +66,6 @@ class MainPage_graph(Tk):
         # Création d'un Label avec l'image chargée comme image de fond
         self.buttonProfil = ctk.CTkButton(self, image=self.imageProfil, text=None, width=20, height=20, fg_color="#c7c1f2", bg_color= "#c7c1f2", corner_radius= 10, hover_color="#a78ff7", command = self.start_server)
         self.buttonProfil.place(x=10, y=100)
-
-    def start_server(self):
-        self.server = Server()
-        self.server_thread = threading.Thread(target=self.server.start_server)
-        self.server_thread.daemon = True  # Définir le thread comme un démon pour qu'il se termine lorsque le programme principal se termine
-        self.server_thread.start()
         
     # gestion de la frame a afficher sur la droite de mon bouton salon en cliquant sur le bouton
     def toggle_right_frame(self):
@@ -144,6 +140,19 @@ class MainPage_graph(Tk):
             # Création du bouton "valider"
             self.buttonValid = ctk.CTkButton(self, text="VALID", text_color="#38454c", width=80, height=20, corner_radius=10, font=("Agency FB", 21, "bold"), border_width=2, border_color="white", bg_color="#415059", fg_color="#c7c1f2", hover_color="#a78ff7", command=self.join_datacCreateroom)
             self.buttonValid.place(x=550, y=410, anchor=CENTER)
+
+    def start_server(self):
+        if not self.server_started:  # Vérifiez si le serveur n'est pas déjà démarré
+            print("Starting server thread")
+            self.server_thread = threading.Thread(target=self.server.start_server)
+            self.server_thread.daemon = True
+            self.server_thread.start()
+            self.server_started = True  # Mettez à jour l'état du serveur
+        else:
+            print("Stopping server thread")
+            self.server.stop_server()  # Arrêtez le serveur si c'est déjà démarré
+            self.server_started = False  # Mettez à jour l'état du serveur
+
 
     def toggle_voice_message(self):
         print("Toggle voice message method called")
@@ -279,16 +288,10 @@ class MainPage_graph(Tk):
         # Actualisation de la liste des salons
         self.toggle_right_frame()
 
-    # def start_server_when_room_selected(self, id_room):
-    #     # Création du serveur et activation du socket
-    #     self.server.create_server_socket()
-
     def select_room(self, id_room):
         self.id_room = id_room  # Stockez l'ID du salon sélectionné
         self.frame4_message(id_room)
 
-        # # Appel de la méthode pour démarrer le serveur
-        # self.start_server_when_room_selected(id_room)
 
     def send_message(self):
         # Récupère le contenu du ctk.CTkTextbox

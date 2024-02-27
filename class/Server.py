@@ -58,7 +58,8 @@ class Server:
         if not self.server_socket:
             self.create_server_socket()  # Créer le socket serveur si nécessaire
         else:
-            print("Le socket serveur existe déjà.")
+            print("Le socket serveur existe déjà. Attendez que le serveur actuel se termine.")
+            return  
 
         try:
             accept_thread = threading.Thread(target=self.accept_clients)
@@ -68,9 +69,19 @@ class Server:
             self.server_socket.close()
             self.audio.terminate()
 
+    def stop_server(self):
+        if self.server_socket:
+            self.server_socket.close()
+            print("Socket serveur fermé.")
+        if self.audio:
+            self.audio.terminate()
+            print("Audio arrêté.")
+
 
 # Utilisation
 if __name__ == "__main__":
     server = Server()
     server.create_server_socket()  # Créer le socket serveur
     server.start_server()  # Démarrer le serveur
+    # Pour arrêter le serveur, appelez la méthode stop_server
+    server.stop_server()
