@@ -64,7 +64,7 @@ class MainPage_graph(Tk):
         self.buttonProfil.place(x=10, y=100)
 
         self.initialize_message_input_area()
-
+        self.should_refresh_messages = True 
         
     # gestion de la frame a afficher sur la droite de mon bouton salon en cliquant sur le bouton
     def toggle_right_frame(self):
@@ -155,6 +155,7 @@ class MainPage_graph(Tk):
     def outRoombutton(self):
         if self.frame4.winfo_ismapped():
             self.frame4.place_forget()
+            self.stop_refreshing_messages()
 
 
     def show_frame4(self):
@@ -173,12 +174,6 @@ class MainPage_graph(Tk):
         # Fetch messages for the selected room
         self.current_chat_instance = Chatting(self.user_id, id_room)
         messages = self.current_chat_instance.load_messages(id_room, self.user_id)
-
-        # bouton pour quitter le salon
-        self.ImageoutRoom = PhotoImage(file="image/boutons/outRoom1.png")
-        self.buttonOutRoom = ctk.CTkButton(self.frame4, image=self.ImageoutRoom, text=None, width=20, height=20, fg_color="#23272d", hover_color="#23b0ed", corner_radius=10, command=lambda: self.outRoombutton())
-        self.buttonOutRoom.place(x=450, y=10)
-        
     
         # Display messages or a placeholder if none are found
         if messages:
@@ -189,7 +184,7 @@ class MainPage_graph(Tk):
 
             for i, message in enumerate(messages):
                 message_text = f"{message[2]} {message[0]}" 
-                self.messageDisplay = ctk.CTkLabel(self.frame4, text=message_text, width=100, height=20, font=("Agency FB", 14, 'bold'),text_color="white", bg_color="#23272d" )
+                self.messageDisplay = ctk.CTkLabel(self.frame4, text=message_text, width=100, height=20, font=("Agency FB", 14, 'bold'),text_color="black", bg_color="#23272d" )
                 self.messageDisplay.place(x=80, y=60 + i * 70)
 
             
@@ -309,8 +304,9 @@ class MainPage_graph(Tk):
     def select_room(self, id_room):
         self.id_room = id_room  # Stockez l'ID du salon sélectionné
         self.frame4_message(id_room)
+        self.start_refreshing_messages()  # Démarrer le rafraîchissement des messages
+        # Si refresh_initialized n'est pas nécessaire, vous pouvez l'omettre ou le gérer différemment
         if not hasattr(self, 'refresh_initialized') or not self.refresh_initialized:
-            self.refresh_messages()
             self.refresh_initialized = True
 
     def send_message(self):
@@ -324,9 +320,19 @@ class MainPage_graph(Tk):
             
             
     def refresh_messages(self):
-        if hasattr(self, 'current_chat_instance') and self.current_chat_instance.id_room:
+        # Ajoutez une vérification pour voir si le rafraîchissement doit continuer
+        if self.should_refresh_messages and hasattr(self, 'current_chat_instance') and self.current_chat_instance.id_room:
             self.frame4_message(self.current_chat_instance.id_room)  # Mise à jour des messages
-            self.after(1000, self.refresh_messages)
+            self.after(1000, self.refresh_messages)  # Planifiez le prochain rafraîchissement
+    
+    def stop_refreshing_messages(self):
+        # Appelez cette méthode pour arrêter le rafraîchissement
+        self.should_refresh_messages = False
+
+    def start_refreshing_messages(self):
+        # Appelez cette méthode pour démarrer ou redémarrer le rafraîchissement
+        self.should_refresh_messages = True
+        self.refresh_messages()
 
     
 
