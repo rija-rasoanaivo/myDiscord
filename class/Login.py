@@ -4,7 +4,7 @@ class Login:
     def __init__(self):
         self.server = Server()
         self.user_id = None  # Initialisez user_id à None au début
-        self.first_name = None
+        self.first_name = None  # Initialisez first_name à None au début
 
     def login(self, email, password):
         self.email = email
@@ -17,8 +17,8 @@ class Login:
         if result:
             print("Login successful!")
             self.user_id = result[0][0]  # Stockez l'ID de l'utilisateur dans user_id
-            self.first_name = result[0][1] # Stockez le prénom de l'utilisateur dans first_name
-            return True, self.user_id , self.first_name # Renvoie True et l'ID de l'utilisateur
+            self.first_name = result[0][1]
+            return True, self.user_id, self.first_name  # Renvoie True et l'id_user
         else:
             print("Login failed. Please check your credentials.")
             return False, None  # Renvoie False et None
@@ -28,30 +28,11 @@ class Login:
         self.user_id = None
         print("User logged out.")
 
-    # def get_userName(self):
-    #     if self.user_id:
-    #         user_info = self.server.db.fetch(
-    #             "SELECT firstName FROM user WHERE id=%s",
-    #             (self.user_id,)
-    #         )
-
-    #         print(user_info)
-    #         return user_info
+    
         
 
 
-    # récupérer les informations de l'utilisateur à partir de son ID
-    def get_user_info(self):
-        if self.user_id:
-            user_info = self.server.db.fetch(
-                "SELECT first_name, last_name, email FROM user WHERE id=%s",
-                (self.user_id,)
-            )
-
-            print(user_info)
-            return user_info
-        else:
-            print("No user logged in.")
-            return None
+ 
+            
 
     
