@@ -210,6 +210,7 @@ class MainPage_graph(Tk):
         # Message entry textbox
         self.text = ctk.CTkTextbox(self.frame4, width=250, height=50, corner_radius=13, fg_color="white", bg_color="#23272d", border_color="#38454c", border_width=1, text_color="black")
         self.text.place(x=200, y=600, anchor=CENTER)
+        
 
         # Send message button
         self.imageSend = PhotoImage(file="image/boutons/envoyer1.png")
@@ -351,16 +352,13 @@ class MainPage_graph(Tk):
             # Utilise l'instance de Chatting pour envoyer le message
             self.current_chat_instance.send_message( self.user_id, self.first_name, message_content)
             self.text.delete("1.0", "end")
-            
-                  
+                      
             
     def refresh_messages(self):
         # Ajoutez une vérification pour voir si le rafraîchissement doit continuer
         if self.should_refresh_messages and hasattr(self, 'current_chat_instance') and self.current_chat_instance.id_room:
             self.frame4_message(self.current_chat_instance.id_room)  # Mise à jour des messages
             self.after(500, self.refresh_messages)  # Planifiez le prochain rafraîchissement
-            self.receive_message(self.user_id, self.first_name)
-            
             
     
     def stop_refreshing_messages(self):
@@ -372,23 +370,7 @@ class MainPage_graph(Tk):
         self.should_refresh_messages = True
         self.refresh_messages()
 
-    def receive_message(self, sender, message):
-        # Traitez le message reçu ici...
-        if not self.notification_displayed:
-            # Afficher une notification pour informer l'utilisateur du nouveau message
-            self.displayNotify("Nouveau message", f"De {sender}: {message}")
-            self.notification_displayed = True  # Mettez à jour le drapeau pour indiquer qu'une notification a été affichée
-
-        # Assurez-vous également de rafraîchir l'affichage des messages dans la fenêtre appropriée
-        self.frame4_message(self.current_chat_instance.id_room)
-
-    def displayNotify(self, title, message):
-        notification.notify(
-            title=title,
-            message=message,
-            app_icon=None,
-            timeout=10, 
-        )
+    
         
     
 

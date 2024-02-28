@@ -1,6 +1,7 @@
 from PrivateChatRoom import *
 from Login import *
 from datetime import datetime
+from plyer import notification
 
 class Message:
 
@@ -24,3 +25,18 @@ class Message:
         
         # Execute the query
         self.db.executeRequete(query, (self.user_id,self.first_name, self.id_room, message_content, timestamp))  
+        self.notify_user(message_content)
+
+    def notify_user(self, message_content):
+        notification.notify(
+            title="New message",
+            message= (f"You have a new message from {self.first_name}: {message_content}")[:50],
+            timeout=10
+        )
+
+        if self.first_name == 'login':
+            notification.notify(
+                title="New message",
+                message= (f"You have a new message from {self.first_name}: {message_content}")[:50],
+                timeout=10,
+            )
