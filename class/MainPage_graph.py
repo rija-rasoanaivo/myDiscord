@@ -367,7 +367,7 @@ class MainPage_graph(Tk):
         self.should_refresh_messages = False
 
     def start_refreshing_messages(self):
-        # Appelez cette méthode pour démarrer ou redémarrer le rafraîchissement
+        # Appelez cette méthode pour déarrer ou redémarrer le rafraîchissement
         self.should_refresh_messages = True
         self.refresh_messages()
 
