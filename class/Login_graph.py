@@ -5,7 +5,6 @@ from Register_graph import *
 from MainPage_graph import MainPage_graph
 
 
-
 class Login_graph(Tk):
     def __init__(self):
         super().__init__()

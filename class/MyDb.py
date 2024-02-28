@@ -34,8 +34,13 @@ class MyDb:
         return result 
     
     def create(self, table, fields, values):
-        requete = "INSERT INTO " + table + " (" + fields + ") VALUES (" + values + ")"
-        self.executeRequete(requete)
+        requete = f"INSERT INTO {table} ({fields}) VALUES ({values})"
+        self.connexion()  # Establish the connection
+        self.cursor.execute(requete)  # Execute the query
+        self.db.commit()  # Commit the transaction
+        last_id = self.cursor.lastrowid  # Get the last inserted ID
+        self.deconnexion()  # Close the connection
+        return last_id 
 
     def read(self, table, fields, condition):
         requete = "SELECT " + fields + " FROM " + table + " WHERE " + condition

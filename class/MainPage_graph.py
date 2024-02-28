@@ -91,69 +91,64 @@ class MainPage_graph(Tk):
                 self.labelAdd.place(x=100, y=560, anchor=CENTER)
 
     def toggle_createRoom(self):
-        
-        # Si la frame3 est déjà affichée, la faire disparaître et détruire ses éléments
+        # Hide the create room frame and its components if it's already displayed
         if self.frame3.winfo_ismapped():
             self.frame3.place_forget()
-            self.titre.winfo_ismapped()
             self.titre.place_forget()
-            self.roomName.winfo_ismapped()
             self.roomName.place_forget()
-            self.entry_roomName.winfo_ismapped()
             self.entry_roomName.place_forget()
-            self.type_room.winfo_ismapped()
             self.type_room.place_forget()
-            self.checkPublic.winfo_ismapped()
             self.checkPublic.place_forget()
-            self.checkPrivate.winfo_ismapped()
             self.checkPrivate.place_forget()
-            self.buttonValid.winfo_ismapped()
             self.buttonValid.place_forget()
-            self.members.winfo_ismapped()
             self.members.place_forget()
-            self.combo.winfo_ismapped()
-            self.combo.place_forget()
-            self.label.winfo_ismapped()
+            if hasattr(self, 'combo'):
+                self.combo.place_forget()
             self.label.place_forget()
-    
 
-        else: # Sinon, afficher la frame3 et ses éléments
-            
+        else:  # Display the frame3 and its components for creating a room
             self.frame3.place(x=400, y=150)
 
-            # Création du titre de la frame
-            self.titre = ctk.CTkLabel(self, text="CREATE YOUR ROOM", width=20, height=20, font=('Broadway', 22), text_color="#c7c1f2", fg_color="#415059")
+            # Title of the frame
+            self.titre = ctk.CTkLabel(self, text="CREATE YOUR ROOM", width=200, height=40, font=('Broadway', 22), text_color="#c7c1f2", fg_color="#415059")
             self.titre.place(x=550, y=180, anchor=CENTER)
 
-            # Création du champ pour le nom du salon
-            self.roomName = ctk.CTkLabel(self, text="Room Name", width=20, height=20, font=('Agency FB', 18, 'bold'), text_color="#c7c1f2", fg_color="#415059")
-            self.roomName.place(x=550, y=210, anchor=CENTER)
+            # Room name label and entry
+            self.roomName = ctk.CTkLabel(self, text="Room Name", width=200, height=40, font=('Agency FB', 18, 'bold'), text_color="#c7c1f2", fg_color="#415059")
+            self.roomName.place(x=550, y=240, anchor=CENTER)
 
-            self.entry_roomName = ctk.CTkEntry(self, width=100, height=30, corner_radius=5, fg_color="white", bg_color="#415059", border_color="#38454c", border_width=1, text_color="black")
-            self.entry_roomName.place(x=550, y=250, anchor=CENTER)
+            self.entry_roomName = ctk.CTkEntry(self, width=200, height=40, corner_radius=5, fg_color="white", bg_color="#415059", border_color="#38454c", border_width=1, text_color="black")
+            self.entry_roomName.place(x=550, y=290, anchor=CENTER)
 
-            # Création de la checkbox pour choisir salon privé ou public
-            self.type_room = ctk.CTkLabel(self, text="Type Room", width=20, height=20, font=('Agency FB', 18, 'bold'), text_color="#c7c1f2", fg_color="#415059")
-            self.type_room.place(x=550, y=280, anchor=CENTER)
+            # Radio buttons for room type
+            self.type_room = ctk.CTkLabel(self, text="Type Room", width=200, height=40, font=('Agency FB', 18, 'bold'), text_color="#c7c1f2", fg_color="#415059")
+            self.type_room.place(x=550, y=340, anchor=CENTER)
 
-            self.checkPublic = ctk.CTkCheckBox(self, text="Public", text_color="white", width=40, height=20, bg_color="#415059", corner_radius=5, border_color="white", border_width=1)
-            self.checkPublic.place(x=480, y=310, anchor=CENTER)
+            self.checkPublic = ctk.CTkCheckBox(self, text="Public", text_color="white", width=200, height=40, bg_color="#415059", corner_radius=5, border_color="white", border_width=1)
+            self.checkPublic.place(x=480, y=390, anchor=CENTER)
 
-            self.checkPrivate = ctk.CTkCheckBox(self, text="Private", text_color="white", width=40, height=20, bg_color="#415059", corner_radius=5, border_color="white", border_width=1)
-            self.checkPrivate.place(x=630, y=310, anchor=CENTER)
+            self.checkPrivate = ctk.CTkCheckBox(self, text="Private", text_color="white", width=200, height=40, bg_color="#415059", corner_radius=5, border_color="white", border_width=1)
+            self.checkPrivate.place(x=630, y=390, anchor=CENTER)
             
-            # creation combobox pour ajouter les membres dans le salon
-            self.members = ctk.CTkLabel(self, text="Add Members", width=20, height=20, font=('Agency FB', 18, 'bold'), text_color="#c7c1f2", fg_color="#415059")
-            self.members.place(x=550, y=340, anchor=CENTER)
-            listmember = PrivateChatRoom()
-            listmembers = listmember.get_userNames()
+            # Combobox for adding members to the room
+            self.members = ctk.CTkLabel(self, text="Add Members", width=200, height=40, font=('Agency FB', 18, 'bold'), text_color="#c7c1f2", fg_color="#415059")
+            self.members.place(x=550, y=440, anchor=CENTER)
             
-            self.combo = ctk.CTkComboBox(self, width=150, height=25, corner_radius=5, fg_color="white", bg_color="#415059", border_color="#38454c", border_width=1, values=listmembers)
-            self.combo.place(x=550, y=370, anchor=CENTER)
+            # Create an instance of PrivateChatRoom and retrieve member names
+            private_chat_room = PrivateChatRoom()
+            listmembers = private_chat_room.get_userNames()
+            member_names = [member['name'] for member in listmembers]
 
-            # Création du bouton "valider"
-            self.buttonValid = ctk.CTkButton(self, text="VALID", text_color="#38454c", width=80, height=20, corner_radius=10, font=("Agency FB", 21, "bold"), border_width=2, border_color="white", bg_color="#415059", fg_color="#c7c1f2", hover_color="#a78ff7", command=self.join_datacCreateroom)
-            self.buttonValid.place(x=550, y=420, anchor=CENTER)
+            # Destroy existing combobox if it exists and create a new one
+            if hasattr(self, 'combo'):
+                self.combo.destroy()
+            self.combo = ctk.CTkComboBox(self, width=200, height=40, corner_radius=5, fg_color="white", bg_color="#415059", border_color="#38454c", border_width=1, values=member_names)
+            self.combo.place(x=550, y=490, anchor=CENTER)
+
+            # Button to validate and create the room
+            self.buttonValid = ctk.CTkButton(self, text="VALID", text_color="#38454c", width=200, height=40, corner_radius=10, font=("Agency FB", 21, "bold"), border_width=2, border_color="white", bg_color="#415059", fg_color="#c7c1f2", hover_color="#a78ff7", command=self.join_datacreateroom)
+            self.buttonValid.place(x=550, y=540, anchor=CENTER)
+
     
     # fermer la frame4
     def outRoombutton(self):
@@ -206,7 +201,7 @@ class MainPage_graph(Tk):
     def initialize_message_input_area(self):
 
         # Message entry textbox
-        self.text = ctk.CTkTextbox(self.frame4, width=250, height=50, corner_radius=13, fg_color="white", bg_color="#23272d", border_color="#38454c", border_width=1)
+        self.text = ctk.CTkTextbox(self.frame4, width=250, height=50, corner_radius=13, fg_color="white", bg_color="#23272d", border_color="#38454c", text_color="black", border_width=1)
         self.text.place(x=200, y=600, anchor=CENTER)
 
         # Send message button
@@ -299,6 +294,8 @@ class MainPage_graph(Tk):
 
     def returnPageLogin(self):
         try:
+            from Login_graph import Login_graph  # Import tardif
+            
             # Libérer les ressources si nécessaire
             self.voice_thread = None
             
@@ -308,34 +305,37 @@ class MainPage_graph(Tk):
             # Créer une nouvelle instance de la page de connexion
             go_login = Login_graph()
             go_login.mainloop()
-            
-            # Mettre à jour l'interface si nécessaire
-            go_login.update()
 
-            self.update()
-            
         except Exception as e:
             print("Une erreur s'est produite lors du retour à la page de connexion:", e)
         
 
     # methode pour creer un salon
-    def join_datacCreateroom(self):
-        # récupérer les valeurs saisies par l'utilisateur
-        roomName = self.entry_roomName.get()
-        typeRoom = "Public" if self.checkPublic.get() else "Private"  # Déterminez le type de la chambre en fonction de la case cochée
+    def join_datacreateroom(self):
+        roomName = self.entry_roomName.get().strip()
+        isPublic = self.checkPublic.get()
+        isPrivate = not isPublic  # Assuming only one can be True at a time
 
-        # insertion des valeurs dans la base de données par la classe ChatRoom
-        create_room = ChatRoom()
-        create_room.create_chat_room(roomName, typeRoom)
-        
-        # affichage d'un message de confirmation
-        self.label = ctk.CTkLabel(self.frame3, text="Room created", width=20, height=20, font=('Agency FB', 30, 'bold'), text_color="white", fg_color="#415059")
-        self.label.place(x=550, y=300, anchor=CENTER)
+        # Create room and get ID
+        chat_room = ChatRoom()
+        room_id = chat_room.create_chat_room(roomName, '0' if isPublic else '1')
+        if room_id:
+            private_chat_room = PrivateChatRoom()
+            if isPrivate:
+                # Add creator as admin
+                private_chat_room.admin_join_private_chat_room(self.user_id, room_id)
+                selectedMemberName = self.combo.get()
+                members_list = private_chat_room.get_userNames()
+                selected_member_id = next((member['id'] for member in members_list if member['name'] == selectedMemberName), None)
+                if selected_member_id:
+                    private_chat_room.admin_add_member_private_chat_room(selected_member_id, room_id)
+            print(f"Room '{roomName}' created with ID {room_id}.")
+        else:
+            print("Error creating the room.")
 
-        
 
-        # Actualisation de la liste des salons
-        self.toggle_right_frame()
+
+
 
 
     def select_room(self, id_room):
