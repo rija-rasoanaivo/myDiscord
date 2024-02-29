@@ -82,7 +82,7 @@ class Login_graph(Tk):
         if self.password_visible:
             self.entry3.configure(show="*")
             self.password_visible = False
-        else:
+        else: 
             self.entry3.configure(show="")
             self.password_visible = True
 
