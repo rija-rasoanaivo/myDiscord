@@ -15,6 +15,8 @@ class MainPage_graph(Tk):
         super().__init__()
 
         self.classLogin = Login()
+        self.chat_room = ChatRoom()
+        self.private_chat_room = PrivateChatRoom()
         self.user_id = user_id
         self.first_name = first_name
 
@@ -348,12 +350,30 @@ class MainPage_graph(Tk):
 
 
     def select_room(self, id_room):
-        self.id_room = id_room  # Stockez l'ID du salon sélectionné
-        self.frame4_message(id_room)
-        self.start_refreshing_messages()  # Démarrer le rafraîchissement des messages
-        # Si refresh_initialized n'est pas nécessaire, vous pouvez l'omettre ou le gérer différemment
-        if not hasattr(self, 'refresh_initialized') or not self.refresh_initialized:
-            self.refresh_initialized = True
+        print(f"Selecting room with ID: {id_room}")
+        room_type = self.chat_room.get_room_type(id_room)
+        
+        room_type = str(room_type).strip() # Convertir en chaîne et supprimer les espaces
+        print(f"Room type: {room_type}")
+
+        if room_type == '1': # Si le salon est privé, vérifiez l'autorisation de l'utilisateur
+            auth = self.private_chat_room.get_user_authorization(self.user_id, id_room)
+            print(f"User authorization: {auth}")
+            if auth in ['admin', 'member']:
+                print("Authorized access to private room.")
+                self.frame4_message(id_room)
+                self.start_refreshing_messages()
+            else:
+                print("Access denied to the private room.")
+                return
+        else:
+            print("Access to public room.")
+            self.frame4_message(id_room)
+            self.start_refreshing_messages()
+
+
+
+
         
             
 

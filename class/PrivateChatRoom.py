@@ -71,6 +71,22 @@ class PrivateChatRoom:
         # Fermeture de la connexion à la base de données
         self.db.deconnexion()
 
+    def get_user_authorization(self, user_id, id_room):
+        try:
+            self.db = Server.db
+            # Assurez-vous que la requête utilise la préparation de requête avec des paramètres pour prévenir les injections SQL
+            query = "SELECT type_authorisation FROM privateChatRoom WHERE id_user = %s AND id_room = %s"
+            result = self.db.fetch(query, (user_id, id_room))
+            if result:
+                # Assuming 'type_authorisation' is the first column in the result as only one column is selected
+                return result[0][0]  # This should be the authorization type ('admin' or 'member')
+            else:
+                return None  # The user is neither admin nor member of this room
+        except Exception as e:
+            print("Error fetching user authorization:", e)
+            return None
+
+
 
 if __name__ == "__main__":
     join_private_chat_room = PrivateChatRoom()
