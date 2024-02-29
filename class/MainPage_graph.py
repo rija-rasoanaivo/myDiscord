@@ -51,7 +51,6 @@ class MainPage_graph(Tk):
         # Création d'un Label avec l'image chargée comme image de fond
         self.buttonDeconnexion = ctk.CTkButton(self, image=self.imageDeconnexion, text=None, width=20, height=20, fg_color="#c7c1f2",bg_color= "#c7c1f2", corner_radius= 10, hover_color="#a78ff7", command= self.returnPageLogin)
         self.buttonDeconnexion.place(x=15, y=570)
-        
 
         # creation de la frame a afficher sur la droite de mon bouton salon
         self.frame2 = ctk.CTkFrame(self, width=200, height=800, corner_radius=2, fg_color="#aeb8f9")
@@ -83,7 +82,14 @@ class MainPage_graph(Tk):
                 button = ctk.CTkButton(self.frame2, text=room_name, width=70, height=20, corner_radius=10, font=("Agency FB", 18, 'bold'), fg_color="#aeb8f9",bg_color="#aeb8f9", hover_color= "#a78ff7", command=lambda id=room_id: self.select_room(id))
                 button.place(x=80, y=50 + i * 50)
 
-                
+                # creation bouton ajouter salon
+                self.imageAdd = PhotoImage(file="image/boutons/ajout.png")
+                self.buttonAdd = ctk.CTkButton(self.frame2, image=self.imageAdd, text=None, width=20, height=20, fg_color="#aeb8f9",bg_color= "#aeb8f9", hover_color="#a78ff7", corner_radius= 10, command = self.toggle_createRoom)
+                self.buttonAdd.place(x=100, y=610, anchor = CENTER)
+
+                # texte pour ajouter un salon
+                self.labelAdd = ctk.CTkLabel(self.frame2, text="clic for create Room", width=20, height=20, font=('Agency FB', 15, 'bold'), text_color="white", fg_color="#aeb8f9")
+                self.labelAdd.place(x=100, y=560, anchor=CENTER)
 
     def toggle_createRoom(self):
         
