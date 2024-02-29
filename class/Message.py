@@ -34,7 +34,7 @@ class Message:
             timeout=10
         )
 
-        if self.first_name == 'login':
+        if self.first_name != self.user_id:
             notification.notify(
                 title="New message",
                 message= (f"You have a new message from {self.first_name}: {message_content}")[:50],

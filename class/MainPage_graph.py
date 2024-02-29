@@ -344,6 +344,8 @@ class MainPage_graph(Tk):
         # Si refresh_initialized n'est pas nécessaire, vous pouvez l'omettre ou le gérer différemment
         if not hasattr(self, 'refresh_initialized') or not self.refresh_initialized:
             self.refresh_initialized = True
+        
+            
 
     def send_message(self):
         # Récupère le contenu du ctk.CTkTextbox
@@ -352,6 +354,7 @@ class MainPage_graph(Tk):
             # Utilise l'instance de Chatting pour envoyer le message
             self.current_chat_instance.send_message( self.user_id, self.first_name, message_content)
             self.text.delete("1.0", "end")
+            
                       
             
     def refresh_messages(self):
@@ -359,6 +362,9 @@ class MainPage_graph(Tk):
         if self.should_refresh_messages and hasattr(self, 'current_chat_instance') and self.current_chat_instance.id_room:
             self.frame4_message(self.current_chat_instance.id_room)  # Mise à jour des messages
             self.after(500, self.refresh_messages)  # Planifiez le prochain rafraîchissement
+            # Dans le code principal
+            
+    
             
     
     def stop_refreshing_messages(self):
@@ -380,3 +386,4 @@ class MainPage_graph(Tk):
 if __name__ == "__main__":
         app = MainPage_graph()
         app.mainloop()
+        

@@ -1,8 +1,8 @@
 from tkinter import *
 import customtkinter as ctk
 from Register import *
-from Login_graph import Login_graph
-from MainPage_graph import MainPage_graph
+
+
 
 
 
@@ -91,6 +91,7 @@ class Register_graph(Tk):
     
 
     def verifcreate_user(self):
+        from Login_graph import Login_graph
         register_backend = Register()   
         firstname = self.entry.get()
         surname = self.entry1.get()
