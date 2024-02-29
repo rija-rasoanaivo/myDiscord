@@ -340,10 +340,10 @@ class MainPage_graph(Tk):
                 selected_member_id = next((member['id'] for member in members_list if member['name'] == selectedMemberName), None)
                 if selected_member_id:
                     private_chat_room.admin_add_member_private_chat_room(selected_member_id, room_id)
-            # print(f"Room '{roomName}' created with ID {room_id}.")
-            label = ctk.CTkLabel(self.frame3, text="Room created successfully", width=20, height=20, font=('Agency FB', 18, 'bold'), text_color="white", fg_color="#415059")
-            label.place(x=550, y=450, anchor=CENTER)
-            self.toggle_right_frame()
+                # print(f"Room '{roomName}' created with ID {room_id}.")
+                label = ctk.CTkLabel(self.frame3, text="Room created successfully", width=20, height=20, font=('Agency FB', 18, 'bold'), text_color="white", fg_color="#415059")
+                label.place(x=550, y=450, anchor=CENTER)
+                self.toggle_right_frame()
         else:
             print("Error creating the room.")
 
