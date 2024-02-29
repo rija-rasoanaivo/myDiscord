@@ -3,7 +3,6 @@ import customtkinter as ctk
 from Register_graph import *
 from ChatRoom import *
 from PrivateChatRoom import *
-from Chatting import *
 from tkinter.constants import CENTER
 from Vocal import *
 import threading
