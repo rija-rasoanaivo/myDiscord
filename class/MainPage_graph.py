@@ -113,7 +113,8 @@ class MainPage_graph(Tk):
             self.members.winfo_ismapped()
             self.members.place_forget()
             self.combo.winfo_ismapped()
-            self.combo.place_forget()
+            if hasattr(self, 'combo'):
+                self.combo.place_forget()
             self.label.winfo_ismapped()
             self.label.place_forget()
     
@@ -146,14 +147,15 @@ class MainPage_graph(Tk):
             # creation combobox pour ajouter les membres dans le salon
             self.members = ctk.CTkLabel(self, text="Add Members", width=20, height=20, font=('Agency FB', 18, 'bold'), text_color="#c7c1f2", fg_color="#415059")
             self.members.place(x=550, y=340, anchor=CENTER)
-            listmember = PrivateChatRoom()
-            listmembers = listmember.get_userNames()
+            private_chat_room = PrivateChatRoom()
+            listmembers = private_chat_room.get_userNames()
+            member_names = [member['name'] for member in listmembers]
             
-            self.combo = ctk.CTkComboBox(self, width=150, height=25, corner_radius=5, fg_color="white", bg_color="#415059", border_color="#38454c", border_width=1, values=listmembers)
+            self.combo = ctk.CTkComboBox(self, width=150, height=25, corner_radius=5, fg_color="white", bg_color="#415059", border_color="#38454c", border_width=1, values=member_names)
             self.combo.place(x=550, y=370, anchor=CENTER)
 
             # Création du bouton "valider"
-            self.buttonValid = ctk.CTkButton(self, text="VALID", text_color="#38454c", width=80, height=20, corner_radius=10, font=("Agency FB", 21, "bold"), border_width=2, border_color="white", bg_color="#415059", fg_color="#c7c1f2", hover_color="#a78ff7", command=self.join_datacCreateroom)
+            self.buttonValid = ctk.CTkButton(self, text="VALID", text_color="#38454c", width=80, height=20, corner_radius=10, font=("Agency FB", 21, "bold"), border_width=2, border_color="white", bg_color="#415059", fg_color="#c7c1f2", hover_color="#a78ff7", command=self.join_datacreateroom)
             self.buttonValid.place(x=550, y=420, anchor=CENTER)
     
     # fermer la frame4
@@ -318,23 +320,32 @@ class MainPage_graph(Tk):
             print("Une erreur s'est produite lors du retour à la page de connexion:", e)
         
 
-    # methode pour creer un salon
-    def join_datacCreateroom(self):
-        # récupérer les valeurs saisies par l'utilisateur
-        roomName = self.entry_roomName.get()
-        typeRoom = "Public" if self.checkPublic.get() else "Private"  # Déterminez le type de la chambre en fonction de la case cochée
+   
+     # methode pour creer un salon
+    def join_datacreateroom(self):
+        roomName = self.entry_roomName.get().strip()
+        isPublic = self.checkPublic.get()
+        isPrivate = not isPublic  
 
-        # insertion des valeurs dans la base de données par la classe ChatRoom
-        create_room = ChatRoom()
-        create_room.create_chat_room(roomName, typeRoom)
-        
-        # affichage d'un message de confirmation
-        self.label = ctk.CTkLabel(self.frame3, text="Room created", width=20, height=20, font=('Agency FB', 30, 'bold'), text_color="white", fg_color="#415059")
-        self.label.place(x=550, y=300, anchor=CENTER)
-
-
-        # Actualisation de la liste des salons
-        self.toggle_right_frame()
+        # Create room and get ID
+        chat_room = ChatRoom()
+        room_id = chat_room.create_chat_room(roomName, '0' if isPublic else '1')
+        if room_id:
+            private_chat_room = PrivateChatRoom()
+            if isPrivate:
+                # Add creator as admin
+                private_chat_room.admin_join_private_chat_room(self.user_id, room_id)
+                selectedMemberName = self.combo.get()
+                members_list = private_chat_room.get_userNames()
+                selected_member_id = next((member['id'] for member in members_list if member['name'] == selectedMemberName), None)
+                if selected_member_id:
+                    private_chat_room.admin_add_member_private_chat_room(selected_member_id, room_id)
+            # print(f"Room '{roomName}' created with ID {room_id}.")
+            label = ctk.CTkLabel(self.frame3, text="Room created successfully", width=20, height=20, font=('Agency FB', 18, 'bold'), text_color="white", fg_color="#415059")
+            label.place(x=550, y=450, anchor=CENTER)
+            self.toggle_right_frame()
+        else:
+            print("Error creating the room.")
 
 
     def select_room(self, id_room):
@@ -362,7 +373,7 @@ class MainPage_graph(Tk):
         if self.should_refresh_messages and hasattr(self, 'current_chat_instance') and self.current_chat_instance.id_room:
             self.frame4_message(self.current_chat_instance.id_room)  # Mise à jour des messages
             self.after(500, self.refresh_messages)  # Planifiez le prochain rafraîchissement
-            # Dans le code principal
+            
             
     
             
