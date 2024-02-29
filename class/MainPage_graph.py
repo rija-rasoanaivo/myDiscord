@@ -352,7 +352,6 @@ class MainPage_graph(Tk):
     def select_room(self, id_room):
         print(f"Selecting room with ID: {id_room}")
         room_type = self.chat_room.get_room_type(id_room)
-        
         room_type = str(room_type).strip() # Convertir en chaîne et supprimer les espaces
         print(f"Room type: {room_type}")
 
@@ -364,7 +363,9 @@ class MainPage_graph(Tk):
                 self.frame4_message(id_room)
                 self.start_refreshing_messages()
             else:
-                print("Access denied to the private room.")
+                labelDenied = ctk.CTkLabel(self, text="Access denied.", width=20, height=20, font=('Agency FB', 18, 'bold'), text_color="white", fg_color="#415059")
+                labelDenied.place(x=550, y=450, anchor=CENTER)
+                self.after(1000, labelDenied.destroy)
                 return
         else:
             print("Access to public room.")
