@@ -41,16 +41,25 @@ class MainPage_graph(Tk):
         self.logo_label.pack(side="top", anchor="nw", padx=10)
 
         # creation bouton salon
-        self.imageRoom  = PhotoImage(file="image/boutons/sms.png")
+        self.imageRoom  = PhotoImage(file="image/boutons/message.png")
         # Création d'un Label avec l'image chargée comme image de fond
         self.buttonRoom = ctk.CTkButton(self, image=self.imageRoom,text= None, width=20, height=20, fg_color="#c7c1f2",border_color="black",bg_color="#c7c1f2",  corner_radius=10 ,hover_color="#a78ff7", command = self.toggle_right_frame)
-        self.buttonRoom.pack(side="top", anchor="nw", padx=12, pady=70)
+        self.buttonRoom.pack(side="top", anchor="nw", padx=15, pady=100)
 
         # creation bouton deconnexion
         self.imageDeconnexion = PhotoImage(file="image/boutons/deco.png")
         # Création d'un Label avec l'image chargée comme image de fond
         self.buttonDeconnexion = ctk.CTkButton(self, image=self.imageDeconnexion, text=None, width=20, height=20, fg_color="#c7c1f2",bg_color= "#c7c1f2", corner_radius= 10, hover_color="#a78ff7", command= self.returnPageLogin)
         self.buttonDeconnexion.place(x=15, y=570)
+
+        # creation bouton ajouter salon
+        self.imageAdd = PhotoImage(file="image/boutons/addchat.png")
+        self.buttonAdd = ctk.CTkButton(self, image=self.imageAdd, text=None, width=20, height=20, fg_color="#c7c1f2",bg_color= "#c7c1f2", hover_color="#a78ff7", corner_radius= 10, command = self.toggle_createRoom)
+        self.buttonAdd.place(x=50, y=480, anchor = CENTER)
+
+        # texte pour ajouter un salon
+        self.labelAdd = ctk.CTkLabel(self, text="CREATE CHATROOM", width=15, height=20, font=('Agency FB', 13, 'bold'), text_color="white", fg_color="#c7c1f2")
+        self.labelAdd.place(x=50, y=430, anchor=CENTER)
 
         # creation de la frame a afficher sur la droite de mon bouton salon
         self.frame2 = ctk.CTkFrame(self, width=200, height=800, corner_radius=2, fg_color="#aeb8f9")
@@ -62,10 +71,10 @@ class MainPage_graph(Tk):
         self.frame4 = ctk.CTkFrame(self, width=500, height=800, corner_radius=2, fg_color="#23272d")
 
         # creation du logo profil
-        self.imageProfil = PhotoImage(file="image/boutons/profil.png")
+        self.imageProfil = PhotoImage(file="image/boutons/pac.png")
         # Création d'un Label avec l'image chargée comme image de fond
         self.buttonProfil = ctk.CTkButton(self, image=self.imageProfil, text=None, width=20, height=20, fg_color="#c7c1f2", bg_color= "#c7c1f2", corner_radius= 10, hover_color="#a78ff7", command= self.start_server)
-        self.buttonProfil.place(x=10, y=100)
+        self.buttonProfil.place(x=15, y=100)
 
         self.initialize_message_input_area()
         self.should_refresh_messages = True
@@ -82,14 +91,7 @@ class MainPage_graph(Tk):
                 button = ctk.CTkButton(self.frame2, text=room_name, width=70, height=20, corner_radius=10, font=("Agency FB", 18, 'bold'), fg_color="#aeb8f9",bg_color="#aeb8f9", hover_color= "#a78ff7", command=lambda id=room_id: self.select_room(id))
                 button.place(x=80, y=50 + i * 50)
 
-                # creation bouton ajouter salon
-                self.imageAdd = PhotoImage(file="image/boutons/ajout.png")
-                self.buttonAdd = ctk.CTkButton(self.frame2, image=self.imageAdd, text=None, width=20, height=20, fg_color="#aeb8f9",bg_color= "#aeb8f9", hover_color="#a78ff7", corner_radius= 10, command = self.toggle_createRoom)
-                self.buttonAdd.place(x=100, y=610, anchor = CENTER)
-
-                # texte pour ajouter un salon
-                self.labelAdd = ctk.CTkLabel(self.frame2, text="clic for create Room", width=20, height=20, font=('Agency FB', 15, 'bold'), text_color="white", fg_color="#aeb8f9")
-                self.labelAdd.place(x=100, y=560, anchor=CENTER)
+                
 
     def toggle_createRoom(self):
         
@@ -115,8 +117,8 @@ class MainPage_graph(Tk):
             self.combo.winfo_ismapped()
             if hasattr(self, 'combo'):
                 self.combo.place_forget()
-            self.label.winfo_ismapped()
-            self.label.place_forget()
+            # self.label.winfo_ismapped()
+            # self.label.place_forget()
     
 
         else: # Sinon, afficher la frame3 et ses éléments
