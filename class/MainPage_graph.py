@@ -18,6 +18,9 @@ class MainPage_graph(Tk):
         self.classLogin = Login()
         self.user_id = user_id
         self.first_name = first_name
+        self.chat_room = ChatRoom()
+        self.private_chat_room1 = PrivateChatRoom()
+        
 
         # Initialisation de l'attribut recording
         self.recording = False
@@ -29,6 +32,7 @@ class MainPage_graph(Tk):
         # Création de la fenêtre principale
         self.geometry("800x650")
         self.title("Main Page")
+        self.iconbitmap("image/logo/logoJRM1.ico")
         self.configure(bg="black")  
 
         # Création du cadre avec la couleur de fond spécifiée
@@ -200,9 +204,9 @@ class MainPage_graph(Tk):
                 
 
             for i, message in enumerate(messages):
-                message_text = f"{message[2]} {message[0]}" 
-                self.messageDisplay = ctk.CTkLabel(self.frame4, text=message_text, width=100, height=20, font=("Agency FB", 14, 'bold'),text_color="white", bg_color="#23272d" )
-                self.messageDisplay.place(x=80, y=60 + i * 70)
+                message_text = f"{message[0]}  {message[2]} " 
+                self.messageDisplay = ctk.CTkLabel(self.frame4, text=message_text, width=100, height=20, font=("Agency FB", 13, 'bold'),text_color="white", bg_color="#23272d" )
+                self.messageDisplay.place(x=90, y=60 + i * 70)
 
             
         else:
@@ -342,21 +346,34 @@ class MainPage_graph(Tk):
                 selected_member_id = next((member['id'] for member in members_list if member['name'] == selectedMemberName), None)
                 if selected_member_id:
                     private_chat_room.admin_add_member_private_chat_room(selected_member_id, room_id)
-                # print(f"Room '{roomName}' created with ID {room_id}.")
-                label = ctk.CTkLabel(self.frame3, text="Room created successfully", width=20, height=20, font=('Agency FB', 18, 'bold'), text_color="white", fg_color="#415059")
-                label.place(x=550, y=450, anchor=CENTER)
+                
                 self.toggle_right_frame()
         else:
             print("Error creating the room.")
 
 
     def select_room(self, id_room):
-        self.id_room = id_room  # Stockez l'ID du salon sélectionné
-        self.frame4_message(id_room)
-        self.start_refreshing_messages()  # Démarrer le rafraîchissement des messages
-        # Si refresh_initialized n'est pas nécessaire, vous pouvez l'omettre ou le gérer différemment
-        if not hasattr(self, 'refresh_initialized') or not self.refresh_initialized:
-            self.refresh_initialized = True
+        
+        room_type = self.chat_room.get_room_type(id_room)
+        room_type = str(room_type).strip() # Convertir en chaîne et supprimer les espaces
+        
+
+        if room_type == '1': # Si le salon est privé, vérifiez l'autorisation de l'utilisateur
+            auth = self.private_chat_room1.get_user_authorization(self.user_id, id_room)
+            print(f"User authorization: {auth}")
+            if auth in ['admin', 'member']:
+                print("Authorized access to private room.")
+                self.frame4_message(id_room)
+                self.start_refreshing_messages()
+            else:
+                labelDenied = ctk.CTkLabel(self, text="Access denied !", width=50, height=20, font=('Agency FB', 35, 'bold'), text_color="white", fg_color="black")
+                labelDenied.place(x=550, y=300, anchor=CENTER)
+                self.after(1000, labelDenied.destroy)
+                return
+        else:
+            print("Access to public room.")
+            self.frame4_message(id_room)
+            self.start_refreshing_messages()
         
             
 
@@ -374,7 +391,7 @@ class MainPage_graph(Tk):
         # Ajoutez une vérification pour voir si le rafraîchissement doit continuer
         if self.should_refresh_messages and hasattr(self, 'current_chat_instance') and self.current_chat_instance.id_room:
             self.frame4_message(self.current_chat_instance.id_room)  # Mise à jour des messages
-            self.after(500, self.refresh_messages)  # Planifiez le prochain rafraîchissement
+            self.after(1000, self.refresh_messages)  # Planifiez le prochain rafraîchissement
             
             
     

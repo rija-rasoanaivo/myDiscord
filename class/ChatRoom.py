@@ -42,6 +42,20 @@ class ChatRoom:
         except Exception as e:
             print("Error fetching chat room IDs and names:", e)
             return []
+        
+    def get_room_type(self, id_room):
+        try:
+            self.db = Server.db
+            query = "SELECT type_room FROM chatRoom WHERE id_room = %s"
+            result = self.db.fetch(query, (id_room,))
+            if result:
+                # Since 'type_room' is the only column selected, it will be at index 0 of the first tuple
+                return result[0][0]  # Use index 0 here
+            else:
+                return None
+        except Exception as e:
+            print("Error fetching room type:", e)
+            return None
 
 if __name__ == "__main__":
     create_chat_room = ChatRoom()

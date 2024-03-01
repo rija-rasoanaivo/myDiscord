@@ -11,7 +11,8 @@ class Register_graph(Tk):
     def __init__(self):
         super().__init__()
         self.geometry("400x650")
-        self.title("Register Page") 
+        self.title("Register Page")
+        self.iconbitmap("image/logo/logoJRM1.ico")
         self.configure(bg = "#c3caf7")
         self.frame = ctk.CTkFrame(self,width= 150,height= 150)
         self.frame.place( x= 200, y=70, anchor = CENTER)

@@ -14,9 +14,11 @@ class Login_graph(Tk):
         # Création de la fenêtre
         self.geometry("400x650")
         self.title("Login Page") 
+        self.iconbitmap("image/logo/logoJRM1.ico")
         self.configure(bg="#c3caf7")
         self.frame = ctk.CTkFrame(self, width=150, height=150)
         self.frame.place(x=200, y=70, anchor=CENTER)
+        
 
         # Télécharger le logo 
         self.logo = PhotoImage(file="image/logo/logoJRM1.png")
