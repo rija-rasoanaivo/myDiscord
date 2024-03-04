@@ -336,20 +336,23 @@ class MainPage_graph(Tk):
             self.label_message = ctk.CTkLabel(self, text="Room created successfully !", width=50, height=20, font=('Agency FB', 35, 'bold'), text_color="white")
             self.label_message.place(x=550, y=300, anchor=CENTER)
             self.after(1000, self.label_message.destroy)
-            self.toggle_createRoom().destroy()
-            
-
+        
             if isPrivate:
                 # Add creator as admin
                 private_chat_room.admin_join_private_chat_room(self.user_id, room_id)
                 selectedMemberName = self.combo.get()
                 members_list = private_chat_room.get_userNames()
                 selected_member_id = next((member['id'] for member in members_list if member['name'] == selectedMemberName), None)
+                
                 if selected_member_id:
                     private_chat_room.admin_add_member_private_chat_room(selected_member_id, room_id)
                 
+                self.label_message = ctk.CTkLabel(self, text="Room created successfully !", width=50, height=20, font=('Agency FB', 35, 'bold'), text_color="white")
+                self.label_message.place(x=550, y=300, anchor=CENTER)
+                self.after(1000, self.label_message.destroy)
                 self.toggle_right_frame()
-                self.update()
+            self.toggle_createRoom().destroy()
+            self.update()
 
         
     # method for select room
