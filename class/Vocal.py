@@ -2,30 +2,31 @@ from Chatting import *
 import socket
 import pyaudio
 
+# Class to record audio and send it to the server
 class Vocal:
     def __init__(self, host='127.0.0.1', port=8000):
         self.host = host
         self.port = port
 
-        # Paramètres audio
+        # setting 
         self.FORMAT = pyaudio.paInt16
         self.CHANNELS = 1
         self.RATE = 44100
         self.CHUNK = 1024
 
-        # Initialisation de PyAudio
+    
         self.audio = pyaudio.PyAudio()
 
-        # Création du socket TCP
+        # Create a socket to connect to the server
         print("Connecting to server...")
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client_socket.connect((self.host, self.port))
         print("Connected to server.")
 
-        # Variable pour contrôler l'état de l'enregistrement vocal
+        # Flag to check if the audio is being recorded
         self.is_recording = False
 
-    # Fonction pour envoyer l'audio au serveur
+    # Method to send audio to the server
     def send_audio(self):
         print("Recording and sending audio...")
         stream = self.audio.open(format=self.FORMAT, channels=self.CHANNELS, rate=self.RATE, input=True, frames_per_buffer=self.CHUNK)
@@ -40,6 +41,7 @@ class Vocal:
             stream.close()
             print("Audio stream stopped and closed.")
 
+    # Method to start recording audio
     def start(self):
         self.is_recording = True
         try:
@@ -48,11 +50,12 @@ class Vocal:
             self.client_socket.close()
             print("Connection closed.")
 
+    # Method to stop recording audio
     def stop(self):
         print("Stopping audio recording on vocal...")
         self.is_recording = False
 
-# Utilisation
+
 if __name__ == "__main__":
     vocal = Vocal()
     vocal.start()

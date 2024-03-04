@@ -8,6 +8,7 @@ class MyDb:
         self.password = password
         self.database = database
 
+    
     def connexion(self):
         self.db = mysql.connector.connect(
             host=self.host, 

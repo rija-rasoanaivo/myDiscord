@@ -8,22 +8,22 @@ class Server:
     db.connexion()
 
     def __init__(self):
-        # Paramètres audio
+        # audio settings
         self.FORMAT = pyaudio.paInt16
         self.CHANNELS = 1
         self.RATE = 44100
         self.CHUNK = 1024
 
-        # Initialisation de PyAudio
+        # Initialize the PyAudio instance
         self.audio = pyaudio.PyAudio()
 
-        self.server_socket = None  # Initialisation du socket à None
+        self.server_socket = None  
 
     def create_server_socket(self, host='127.0.0.1', port=8000):
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
             self.server_socket.bind((host, port))
-            self.server_socket.listen(10)  # Attente de connexions
+            self.server_socket.listen(10)  # Accepts up to 10 connections
             print("Serveur en attente de connexions...")
         except Exception as e:
             print(f"Erreur lors de la liaison du socket : {e}")
@@ -56,7 +56,7 @@ class Server:
 
     def start_server(self):
         if not self.server_socket:
-            self.create_server_socket()  # Créer le socket serveur si nécessaire
+            self.create_server_socket()  
         else:
             print("Le socket serveur existe déjà. Attendez que le serveur actuel se termine.")
             return  
@@ -64,7 +64,7 @@ class Server:
         try:
             accept_thread = threading.Thread(target=self.accept_clients)
             accept_thread.start()
-            accept_thread.join()  # Attente indéfinie pour que le thread d'acceptation ne se termine pas
+            accept_thread.join()  
         finally:
             self.server_socket.close()
             self.audio.terminate()
@@ -78,10 +78,9 @@ class Server:
             print("Audio arrêté.")
 
 
-# Utilisation
+# Usage
 if __name__ == "__main__":
     server = Server()
-    server.create_server_socket()  # Créer le socket serveur
-    server.start_server()  # Démarrer le serveur
-    # Pour arrêter le serveur, appelez la méthode stop_server
+    server.create_server_socket()  
+    server.start_server()  
     server.stop_server()

@@ -6,13 +6,13 @@ class PrivateChatRoom:
         # Utilisation des informations de connexion de la classe Server
         self.db = Server.db
 
-    def get_userNames(self):
-        
+    def get_userNames(self):    
+        # Attempt to fetch user IDs and names from the database
         try:
             self.db = Server.db
             query = "SELECT id, firstName, name FROM user"
             result = self.db.fetch(query)
-            # Here, we're creating a list of dictionaries
+            # Create a list of dictionaries with user IDs and their full names
             listMembers = [{'id': row[0], 'name': f'{row[1]} {row[2]}'} for row in result]
             print(listMembers)
             return listMembers
@@ -44,11 +44,10 @@ class PrivateChatRoom:
             self.db.deconnexion()
 
     def admin_add_member_private_chat_room(self, user_id, id_room):
-        # Connexion à la base de données
         self.db.connexion()
         self.user_id = user_id
         self.id_room = id_room
-        # Exemple de requête SQL avec INNER JOIN et les valeurs saisies par l'utilisateur
+        # request to add a member to a private chat room
         query = f"""
             INSERT INTO privateChatRoom (Id_user, Id_Room, Type_Authorisation)
             SELECT 
@@ -62,16 +61,12 @@ class PrivateChatRoom:
                 AND chatRoom.id_room = '{id_room}';
         """
 
-        # Exécution de la requête SQL
         self.db.executeRequete(query)
-
-        # Fermeture de la connexion à la base de données
         self.db.deconnexion()
 
     def get_user_authorization(self, user_id, id_room):
         try:
             self.db = Server.db
-            # Assurez-vous que la requête utilise la préparation de requête avec des paramètres pour prévenir les injections SQL
             query = "SELECT type_authorisation FROM privateChatRoom WHERE id_user = %s AND id_room = %s"
             result = self.db.fetch(query, (user_id, id_room))
             if result:
