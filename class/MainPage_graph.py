@@ -75,8 +75,8 @@ class MainPage_graph(Tk):
 
         # create button login server
         self.imageProfil = PhotoImage(file="image/boutons/pac.png")
-        self.buttonProfil = ctk.CTkButton(self, image=self.imageProfil, text=None, width=20, height=20, fg_color="#c7c1f2", bg_color= "#c7c1f2", corner_radius= 10, hover_color="#a78ff7", command= self.start_server)
-        self.buttonProfil.place(x=15, y=100)
+        self.buttonserver = ctk.CTkButton(self, image=self.imageProfil, text=None, width=20, height=20, fg_color="#c7c1f2", bg_color= "#c7c1f2", corner_radius= 10, hover_color="#a78ff7", command= self.start_server)
+        self.buttonserver.place(x=15, y=100)
 
         self.initialize_message_input_area()
         self.should_refresh_messages = True
@@ -306,6 +306,7 @@ class MainPage_graph(Tk):
 
     # ------------------- party interaction db -------------------     
 
+
     def returnPageLogin(self):
         try:
             from Login_graph import Login_graph  # Import tardif
@@ -384,8 +385,8 @@ class MainPage_graph(Tk):
             self.text.delete("1.0", "end")
             
 
-
     # ----------------- party for refresh message ------------------   
+
 
     # method for refresh message        
     def refresh_messages(self):
