@@ -1,9 +1,7 @@
 from tkinter import *
 import customtkinter as ctk
 from Register_graph import *
-from ChatRoom import *
 from PrivateChatRoom import *
-from Chatting import *
 from tkinter.constants import CENTER
 from Vocal import *
 import threading
@@ -93,7 +91,7 @@ class MainPage_graph(Tk):
             room_info = ChatRoom().get_chat_room_ids_and_names()
             for i, (room_id, room_name) in enumerate(room_info):
                 button = ctk.CTkButton(self.frame2, text=room_name, width=70, height=20, corner_radius=10, font=("Agency FB", 18, 'bold'), fg_color="#aeb8f9",bg_color="#aeb8f9", hover_color= "#a78ff7", command=lambda id=room_id: self.select_room(id))
-                button.place(x=80, y=50 + i * 50)
+                button.place(x=50, y=50 + i * 50)
 
     # ------------ party frame3 (create room) ----------------
                 
