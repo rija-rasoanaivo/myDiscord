@@ -6,29 +6,28 @@ class ChatRoom:
         
 
     def create_chat_room(self, name, type_room):
-        # Définition de la table, des champs et des valeurs pour l'insertion
+        # Define the table, fields, and values for the SQL insertion query
         table = "chatRoom"
         fields = "(name, type_room)"
         values = f"('{name}', '{type_room}')"
         
-        # Construction de la requête d'insertion
+        # Construct the SQL insertion query
         query = f"INSERT INTO {table} {fields} VALUES {values};"
         
         try:
-            # Connexion à la base de données via l'instance de Server.db
+            # Connect to the database using the connection method of the Server.db instance
             Server.db.connexion()
-            # Exécution de la requête avec Server.db.cursor
+            # Execute the SQL query using the cursor of Server.db
             Server.db.cursor.execute(query)
-            # Engagement de la transaction pour s'assurer que l'insertion est réalisée
+            # Commit the transaction to ensure the insertion is completed
             Server.db.db.commit()
-            # Récupération de l'ID de la dernière ligne insérée
+            # Retrieve the ID of the last inserted row
             room_id = Server.db.cursor.lastrowid
             return room_id
         except Exception as e:
             print(f"An error occurred: {e}")
             return None
         finally:
-            # Déconnexion de la base de données
             Server.db.deconnexion()
     
     def get_chat_room_ids_and_names(self):
@@ -60,8 +59,3 @@ class ChatRoom:
 if __name__ == "__main__":
     create_chat_room = ChatRoom()
     create_chat_room.create_chat_room()
-
-# table = "chatRoom"
-# fields = "name, type_room"
-# values = "'chatRoom2', 'private'"
-# db.create(table, fields, values)

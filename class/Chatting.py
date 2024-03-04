@@ -1,17 +1,17 @@
-
-from threading import Thread
 from Message import *
-import time
 
 class Chatting:
     def __init__(self, user_id, id_room):
+        # Initialize the Chatting instance with user ID, room ID, and database connection
         self.user_id = user_id
         self.id_room = id_room
         self.db = Server.db
-        self.last_message_timestamp = None
+        self.last_message_timestamp = None # To track the timestamp of the last loaded message
     
     def load_messages(self, id_room, id_user):
         self.db = Server.db
+        # SQL query to select the first name, message content, and timestamp from the 'message' table
+        # for a specific room ID
 
         query = """
         SELECT  firstName, message_content, hour
@@ -19,33 +19,27 @@ class Chatting:
         WHERE id_room = %s
         """
         params = (id_room,)
+        # If we have a timestamp for the last loaded message, append a condition to only fetch messages after that timestamp
         if self.last_message_timestamp:
             query += " AND hour > %s"
             params += (self.last_message_timestamp,)
 
-        query += " ORDER BY hour DESC"  # Tri décroissant pour obtenir les derniers messages
-        query += " LIMIT 6"  # Limite à 6 messages
+        query += " ORDER BY hour DESC"  # Order by timestamp in descending order
+        query += " LIMIT 6"  
         messages = self.db.fetch(query, params)
 
-        # Inverser les messages pour les afficher dans l'ordre chronologique
+        # Reverse the order of the messages to display the latest message at the bottom
         messages = messages[::-1]
 
-        # Mise à jour de last_message_timestamp avec l'horodatage du dernier message chargé
+        # Update the last message timestamp
         if messages:
-            self.last_message_timestamp = messages[::-1]  # Supposant que le troisième élément est l'horodatage
+            self.last_message_timestamp = messages[::-1]  
 
         return messages
 
 
     def send_message(self,user_id, first_name, message_content):
-        # Création d'une instance de Message
+        # Create a new Message instance
         message = Message(user_id=user_id, first_name=first_name, id_room= self.id_room)
-        # Envoi du message
+        # Call the send_message method of the Message instance
         message.send_message(message_content)
-
-      
-
-# if __name__ == "__main__":
-#     db = MyDb("82.165.185.52", "marijo", "Rijoma13!", "manon-rittling_mydiscord") 
-#     chat_client = Chatting(db)
-    
