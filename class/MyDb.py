@@ -8,6 +8,7 @@ class MyDb:
         self.password = password
         self.database = database
 
+    
     def connexion(self):
         self.db = mysql.connector.connect(
             host=self.host, 
@@ -34,8 +35,13 @@ class MyDb:
         return result 
     
     def create(self, table, fields, values):
-        requete = "INSERT INTO " + table + " (" + fields + ") VALUES (" + values + ")"
-        self.executeRequete(requete)
+        requete = f"INSERT INTO {table} ({fields}) VALUES ({values})"
+        self.connexion()  
+        self.cursor.execute(requete)  
+        self.db.commit()  
+        last_id = self.cursor.lastrowid  
+        self.deconnexion()  
+        return last_id 
 
     def read(self, table, fields, condition):
         requete = "SELECT " + fields + " FROM " + table + " WHERE " + condition
