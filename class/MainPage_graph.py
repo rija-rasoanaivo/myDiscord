@@ -7,7 +7,7 @@ from Chatting import *
 from tkinter.constants import CENTER
 from Vocal import *
 import threading
-from plyer import notification
+
 
 
 
@@ -15,6 +15,7 @@ class MainPage_graph(Tk):
     def __init__(self, user_id=None, first_name=None):
         super().__init__()
 
+        # Initialize chat room and private chat room instances
         self.classLogin = Login()
         self.user_id = user_id
         self.first_name = first_name
@@ -22,61 +23,58 @@ class MainPage_graph(Tk):
         self.private_chat_room1 = PrivateChatRoom()
         
 
-        # Initialisation de l'attribut recording
+        # Initialize voice message recording
         self.recording = False
         self.voice_thread = None
         self.voice=None
         self.server=Server()
         self.server_started = False
 
-        # Création de la fenêtre principale
+        # Create main window
         self.geometry("800x650")
         self.title("Main Page")
         self.iconbitmap("image/logo/logoJRM1.ico")
         self.configure(bg="black")  
 
-        # Création du cadre avec la couleur de fond spécifiée
+        # Create frame1 for display logo and buttons
         self.frame1 = ctk.CTkFrame(self, width=100, height=800, corner_radius=0, fg_color="#c7c1f2")  # Définition de la couleur de fond du cadre
         self.frame1.place(x=0, y=0)
 
-        # telecharger le logo placement du logo
+        # download logo and display it
         self.logo = PhotoImage(file="image/logo/logoJRM3.png")
         self.logo_label = Label(self, image=self.logo, bg='#c7c1f2')
         self.logo_label.pack(side="top", anchor="nw", padx=10)
 
-        # creation bouton salon
+        # create button go room
         self.imageRoom  = PhotoImage(file="image/boutons/message.png")
-        # Création d'un Label avec l'image chargée comme image de fond
         self.buttonRoom = ctk.CTkButton(self, image=self.imageRoom,text= None, width=20, height=20, fg_color="#c7c1f2",border_color="black",bg_color="#c7c1f2",  corner_radius=10 ,hover_color="#a78ff7", command = self.toggle_right_frame)
         self.buttonRoom.pack(side="top", anchor="nw", padx=15, pady=100)
 
-        # creation bouton deconnexion
+        # create button deconnexion
         self.imageDeconnexion = PhotoImage(file="image/boutons/deco.png")
-        # Création d'un Label avec l'image chargée comme image de fond
         self.buttonDeconnexion = ctk.CTkButton(self, image=self.imageDeconnexion, text=None, width=20, height=20, fg_color="#c7c1f2",bg_color= "#c7c1f2", corner_radius= 10, hover_color="#a78ff7", command= self.returnPageLogin)
         self.buttonDeconnexion.place(x=15, y=570)
 
-        # creation bouton ajouter salon
+        # create button add chatroom
         self.imageAdd = PhotoImage(file="image/boutons/addchat.png")
         self.buttonAdd = ctk.CTkButton(self, image=self.imageAdd, text=None, width=20, height=20, fg_color="#c7c1f2",bg_color= "#c7c1f2", hover_color="#a78ff7", corner_radius= 10, command = self.toggle_createRoom)
         self.buttonAdd.place(x=50, y=480, anchor = CENTER)
 
-        # texte pour ajouter un salon
+        # create label create chatroom
         self.labelAdd = ctk.CTkLabel(self, text="CREATE CHATROOM", width=15, height=20, font=('Agency FB', 13, 'bold'), text_color="white", fg_color="#c7c1f2")
         self.labelAdd.place(x=50, y=430, anchor=CENTER)
 
-        # creation de la frame a afficher sur la droite de mon bouton salon
+        # create frame2 for display room
         self.frame2 = ctk.CTkFrame(self, width=200, height=800, corner_radius=2, fg_color="#aeb8f9")
 
-        # creation de la frame a afficher au dessus pour creer un salon
+        # create frame3 for create room
         self.frame3 = ctk.CTkFrame(self, width=300, height=300, corner_radius=30, fg_color="#415059")
 
-        # creation frame4 pour afficher les messages
+        # create frame4 for display messages
         self.frame4 = ctk.CTkFrame(self, width=500, height=800, corner_radius=2, fg_color="#23272d")
 
-        # creation du logo profil
+        # create button login server
         self.imageProfil = PhotoImage(file="image/boutons/pac.png")
-        # Création d'un Label avec l'image chargée comme image de fond
         self.buttonProfil = ctk.CTkButton(self, image=self.imageProfil, text=None, width=20, height=20, fg_color="#c7c1f2", bg_color= "#c7c1f2", corner_radius= 10, hover_color="#a78ff7", command= self.start_server)
         self.buttonProfil.place(x=15, y=100)
 
@@ -84,6 +82,8 @@ class MainPage_graph(Tk):
         self.should_refresh_messages = True
         self.notification_displayed = False
         
+     
+
     # gestion de la frame a afficher sur la droite de mon bouton salon en cliquant sur le bouton
     def toggle_right_frame(self):
         if self.frame2.winfo_ismapped():
@@ -95,6 +95,7 @@ class MainPage_graph(Tk):
                 button = ctk.CTkButton(self.frame2, text=room_name, width=70, height=20, corner_radius=10, font=("Agency FB", 18, 'bold'), fg_color="#aeb8f9",bg_color="#aeb8f9", hover_color= "#a78ff7", command=lambda id=room_id: self.select_room(id))
                 button.place(x=80, y=50 + i * 50)
 
+    # ------------ party frame3 (create room) ----------------
                 
     # method for display create room
     def toggle_createRoom(self):
@@ -121,11 +122,8 @@ class MainPage_graph(Tk):
             self.combo.winfo_ismapped()
             if hasattr(self, 'combo'):
                 self.combo.place_forget()
-            # self.label.winfo_ismapped()
-            # self.label.place_forget()
-    
-
-        else: # Sinon, afficher la frame3 et ses éléments
+            
+        else: 
             
             self.frame3.place(x=400, y=150)
 
@@ -170,7 +168,7 @@ class MainPage_graph(Tk):
 
     # ------------ party frame4 (messages) ----------------
 
-    # fermer la frame4
+    # close button frame4
     def outRoombutton(self):
         if self.frame4.winfo_ismapped():
             self.frame4.place_forget()
@@ -178,7 +176,6 @@ class MainPage_graph(Tk):
 
     # method for display frame4
     def show_frame4(self):
-        # Afficher la frame4
         self.frame4.place(x=300, y=0)
 
 
@@ -225,7 +222,6 @@ class MainPage_graph(Tk):
         self.text = ctk.CTkTextbox(self.frame4, width=250, height=50, corner_radius=13, fg_color="white", bg_color="#23272d", border_color="#38454c", border_width=1, text_color="black")
         self.text.place(x=200, y=600, anchor=CENTER)
         
-
         # Send message button
         self.imageSend = PhotoImage(file="image/boutons/envoyer1.png")
         self.buttonSend = ctk.CTkButton(self.frame4, image=self.imageSend, text=None, width=10, height=10, fg_color="#23b0ed", border_color="black", border_width=1, hover_color="#a78ff7", corner_radius=10, command=self.send_message)
@@ -254,7 +250,6 @@ class MainPage_graph(Tk):
             x_position += 30  
 
 
-    
     # ---------------------- party vocal ----------------------
 
     # method for toggle voice message
@@ -337,6 +332,12 @@ class MainPage_graph(Tk):
         room_id = chat_room.create_chat_room(roomName, '0' if isPublic else '1')
         if room_id:
             private_chat_room = PrivateChatRoom()
+            self.label_message = ctk.CTkLabel(self, text="Room created successfully !", width=50, height=20, font=('Agency FB', 35, 'bold'), text_color="white")
+            self.label_message.place(x=550, y=300, anchor=CENTER)
+            self.after(1000, self.label_message.destroy)
+            self.toggle_createRoom().destroy()
+            
+
             if isPrivate:
                 # Add creator as admin
                 private_chat_room.admin_join_private_chat_room(self.user_id, room_id)
