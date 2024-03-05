@@ -14,7 +14,7 @@ class PrivateChatRoom:
             result = self.db.fetch(query)
             # Create a list of dictionaries with user IDs and their full names
             listMembers = [{'id': row[0], 'name': f'{row[1]} {row[2]}'} for row in result]
-            print(listMembers)
+            
             return listMembers
         except Exception as e:
             print("Error fetching user names and IDs:", e)

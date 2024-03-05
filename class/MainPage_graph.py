@@ -59,7 +59,7 @@ class MainPage_graph(Tk):
         self.buttonAdd.place(x=50, y=480, anchor = CENTER)
 
         # create label create chatroom
-        self.labelAdd = ctk.CTkLabel(self, text="CREATE CHATROOM", width=15, height=20, font=('Agency FB', 13, 'bold'), text_color="white", fg_color="#c7c1f2")
+        self.labelAdd = ctk.CTkLabel(self, text="CREATE CHATROOM", width=18, height=20, font=('Agency FB', 13, 'bold'), text_color="white", fg_color="#c7c1f2")
         self.labelAdd.place(x=50, y=430, anchor=CENTER)
 
         # create frame2 for display room
